@@ -1,0 +1,10 @@
+sequenceDiagram
+  participant Visitor as Visitor
+  participant SnowTricks as SnowTricks
+
+  Visitor ->>+ SnowTricks: Visit the site
+  SnowTricks -->>- Visitor: Display welcome page
+  Visitor ->>+ SnowTricks: Click on a figure
+  SnowTricks --x- Visitor: Display the detail about a figure
+
+

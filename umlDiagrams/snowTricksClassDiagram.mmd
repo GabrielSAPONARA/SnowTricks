@@ -1,0 +1,78 @@
+---
+config:
+  layout: elk
+---
+classDiagram
+direction TB
+    class User {
+	    -int id
+	    -String username
+	    -String email
+	    -String password
+        -String userPhoto
+	    +getId() int
+	    +getUsername() String
+	    +setUsername(String username) void
+	    +getEmail() String
+	    +setEmail(String email) void
+	    +getPassword() String
+	    +setPassword(String password) void
+        +getUserPhoto() String
+        +setUserPhoto(String userPhoto) void
+    }
+    class Figure {
+	    -int id
+	    -String name
+	    -String descriptition
+	    -String slug
+        -DateTime creationDate
+        -DateTime DataOfLastUpdate
+	    +getId() int
+	    +getName() String
+	    +setName(String name) void
+	    +getDescription() String
+	    +setDescription(String description) void
+	    +getSlug() String
+	    +setSlug(String slug) void
+        +getCreationDate() DateTime
+        +setCreationDate(DateTime creationDate) void
+        +getDateOfLastUpdate() DateTime
+        +setDataOfLastUpdate(DateTime dateOfLastUpdate) void
+    }
+    class FigureVideo {
+	    -int id
+	    -String name
+	    +getId() int
+	    +getName() String
+	    +setName(String name) void
+    }
+    class FigureImage {
+	    -int id
+	    -String name
+	    +getId() int
+	    +getName() String
+	    +setName(String name) void
+    }
+    class Message {
+	    -int id
+	    -String content
+        -DateTime dateOfLastUpdate
+	    +getId() int
+	    +getContent() String
+	    +setContent(String content) void
+        +getDateOfLastUpdate() DateTime
+        +setDateOfLastUpdate(DateTime dateOfLastUpdate) void
+    }
+    class FigureGroup {
+      -int id
+      -String name
+      +getId() int
+      +getName() String
+      +setName(String name) void
+    }
+    User "1" -- "0..*" Message : Write
+    User "1" -- "0..*" Figure : Add
+    Figure "1" -- "1..*" FigureVideo : Tie
+    Figure "1" -- "1..*" FigureImage : Link
+    Figure "1..*" -- "1" FigureGroup : BelongTo
+

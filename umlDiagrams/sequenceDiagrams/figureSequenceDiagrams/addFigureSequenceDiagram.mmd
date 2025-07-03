@@ -1,0 +1,11 @@
+sequenceDiagram
+    Member->>+SnowTricks: visit the SnowTricks website
+    SnowTricks-->>-Member: display the welcome page
+    Member->>+SnowTricks: connect with his username and his password
+    SnowTricks-->>-Member: display the welcome page with the button to add a figure
+    Member->>+SnowTricks: click on the button to add a figure
+    loop (the informations aren't valid or the figure exist in database) and the form isn't submit
+    SnowTricks-->>-Member: display form to add a figure with the error(s)
+    Member->>+SnowTricks: fill the form with the informations of the new figure
+    end
+    SnowTricks --x- Member: display the page with all figures with the new figure
