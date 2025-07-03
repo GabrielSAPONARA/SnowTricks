@@ -1,0 +1,11 @@
+sequenceDiagram
+    Visitor->>+SnowTricks: visit the site
+    SnowTricks-->>-Visitor: display the welcome page with all figures
+    Visitor->>+SnowTricks: click on button to sign up
+    loop the form isn't valid and isn't submit
+    SnowTricks-->>-Visitor: display form to sign up
+    Visitor->>+SnowTricks: fill the form to subscribe
+    end
+    SnowTricks-->>-Visitor: send mail to validate account
+    Visitor->>+SnowTricks: clik on link in mail to confirm his account
+    SnowTricks-->>-Visitor: display the page with user informations and with a popup to confirm subscription

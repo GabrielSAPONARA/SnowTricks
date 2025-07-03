@@ -1,0 +1,9 @@
+sequenceDiagram
+    Member->>+SnowTricks: visit the site
+    SnowTricks-->>-Member: display the welcome page with all figures
+    Member->>+SnowTricks: click on button to sign in
+    loop the form isn't valid and isn't submit
+    SnowTricks-->>-Member: display form to sign in
+    Member->>+SnowTricks: fill the form to sign in
+    end
+    SnowTricks--x-Member: display the welcome page with the buttons to modify and delete a trick

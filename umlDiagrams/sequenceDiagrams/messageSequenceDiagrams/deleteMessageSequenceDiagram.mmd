@@ -1,0 +1,19 @@
+sequenceDiagram
+    Member->>+SnowTricks: visit the SnowTricks website
+    SnowTricks-->>-Member: display the welcome page
+    Member->>+SnowTricks: connect with his username and his password
+    SnowTricks-->>-Member: display the welcome page with the button to delete a figure
+    Member->>+SnowTricks: click on the page to see all figures
+    SnowTricks-->>-Member: display page with all figures
+    Member->>+SnowTricks: click on a figure to watch the detail about its figure
+    SnowTricks -->>- Member: display the figure
+    Member ->>+ SnowTricks : click on the button to delete a message
+    SnowTricks -->>- Member : display a popup to confirm the deletion
+    Member ->>+ SnowTricks : click on the popup
+    alt the member click on "yes"
+        SnowTricks --x Member : display the figure without the message
+    else the member click on "no"
+        SnowTricks --x- Member : display the figure with the message
+    end
+    
+    
