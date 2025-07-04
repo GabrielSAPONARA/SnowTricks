@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Figure{% endblock %}
+
+{% block body %}
+    <h1>Figure</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ figure.id }}</td>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <td>{{ figure.name }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ figure.description }}</td>
+            </tr>
+            <tr>
+                <th>Slug</th>
+                <td>{{ figure.slug }}</td>
+            </tr>
+            <tr>
+                <th>CreationDate</th>
+                <td>{{ figure.creationDate ? figure.creationDate|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>DateOfLastUpdate</th>
+                <td>{{ figure.dateOfLastUpdate ? figure.dateOfLastUpdate|date('Y-m-d') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_figure_index') }}">back to list</a>
+
+    <a href="{{ path('app_figure_edit', {'id': figure.id}) }}">edit</a>
+
+    {{ include('figure/_delete_form.html.twig') }}
+{% endblock %}
