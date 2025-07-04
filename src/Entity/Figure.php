@@ -43,14 +43,17 @@ class Figure
     #[ORM\OneToMany(targetEntity: PictureFigure::class, mappedBy: 'figure')]
     private Collection $pictureFigures;
 
-    #[ORM\ManyToOne(inversedBy: 'figures')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Group $groupe = null;
+    /**
+     * @var Collection<int, Group>
+     */
+    #[ORM\ManyToMany(targetEntity: Group::class, inversedBy: 'figures')]
+    private Collection $groupes;
 
     public function __construct()
     {
         $this->videoFigures = new ArrayCollection();
         $this->pictureFigures = new ArrayCollection();
+        $this->groupes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -178,14 +181,26 @@ class Figure
         return $this;
     }
 
-    public function getGroupe(): ?Group
+    /**
+     * @return Collection<int, Group>
+     */
+    public function getGroupes(): Collection
     {
-        return $this->groupe;
+        return $this->groupes;
     }
 
-    public function setGroupe(?Group $groupe): static
+    public function addGroupe(Group $groupe): static
     {
-        $this->groupe = $groupe;
+        if (!$this->groupes->contains($groupe)) {
+            $this->groupes->add($groupe);
+        }
+
+        return $this;
+    }
+
+    public function removeGroupe(Group $groupe): static
+    {
+        $this->groupes->removeElement($groupe);
 
         return $this;
     }
