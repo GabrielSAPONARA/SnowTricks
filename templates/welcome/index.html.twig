@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello WelcomeController!{% endblock %}
+
+{% block body %}
+    {% for figure in figures %}
+        <div>{{ figure.name }}</div>
+    {% endfor %}
+{% endblock %}
