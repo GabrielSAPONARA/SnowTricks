@@ -42,7 +42,7 @@ final class FigureController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_figure_show', methods: ['GET'])]
+    #[Route('/{slug}', name: 'app_figure_show', methods: ['GET'])]
     public function show(Figure $figure): Response
     {
         return $this->render('figure/show.html.twig', [
