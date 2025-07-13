@@ -8,9 +8,9 @@ Install Git and clone the project with :
 
 ## Install project
 
-Build container with : `docker-compose up --build` 
+Launch container with : `docker-compose up --build` 
 
-Remove container with : `docker-compose down`
+Stop container with : `docker-compose down`
 
 ##  Use Symfony commands
 
