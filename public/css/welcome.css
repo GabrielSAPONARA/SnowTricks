@@ -1,0 +1,20 @@
+header
+{
+    height: 95dvh;
+}
+
+nav
+{
+    height: 5dvh;
+}
+
+.arrow-down
+{
+    bottom: 3vh;
+    right: 1vw;
+}
+
+.catchphrase
+{
+    top: 80%;
+}

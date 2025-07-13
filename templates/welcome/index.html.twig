@@ -2,8 +2,45 @@
 
 {% block title %}Hello WelcomeController!{% endblock %}
 
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/welcome.css') }}">
+{% endblock %}
+
 {% block body %}
-    {% for figure in figures %}
-        <div>{{ figure.name }}</div>
-    {% endfor %}
+    <header class="bg-dark">
+        <img class="h-100 w-100" src="{{ asset('assets/img/snowboard_neige_figure_saut_shutterstock.jpg') }}"
+             alt="a snowboard jump figure">
+        <a href="#figures" class="position-absolute arrow-down">
+            <img src="{{ asset('assets/img/arrowDown.svg') }}" alt="an arrow down" width="50" height="50">
+        </a>
+        <p class="px-5 fs-4 fw-bold fst-italic position-absolute catchphrase">
+            "Rejoignez notre communauté de riders passionnés et partagez vos meilleures figures de snowboard. Que vous
+            soyez un pro des tricks ou un débutant en quête de conseils, trouvez l'inspiration et le
+            soutien pour dominer les pistes comme jamais !"
+        </p>
+    </header>
+    <section class="py-5" id="figures">
+        <div class="container px-5 my-5">
+            <div class="row gx-5">
+                {% for figure in figures %}
+                    <div class="col-lg-4 col-xl-3 mb-5">
+                        <div class="card h-100 shadow border-0">
+                            <img class="card-img-top" src="https://dummyimage.com/600x350/ced4da/6c757d" alt="..."/>
+                            <div class="card-body p-4 row">
+                                <a class="col-6" href="{{ path('app_figure_show', {'slug' : figure.slug}) }}">
+                                    <h5 class="card-title mb-3 fw-bold">{{ figure.name }}</h5>
+                                </a>
+                                <a class="col-2 px-0" href="{{ path('app_figure_edit', {'slug' : figure.slug}) }}">
+                                    <img class="" src="{{ asset('assets/img/pencilToEdit.svg') }}" alt="a pencil to edit a figure">
+                                </a>
+                                <a class="col-2 px-0" href="{{ path('app_figure_delete', {'slug' : figure.slug}) }}">
+                                    <img class="" src="{{ asset('assets/img/bin.svg') }}" alt="a bin to delete a figure">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
 {% endblock %}
