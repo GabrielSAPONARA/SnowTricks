@@ -36,7 +36,7 @@
 
     <a href="{{ path('app_figure_index') }}">back to list</a>
 
-    <a href="{{ path('app_figure_edit', {'id': figure.id}) }}">edit</a>
+    <a href="{{ path('app_figure_edit', {'slug': figure.slug}) }}">edit</a>
 
     {{ include('figure/_delete_form.html.twig') }}
 {% endblock %}

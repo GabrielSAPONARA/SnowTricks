@@ -50,7 +50,7 @@ final class FigureController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_figure_edit', methods: ['GET', 'POST'])]
+    #[Route('/edit/{slug}', name: 'app_figure_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Figure $figure, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(FigureForm::class, $figure);
@@ -68,7 +68,7 @@ final class FigureController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_figure_delete', methods: ['POST'])]
+    #[Route('/{slug}', name: 'app_figure_delete', methods: ['POST'])]
     public function delete(Request $request, Figure $figure, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$figure->getId(), $request->getPayload()->getString('_token'))) {
