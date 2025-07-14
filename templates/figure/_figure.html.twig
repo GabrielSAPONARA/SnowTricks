@@ -1,1 +1,19 @@
-<h3 id="title-model">{{ figure.name }}</h3>
+<h3 id="title-model" class="d-flex justify-content-center">{{ figure.name }}</h3>
+<div class="row">
+    <p class="col-10">
+        {{ figure.description }}
+    </p>
+</div>
+<div class="row">
+    <p class="col-2">
+        {{ figure.creationDate|date('Y-m-d') }}
+    </p>
+    <p class="col-2">
+        {{ figure.dateOfLastUpdate|date('Y-m-d') }}
+    </p>
+    <div class="col-4">
+        {% for group in figure.groupes %}
+            {{ group.name }}
+        {% endfor %}
+    </div>
+</div>
