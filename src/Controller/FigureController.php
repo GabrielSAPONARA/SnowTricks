@@ -7,6 +7,7 @@ use App\Form\FigureForm;
 use App\Repository\FigureRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -43,8 +44,14 @@ final class FigureController extends AbstractController
     }
 
     #[Route('/{slug}', name: 'app_figure_show', methods: ['GET'])]
-    public function show(Figure $figure): Response
+    public function show(Figure $figure, Request $request): Response
     {
+        if($request->isXmlHttpRequest())
+        {
+            return new JsonResponse([
+               'content' => $this->renderView('figure/_figure.html.twig', [ 'figure' => $figure ])
+            ]);
+        }
         return $this->render('figure/show.html.twig', [
             'figure' => $figure,
         ]);

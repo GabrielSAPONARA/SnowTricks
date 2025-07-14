@@ -92,7 +92,6 @@
 }
 
 body {
-  margin: 0;
   font-family: var(--bs-body-font-family);
   font-size: var(--bs-body-font-size);
   font-weight: var(--bs-body-font-weight);
@@ -10827,6 +10826,8 @@ textarea.form-control-lg {
 body,
 html {
   height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 .feature {

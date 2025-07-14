@@ -1,0 +1,30 @@
+header
+{
+    height: 95dvh;
+}
+
+nav
+{
+    height: 5dvh;
+}
+
+.arrow-down
+{
+    bottom: 3vh;
+    right: 1vw;
+}
+
+.catchphrase
+{
+    top: 80%;
+}
+
+#js-figure-informations
+{
+    width: 600px;
+    max-width: calc(100vw - 50px);
+    max-height: calc(100vh - 50px);
+    padding: 20px;
+    overflow: auto;
+    position: fixed;
+}

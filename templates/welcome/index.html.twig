@@ -3,7 +3,7 @@
 {% block title %}Hello WelcomeController!{% endblock %}
 
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('css/welcome.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/welcome/index.css') }}">
 {% endblock %}
 
 {% block body %}
@@ -27,15 +27,20 @@
                         <div class="card h-100 shadow border-0">
                             <img class="card-img-top" src="https://dummyimage.com/600x350/ced4da/6c757d" alt="..."/>
                             <div class="card-body p-4 row">
-                                <a class="col-8 d-flex align-items-end px-0" href="{{ path('app_figure_show', {'slug' : figure.slug}) }}">
+                                <a class="col-8 d-flex align-items-end px-0 js-figure-details"
+                                   href="#js-figure-informations">
                                     <h5 class="card-title fw-bold my-0 w-100 h-100">{{ figure.name }}</h5>
                                 </a>
                                 <div class="col-4 d-flex justify-content-between">
-                                    <a class="col-6 px-0 d-flex justify-content-end" href="{{ path('app_figure_edit', {'slug' : figure.slug}) }}">
-                                        <img class="" src="{{ asset('assets/img/pencilToEdit.svg') }}" alt="a pencil to edit a figure">
+                                    <a class="col-6 px-0 d-flex justify-content-end"
+                                       href="{{ path('app_figure_edit', {'slug' : figure.slug}) }}">
+                                        <img class="" src="{{ asset('assets/img/pencilToEdit.svg') }}"
+                                             alt="a pencil to edit a figure">
                                     </a>
-                                    <a class="col-6 px-0 d-flex justify-content-end" href="{{ path('app_figure_delete', {'slug' : figure.slug}) }}">
-                                        <img class="" src="{{ asset('assets/img/bin.svg') }}" alt="a bin to delete a figure">
+                                    <a class="col-6 px-0 d-flex justify-content-end"
+                                       href="{{ path('app_figure_delete', {'slug' : figure.slug}) }}">
+                                        <img class="" src="{{ asset('assets/img/bin.svg') }}"
+                                             alt="a bin to delete a figure">
                                     </a>
                                 </div>
                             </div>
@@ -45,4 +50,11 @@
             </div>
         </div>
     </section>
+
+    <dialog id="js-figure-informations" aria-hidden="true" role="alertdialog" aria-labelledby="title-model" style="display: none">
+    </dialog>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/welcome/index.js') }}"></script>
 {% endblock %}
