@@ -39,20 +39,23 @@ async function fetchFigure(figureSlug)
     throw new Error("Failed to fetch figure" + figureSlug);
 }
 
-const openModal = function (event, link){
+const openModal = function (event, link) {
     event.preventDefault();
-    const target =  document.querySelector(link.getAttribute("href"));
-    target.style.display = "block";
-    target.removeAttribute("aria-hidden");
-    target.setAttribute("aria-modal", "true");
-    centerModal()
-}
+    const target = document.querySelector(link.getAttribute("href"));
+    target.showModal(); // Utilisez showModal() pour ouvrir le dialog
+};
 
-function centerModal()
-{
-    const dialog = document.querySelector('dialog');
-    const windowHeight = window.innerHeight;
-    const dialogHeight = dialog.offsetHeight;
-    const topPosition = (windowHeight - dialogHeight) / 2;
-    dialog.style.top = `${topPosition}px`;
-}
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape' || event.key === 'Esc') {
+        const dialog = document.querySelector('dialog[open]');
+        if (dialog) {
+            dialog.close();
+        }
+    }
+});
+
+figureModal.addEventListener('click', function(event) {
+    if (event.target === figureModal) {
+        figureModal.close();
+    }
+});
