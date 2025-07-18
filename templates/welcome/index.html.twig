@@ -25,7 +25,12 @@
                 {% for figure in figures %}
                     <div class="col-lg-4 col-xl-3 mb-5">
                         <div class="card h-100 shadow border-0">
-                            <img class="card-img-top" src="https://dummyimage.com/600x350/ced4da/6c757d" alt="..."/>
+{#                            <img class="card-img-top" src="https://dummyimage.com/600x350/ced4da/6c757d" alt="..."/>#}
+                            {% if figure.pictureFigures|length > 0 %}
+                                <img class="h-75" src="{{ asset('uploads/figures/' ~ figure.pictureFigures[0].name) }}" alt="Image de {{ figure.name }}">
+                            {% else %}
+                                <p class="h-75">Aucune image disponible.</p>
+                            {% endif %}
                             <div class="card-body p-4 row">
                                 <a class="col-8 d-flex align-items-end px-0 js-figure-details"
                                    href="#js-figure-informations">
