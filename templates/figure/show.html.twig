@@ -31,6 +31,22 @@
                 <th>DateOfLastUpdate</th>
                 <td>{{ figure.dateOfLastUpdate ? figure.dateOfLastUpdate|date('Y-m-d') : '' }}</td>
             </tr>
+            <tr>
+                <th>Pictures</th>
+                <td>{% for picture in figure.pictureFigures %}
+                        <img src="{{ asset('uploads/figures/' ~ picture.name) }}" alt="{{ figure.name }}" />
+                    {% else %}
+                        <p>Aucune image disponible.</p>
+                    {% endfor %}</td>
+            </tr>
+            <tr>
+                <th>Videos</th>
+                <td>{% for video in figure.videoFigures %}
+                        <iframe width="600" height="350" src="{{ video.name }}">
+                    {% else %}
+                        <p>Aucune video disponible.</p>
+                    {% endfor %}</td>
+            </tr>
         </tbody>
     </table>
 

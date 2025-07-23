@@ -1,4 +1,57 @@
 {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+    {{ form_row(form.name) }}
+    {{ form_row(form.description) }}
+    {{ form_row(form.creationDate) }}
+    {{ form_row(form.dateOfLastUpdate) }}
+    {{ form_row(form.groupes) }}
+
+    {# Upload d'images #}
+<h3>Ajouter des images</h3>
+{{ form_row(form.images) }}
+
+    {# Anciennes images (edit uniquement) #}
+    {% if figure is defined and figure.pictureFigures is not empty %}
+        <h3>Images existantes</h3>
+        <div class="image-gallery">
+            {% for image in figure.pictureFigures %}
+                <div class="image-item">
+                    <img src="{{ asset('uploads/figures/' ~ image.name) }}" alt="" width="150" />
+                    <label>
+                        Supprimer
+                        <input type="checkbox" name="remove_images[]" value="{{ image.id }}">
+                    </label>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {# Ajout dynamique de vidéos #}
+<h3>Ajouter des vidéos</h3>
+<div id="video-fields" data-prototype="{{ form_widget(form.videoUrls.vars.prototype)|e('html_attr') }}">
+    {% for videoUrl in form.videoUrls %}
+        {{ form_row(videoUrl) }}
+    {% endfor %}
+</div>
+<button type="button" id="add-video-field" class="btn btn-secondary mb-3">+ Ajouter une vidéo</button>
+
+{# Anciennes vidéos (edit uniquement) #}
+    {% if figure is defined and figure.videoFigures is not empty %}
+        <h3>Vidéos existantes</h3>
+        <ul>
+            {% for video in figure.videoFigures %}
+                <li>
+                    {{ video.name }}
+                    <label>
+                        Supprimer
+                        <input type="checkbox" name="remove_videos[]" value="{{ video.id }}">
+                    </label>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+<button class="btn btn-primary">{{ button_label|default('Save') }}</button>
 {{ form_end(form) }}
+
+{# JavaScript pour ajout dynamique de vidéos #}
+<script src="{{ asset('/js/figure-form.js') }}"></script>

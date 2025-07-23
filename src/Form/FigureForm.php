@@ -8,6 +8,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Image;
@@ -41,6 +42,16 @@ class FigureForm extends AbstractType
 //                        // d’autres options disponibles si besoin
 //                    ])
 //                ],
+            ])
+            ->add('videoUrls', CollectionType::class, [
+                'entry_type' => TextType::class,
+                'entry_options' => ['label' => 'URL de la vidéo (YouTube, Dailymotion...)'],
+                'allow_add' => true,
+                'allow_delete' => true,
+                'prototype' => true,
+                'mapped' => false, // on les traite manuellement
+                'required' => false,
+                'by_reference' => false,
             ])
 
         ;
