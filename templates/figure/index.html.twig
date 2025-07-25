@@ -2,42 +2,38 @@
 
 {% block title %}Figure index{% endblock %}
 
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/figure/index.css') }}">
+{% endblock %}
+
 {% block body %}
-    <h1>Figure index</h1>
+    <section class="py-5">
+        <div class="container px-5 my-5">
+            <div class="text-center mb-5">
+                <h1 class="fw-bolder">Tricks</h1>
+                <p class="lead fw-normal text-muted mb-0">List of tricks</p>
+            </div>
+            <div class="mb-5">
+                <a class="btn btn-primary" href="{{ path('app_figure_new') }}">Create new Figure</a>
+            </div>
+            <div class="row gx-5">
+                {% for figure in figures %}
+                <div class="col-lg-6">
+                    <div class="position-relative mb-5">
+                        {% if figure.pictureFigures|length > 0 %}
+                            <img class="img-fluid rounded-3 mb-3 fixed-size" width="600"  height="400" src="{{ asset('uploads/figures/' ~ figure.pictureFigures[0].name) }}" alt="Image de {{ figure.name }}">
+                        {% else %}
+                            <p class="">Aucune image disponible.</p>
+                        {% endif %}
+{#                        <img class="img-fluid rounded-3 mb-3" src="https://dummyimage.com/600x400/343a40/6c757d" alt="..." />#}
+                        <a class="h3 fw-bolder text-decoration-none link-dark stretched-link" href="{{ path('app_figure_show', {'slug': figure.slug}) }}">{{ figure.name }}</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Slug</th>
-                <th>CreationDate</th>
-                <th>DateOfLastUpdate</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for figure in figures %}
-            <tr>
-                <td>{{ figure.id }}</td>
-                <td>{{ figure.name }}</td>
-                <td>{{ figure.description }}</td>
-                <td>{{ figure.slug }}</td>
-                <td>{{ figure.creationDate ? figure.creationDate|date('Y-m-d') : '' }}</td>
-                <td>{{ figure.dateOfLastUpdate ? figure.dateOfLastUpdate|date('Y-m-d') : '' }}</td>
-                <td>
-                    <a href="{{ path('app_figure_show', {'slug': figure.slug}) }}">show</a>
-                    <a href="{{ path('app_figure_edit', {'slug': figure.slug}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="7">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
 
-    <a href="{{ path('app_figure_new') }}">Create new</a>
+
 {% endblock %}
