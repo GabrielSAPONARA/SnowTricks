@@ -2,53 +2,86 @@
 
 {% block title %}Figure{% endblock %}
 
-{% block body %}
-    <h1>Figure</h1>
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/figure/show.css') }}">
+{% endblock %}
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ figure.id }}</td>
-            </tr>
-            <tr>
-                <th>Name</th>
-                <td>{{ figure.name }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ figure.description }}</td>
-            </tr>
-            <tr>
-                <th>Slug</th>
-                <td>{{ figure.slug }}</td>
-            </tr>
-            <tr>
-                <th>CreationDate</th>
-                <td>{{ figure.creationDate ? figure.creationDate|date('Y-m-d') : '' }}</td>
-            </tr>
-            <tr>
-                <th>DateOfLastUpdate</th>
-                <td>{{ figure.dateOfLastUpdate ? figure.dateOfLastUpdate|date('Y-m-d') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Pictures</th>
-                <td>{% for picture in figure.pictureFigures %}
-                        <img src="{{ asset('uploads/figures/' ~ picture.name) }}" alt="{{ figure.name }}" />
+{% block body %}
+
+    <section class="py-5">
+        <div class="container px-5 my-5">
+            <div class="row gx-5 justify-content-center">
+                <div class="col-lg-6">
+                    <div class="text-center mb-5">
+                        <h1 class="fw-bolder">{{ figure.name }}</h1>
+                        <p class="lead fw-normal text-muted mb-0">{{ figure.description }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row gx-5 my-5">
+                <div class="col-12">
+
+                        {% if figure is defined and figure.videoFigures is not empty %}
+                            <div class="ratio ratio-16x9 mb-4">
+                                <iframe
+                                        title="Vidéo de {{ figure.name }}"
+                                        src="{{ figure.videoFigures[0].embedUrl }}"
+                                        frameborder="0"
+                                        allowfullscreen
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share">
+                                </iframe>
+                            </div>
+    {#                        <img class="img-fluid rounded-3 mb-5 fixed-size" width="1300" height="700"#}
+    {#                             src="{{ asset('uploads/figures/' ~ figure.pictureFigures[0].name) }}"#}
+    {#                             alt="Picture of {{ figure.name }}">#}
+                        {% else %}
+                            <p class="">No video available</p>
+                        {% endif %}
+
+                </div>
+                {% if figure.videoFigures|length > 1 %}
+                    {% for video in figure.videoFigures|slice(1) %}
+                        <div class="col-lg-6 mb-4">
+                            <div class="ratio ratio-16x9">
+                                <iframe
+                                        title="Vidéo de {{ figure.name }}"
+                                        src="{{ video.embedUrl }}"
+                                        frameborder="0"
+                                        allowfullscreen
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share">
+                                </iframe>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+
+
+
+
+            <div class="row gx-5">
+                <div class="col-12">
+                    {% if figure.pictureFigures|length > 0 %}
+                        <img class="img-fluid rounded-3 mb-5 fixed-size" width="1300" height="700"
+                             src="{{ asset('uploads/figures/' ~ figure.pictureFigures[0].name) }}"
+                             alt="Picture of {{ figure.name }}">
                     {% else %}
-                        <p>Aucune image disponible.</p>
-                    {% endfor %}</td>
-            </tr>
-            <tr>
-                <th>Videos</th>
-                <td>{% for video in figure.videoFigures %}
-                        <iframe width="600" height="350" src="{{ video.name }}">
-                    {% else %}
-                        <p>Aucune video disponible.</p>
-                    {% endfor %}</td>
-            </tr>
-        </tbody>
-    </table>
+                        <p class="">No picture available</p>
+                    {% endif %}
+
+                </div>
+                {% if figure.pictureFigures|length > 1 %}
+                    {% for index in 1..figure.pictureFigures|length-1 %}
+                        <div class="col-lg-6">
+                            <img class="img-fluid rounded-3 mb-5 fixed-size2" width="600" height="400" src="{{ asset('uploads/figures/' ~ figure.pictureFigures[index].name) }}"
+                                 alt="Picture of {{ figure.name }}"/>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+    </section>
 
     <a href="{{ path('app_figure_index') }}">back to list</a>
 

@@ -101,7 +101,7 @@ final class FigureController extends AbstractController
                 }
 
                 $video = new VideoFigure();
-                $video->setName($url);
+                $video->setEmbedUrl($url);
                 $video->setFigure($figure);
                 $entityManager->persist($video);
             }
@@ -129,7 +129,10 @@ final class FigureController extends AbstractController
             ]);
         }
 
-//        dd($figure);
+//        foreach ($figure->getVideoFigures() as $videoFigure) {
+//            dump($videoFigure);
+//        }
+//        dd($figure->getVideoFigures());
         return $this->render('figure/show.html.twig', [
             'figure' => $figure,
         ]);
@@ -204,7 +207,7 @@ final class FigureController extends AbstractController
                 }
 
                 $video = new VideoFigure();
-                $video->setName($url);
+                $video->setEmbedUrl($url);
                 $video->setFigure($figure);
                 $entityManager->persist($video);
             }

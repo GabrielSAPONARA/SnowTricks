@@ -40,7 +40,7 @@
         <ul>
             {% for video in figure.videoFigures %}
                 <li>
-                    {{ video.name }}
+                    {{ video.embedUrl }}
                     <label>
                         Supprimer
                         <input type="checkbox" name="remove_videos[]" value="{{ video.id }}">
