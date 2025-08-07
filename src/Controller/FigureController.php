@@ -122,10 +122,18 @@ final class FigureController extends AbstractController
     #[Route('/{slug}', name: 'app_figure_show', methods: ['GET'])]
     public function show(Figure $figure, Request $request): Response
     {
+        $figureVideos = $figure->getVideoFigures();
+        $figurePictures = $figure->getPictureFigures();
+
         if($request->isXmlHttpRequest())
         {
             return new JsonResponse([
-               'content' => $this->renderView('figure/_figure.html.twig', [ 'figure' => $figure ])
+               'content' => $this->renderView('figure/_figure.html.twig',
+                   [
+                       'figure' => $figure,
+                       'videos' => $figureVideos,
+                       'pictures' => $figurePictures,
+                   ])
             ]);
         }
 
@@ -135,6 +143,8 @@ final class FigureController extends AbstractController
 //        dd($figure->getVideoFigures());
         return $this->render('figure/show.html.twig', [
             'figure' => $figure,
+            'videos' => $figureVideos,
+            'pictures' => $figurePictures,
         ]);
     }
 
