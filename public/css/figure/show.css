@@ -1,0 +1,20 @@
+.fixed-size
+{
+    max-height: 700px;
+    object-fit: cover;
+}
+
+.fixed-size2
+{
+    max-height: 400px;
+    object-fit: cover;
+}
+
+.ratio iframe {
+    min-height: 700px; /* ou la hauteur souhaitée */
+}
+
+.ratio-16x9 {
+    min-height: 700px;
+}
+
