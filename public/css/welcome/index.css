@@ -32,3 +32,13 @@ nav
 dialog::backdrop {
     background-color: rgba(0, 0, 0, 0.75);
 }
+
+.top-div-popup-picture
+{
+    height: fit-content;
+}
+
+.top-picture-popup
+{
+    height: 300px;
+}
