@@ -3,9 +3,16 @@
 {% block title %}New Figure{% endblock %}
 
 {% block body %}
-    <h1>Create new Figure</h1>
-
-    {{ include('figure/_form.html.twig') }}
+    <section class="py-5">
+        <div class="container px-5">
+            <div class="bg-light rounded-3 py-5 px-4 px-md-5 mb-5">
+                <div class="text-center mb-5">
+                    <h1 class="fw-bolder">Create new Figure</h1>
+                </div>
+                {{ include('figure/_form.html.twig') }}
+            </div>
+        </div>
+    </section>
 
     <a href="{{ path('app_figure_index') }}">back to list</a>
 {% endblock %}

@@ -92,9 +92,15 @@ final class FigureController extends AbstractController
             }
 
             // 📹 Gestion des URLs de vidéos (validation stricte)
-            $videoUrls = $request->request->all('videoUrls');
+            $videoUrls = $form->get('videoUrls')->getData();
 
             foreach ($videoUrls as $url) {
+                $url = trim($url);
+
+                if (empty($url)) {
+                    continue;
+                }
+
                 if (!preg_match('/(youtube\.com|youtu\.be|dailymotion\.com)/', $url)) {
                     $this->addFlash('error', 'L’URL "' . $url . '" n’est pas une URL de vidéo valide.');
                     continue;
@@ -105,6 +111,7 @@ final class FigureController extends AbstractController
                 $video->setFigure($figure);
                 $entityManager->persist($video);
             }
+
 
             $entityManager->persist($figure);
             $entityManager->flush();
@@ -209,8 +216,14 @@ final class FigureController extends AbstractController
             }
 
             // 🎬 AJOUT DE NOUVELLES VIDÉOS AVEC VALIDATION
-            $videoUrls = $form->get('videoUrls')->getData();
-            foreach ($videoUrls as $url) {
+            $videoUrlForms = $form->get('videoFigures')->getData();
+            foreach ($videoUrlForms as $videoUrlForm) {
+                $url = trim($videoUrlForm->getEmbedUrl());
+
+                if (empty($url)) {
+                    continue;
+                }
+
                 if (!preg_match('/(youtube\.com|youtu\.be|dailymotion\.com)/', $url)) {
                     $this->addFlash('error', 'L’URL "' . $url . '" n’est pas une URL de vidéo valide.');
                     continue;
@@ -221,6 +234,7 @@ final class FigureController extends AbstractController
                 $video->setFigure($figure);
                 $entityManager->persist($video);
             }
+
 
             // 🧠 SLUG
             $slug = $slugger->slug($figure->getName())->lower();

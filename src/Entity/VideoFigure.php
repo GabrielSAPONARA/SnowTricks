@@ -39,8 +39,13 @@ class VideoFigure
 
     public function getEmbedUrl(): ?string
     {
+
         if (!$this->embedUrl) {
             return null;
+        }
+
+        if (str_contains($this->embedUrl, 'youtube.com/embed')) {
+            return $this->embedUrl;
         }
 
         if (str_contains($this->embedUrl, 'youtube.com/watch')) {
@@ -55,7 +60,7 @@ class VideoFigure
             $id = basename($this->embedUrl);
             return 'https://www.dailymotion.com/embed/video/' . $id;
         }
-
+        dump($this->embedUrl);
         return null;
     }
 
