@@ -19,42 +19,56 @@
                 </div>
             </div>
             <div class="row gx-5 my-5">
-                <div class="col-12">
-
-                        {% if figure is defined and figure.videoFigures is not empty %}
-                            <div class="ratio ratio-16x9 mb-4">
-                                <iframe
-                                        title="Vidéo de {{ figure.name }}"
-                                        src="{{ figure.videoFigures[0].embedUrl }}"
-                                        frameborder="0"
-                                        allowfullscreen
-                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share">
-                                </iframe>
-                            </div>
-    {#                        <img class="img-fluid rounded-3 mb-5 fixed-size" width="1300" height="700"#}
-    {#                             src="{{ asset('uploads/figures/' ~ figure.pictureFigures[0].name) }}"#}
-    {#                             alt="Picture of {{ figure.name }}">#}
-                        {% else %}
-                            <p class="">No video available</p>
-                        {% endif %}
-
-                </div>
-                {% if figure.videoFigures|length > 1 %}
-                    {% for video in figure.videoFigures|slice(1) %}
-                        <div class="col-lg-6 mb-4">
+                {% if videos is defined and videos is not empty %}
+                    {# Première vidéo en grand format #}
+                    {% set embedUrl = videos[0].embedUrl %}
+                    {% if embedUrl %}
+                        <div class="col-12 mb-4">
                             <div class="ratio ratio-16x9">
                                 <iframe
+                                        class="w-100"
                                         title="Vidéo de {{ figure.name }}"
-                                        src="{{ video.embedUrl }}"
+                                        src="{{ embedUrl }}"
                                         frameborder="0"
                                         allowfullscreen
                                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share">
                                 </iframe>
                             </div>
                         </div>
-                    {% endfor %}
+                    {% endif %}
+
+                    {# Vidéos suivantes en 2 colonnes #}
+                    {% if videos|length > 1 %}
+                        {% for video in videos|slice(1) %}
+                            {% set embedUrl = video.embedUrl %}
+                            {% if embedUrl %}
+                                <div class="col-lg-6 mb-4">
+                                    <div class="ratio ratio-16x9">
+                                        <iframe
+                                            class="w-100"
+                                            title="Vidéo de {{ figure.name }}"
+                                            src="{{ embedUrl }}"
+                                            frameborder="0"
+                                            allowfullscreen
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share">
+                                        </iframe>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <div class="col-12 text-danger">
+                                    <p>URL non supportée : {{ video.embedUrl }}</p>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                {% else %}
+                    <div class="col-12">
+                        <p class="">No video available</p>
+                    </div>
                 {% endif %}
             </div>
+
+
 
 
 
