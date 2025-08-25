@@ -8,7 +8,8 @@ Install Git and clone the project with :
 
 ## Install project
 
-Launch container with : `docker-compose up --build` 
+Build PHP container : `docker-compose build php`
+Launch docker-compose : `docker-compose up -d`
 
 Stop container with : `docker-compose down`
 
