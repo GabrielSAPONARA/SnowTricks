@@ -60,7 +60,6 @@ class VideoFigure
             $id = basename($this->embedUrl);
             return 'https://www.dailymotion.com/embed/video/' . $id;
         }
-        dump($this->embedUrl);
         return null;
     }
 
