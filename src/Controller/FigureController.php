@@ -92,10 +92,10 @@ final class FigureController extends AbstractController
             }
 
             // 📹 Gestion des URLs de vidéos (validation stricte)
-            $videoUrls = $form->get('videoUrls')->getData();
+            $videoUrls = $form->get('videoFigures')->getData();
 
-            foreach ($videoUrls as $url) {
-                $url = trim($url);
+            foreach ($videoUrls as $videoUrl) {
+                $url = trim($videoUrl->getEmbedUrl());
 
                 if (empty($url)) {
                     continue;
@@ -258,6 +258,14 @@ final class FigureController extends AbstractController
     public function delete(Request $request, Figure $figure, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$figure->getId(), $request->getPayload()->getString('_token'))) {
+            foreach ($figure->getPictureFigures() as $picture)
+            {
+                $entityManager->remove($picture);
+            }
+            foreach ($figure->getVideoFigures() as $video)
+            {
+                $entityManager->remove($video);
+            }
             $entityManager->remove($figure);
             $entityManager->flush();
         }
