@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Validator\Constraints\Image as ImageConstraint;
@@ -39,6 +40,7 @@ final class FigureController extends AbstractController
     }
 
     #[Route('/new', name: 'app_figure_new', methods: ['GET', 'POST'])]
+    #[IsGranted('IS_AUTHENTICATED')]
     public function new(
         Request $request,
         EntityManagerInterface $entityManager,
@@ -156,6 +158,7 @@ final class FigureController extends AbstractController
     }
 
     #[Route('/edit/{slug}', name: 'app_figure_edit', methods: ['GET', 'POST'])]
+    #[IsGranted('IS_AUTHENTICATED')]
     public function edit(
         Request $request,
         Figure $figure,
@@ -255,6 +258,7 @@ final class FigureController extends AbstractController
 
 
     #[Route('/{slug}', name: 'app_figure_delete', methods: ['POST'])]
+    #[IsGranted('IS_AUTHENTICATED')]
     public function delete(Request $request, Figure $figure, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$figure->getId(), $request->getPayload()->getString('_token'))) {

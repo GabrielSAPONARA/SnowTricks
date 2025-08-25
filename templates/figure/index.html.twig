@@ -13,9 +13,11 @@
                 <h1 class="fw-bolder">Tricks</h1>
                 <p class="lead fw-normal text-muted mb-0">List of tricks</p>
             </div>
-            <div class="mb-5">
-                <a class="btn btn-primary" href="{{ path('app_figure_new') }}">Create new Figure</a>
-            </div>
+            {% if is_granted('IS_AUTHENTICATED') %}
+                <div class="mb-5">
+                    <a class="btn btn-primary" href="{{ path('app_figure_new') }}">Create new Figure</a>
+                </div>
+            {% endif %}
             <div class="row gx-5">
                 {% for figure in figures %}
                 <div class="col-lg-6">

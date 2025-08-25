@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/group')]
 final class GroupController extends AbstractController
@@ -23,6 +24,7 @@ final class GroupController extends AbstractController
     }
 
     #[Route('/new', name: 'app_group_new', methods: ['GET', 'POST'])]
+    #[IsGranted('IS_AUTHENTICATED')]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $group = new Group();
@@ -51,6 +53,7 @@ final class GroupController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_group_edit', methods: ['GET', 'POST'])]
+    #[IsGranted('IS_AUTHENTICATED')]
     public function edit(Request $request, Group $group, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(GroupForm::class, $group);
@@ -69,6 +72,7 @@ final class GroupController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_group_delete', methods: ['POST'])]
+    #[IsGranted('IS_AUTHENTICATED')]
     public function delete(Request $request, Group $group, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$group->getId(), $request->getPayload()->getString('_token'))) {

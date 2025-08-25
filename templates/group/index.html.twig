@@ -30,6 +30,7 @@
         {% endfor %}
         </tbody>
     </table>
-
-    <a href="{{ path('app_group_new') }}">Create new</a>
+    {% if is_granted('IS_AUTHENTICATED') %}
+        <a href="{{ path('app_group_new') }}">Create new</a>
+    {% endif %}
 {% endblock %}
