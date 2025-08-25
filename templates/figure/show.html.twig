@@ -94,12 +94,15 @@
                     {% endfor %}
                 {% endif %}
             </div>
+            <div class="col-1">
+                <a class="btn btn-warning mb-3" href="{{ path('app_figure_index') }}">back to list</a>
+
+                <a class="btn btn-warning mb-3" href="{{ path('app_figure_edit', {'slug': figure.slug}) }}">edit</a>
+
+                {{ include('figure/_delete_form.html.twig') }}
+            </div>
         </div>
     </section>
 
-    <a href="{{ path('app_figure_index') }}">back to list</a>
 
-    <a href="{{ path('app_figure_edit', {'slug': figure.slug}) }}">edit</a>
-
-    {{ include('figure/_delete_form.html.twig') }}
 {% endblock %}

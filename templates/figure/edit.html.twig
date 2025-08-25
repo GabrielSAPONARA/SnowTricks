@@ -16,10 +16,15 @@
                     figure: figure
                 }) }}
             </div>
+            <div class="container px-5">
+                <a class="btn btn-warning mb-3" href="{{ path('app_figure_index') }}">back to list</a>
+
+                {{ include('figure/_delete_form.html.twig') }}
+            </div>
         </div>
+
     </section>
 
-    <a href="{{ path('app_figure_index') }}">back to list</a>
 
-    {{ include('figure/_delete_form.html.twig') }}
+
 {% endblock %}
