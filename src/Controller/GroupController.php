@@ -24,7 +24,7 @@ final class GroupController extends AbstractController
     }
 
     #[Route('/new', name: 'app_group_new', methods: ['GET', 'POST'])]
-    #[IsGranted('IS_AUTHENTICATED')]
+    #[IsGranted('ROLE_VERIFIED')]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $group = new Group();
@@ -53,7 +53,7 @@ final class GroupController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_group_edit', methods: ['GET', 'POST'])]
-    #[IsGranted('IS_AUTHENTICATED')]
+    #[IsGranted('ROLE_VERIFIED')]
     public function edit(Request $request, Group $group, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(GroupForm::class, $group);
@@ -72,7 +72,7 @@ final class GroupController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_group_delete', methods: ['POST'])]
-    #[IsGranted('IS_AUTHENTICATED')]
+    #[IsGranted('ROLE_VERIFIED')]
     public function delete(Request $request, Group $group, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$group->getId(), $request->getPayload()->getString('_token'))) {
