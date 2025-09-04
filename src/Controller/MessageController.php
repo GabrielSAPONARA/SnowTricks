@@ -4,9 +4,12 @@ namespace App\Controller;
 
 use App\Entity\Message;
 use App\Form\MessageType;
+use App\Repository\FigureRepository;
 use App\Repository\MessageRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -23,7 +26,10 @@ final class MessageController extends AbstractController
     }
 
     #[Route('/new', name: 'app_message_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface
+    $entityManager, FigureRepository $figureRepository, MessageRepository
+    $messageRepository, UserRepository $userRepository):
+    Response
     {
         $message = new Message();
         $form = $this->createForm(MessageType::class, $message);
@@ -34,6 +40,31 @@ final class MessageController extends AbstractController
             $entityManager->flush();
 
             return $this->redirectToRoute('app_message_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        if($request->isXmlHttpRequest())
+        {
+            $data = json_decode($request->getContent());
+            $messageContent = $data->messageContent;
+            $figureSlug = $data->figureSlug;
+            $userId = $this->getUser()->getId();
+            $user = $userRepository->find($userId);
+            $message->setUser($user);
+            $message->setContent($messageContent);
+            $message->setFigure($figureRepository->findBySlug($figureSlug));
+            date_default_timezone_set('Europe/Paris');
+            $message->setDateOfLastUpdate(new \DateTime('now', new \DateTimeZone('Europe/Paris')));
+            $entityManager->persist($message);
+            $entityManager->flush();
+
+            $messages = $messageRepository->findByFigureId($figureRepository->findBySlug($figureSlug)->getId());
+
+            return new JsonResponse([
+                'content' => $this->renderView('figure/_messages.html.twig',
+                [
+                    "messages" => $messages,
+                ])
+            ]);
         }
 
         return $this->render('message/new.html.twig', [

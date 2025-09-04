@@ -49,3 +49,12 @@
     </div>
     {% endfor %}
 </div>
+
+<div id="messages">
+    {% include 'figure/_messages.html.twig' with {'messages' : messages } only %}
+</div>
+
+{{ form_start(formMessage) }}
+    {{ form_widget(formMessage) }}
+<button id="save-message" class="btn btn-primary">{{ button_label|default('Save') }}</button>
+{{ form_end(formMessage) }}

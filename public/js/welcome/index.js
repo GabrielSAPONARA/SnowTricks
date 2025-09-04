@@ -1,6 +1,7 @@
 let figureLinks = Array.from(document.getElementsByClassName("js-figure-details"));
 let figureModal = document.getElementById("js-figure-informations");
 
+
 figureLinks.forEach(link =>
 {
     link.addEventListener("click", async (e) =>
@@ -10,6 +11,26 @@ figureLinks.forEach(link =>
         try
         {
             figureModal.innerHTML = await fetchFigure(link.querySelector("h5").textContent)
+            let saveMessageButton = document.getElementById("save-message");
+            console.log(saveMessageButton);
+            let messages = document.getElementById("messages");
+            console.log(messages);
+
+
+            saveMessageButton.addEventListener("click", async (e) =>
+            {
+                e.preventDefault();
+                try
+                {
+                    let messageContent = document.getElementById("message_content").value;
+                    let figureSlug =link.querySelector("h5").textContent;
+                    messages.innerHTML = await fetchMessages(figureSlug, messageContent)
+                }
+                catch (error)
+                {
+                    console.error(error)
+                }
+            })
 
         }
         catch (error)
@@ -20,6 +41,31 @@ figureLinks.forEach(link =>
         openModal(e, link)
     })
 })
+
+
+
+async function fetchMessages(figureSlug, messageContent)
+{
+    let url = "http://localhost:8080/message/new";
+    const messageResponse = await  fetch(url, {
+        method: "POST",
+        headers:
+            {
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+        body: JSON.stringify(
+        {
+                messageContent : messageContent,
+                figureSlug : figureSlug,
+            })
+    });
+    if(messageResponse.status >= 200 && messageResponse.status < 300)
+    {
+        let data = await messageResponse.json();
+        return data.content;
+    }
+    throw new Error("Failed to add the new message");
+}
 
 async function fetchFigure(figureSlug)
 {

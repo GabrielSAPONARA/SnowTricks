@@ -40,4 +40,15 @@ class MessageRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+
+    public function findByFigureId(int $figureId): array
+    {
+        return $this->createQueryBuilder('message')
+            ->andWhere('figure.id = :figureId')
+            ->leftJoin('message.figure', 'figure')
+            ->setParameter('figureId', $figureId)
+            ->getQuery()
+            ->getResult();
+    }
 }

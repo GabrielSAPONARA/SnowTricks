@@ -3,10 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\Figure;
+use App\Entity\Message;
 use App\Entity\PictureFigure;
 use App\Entity\VideoFigure;
 use App\Form\FigureForm;
+use App\Form\MessageType;
 use App\Repository\FigureRepository;
+use App\Repository\MessageRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -129,19 +132,25 @@ final class FigureController extends AbstractController
     }
 
     #[Route('/{slug}', name: 'app_figure_show', methods: ['GET'])]
-    public function show(Figure $figure, Request $request): Response
+    public function show(Figure $figure, Request $request, MessageRepository $messageRepository
+    ): Response
     {
         $figureVideos = $figure->getVideoFigures();
         $figurePictures = $figure->getPictureFigures();
 
         if($request->isXmlHttpRequest())
         {
+            $message = new Message();
+            $formMessage = $this->createForm(MessageType::class, $message);
+            $messages = $messageRepository->findBy(['figure' => $figure->getId()]);
             return new JsonResponse([
                'content' => $this->renderView('figure/_figure.html.twig',
                    [
                        'figure' => $figure,
                        'videos' => $figureVideos,
                        'pictures' => $figurePictures,
+                       'formMessage' => $formMessage,
+                       'messages' => $messages,
                    ])
             ]);
         }
@@ -257,7 +266,8 @@ final class FigureController extends AbstractController
 
 
 
-    #[Route('/{slug}', name: 'app_figure_delete', methods: ['POST'])]
+    #[Route('/delete/{slug}', name: 'app_figure_delete', methods:
+['GET','POST'])]
     #[IsGranted('ROLE_VERIFIED')]
     public function delete(Request $request, Figure $figure, EntityManagerInterface $entityManager): Response
     {

@@ -40,4 +40,13 @@ class FigureRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
+    public function findBySlug(string $slug): ?Figure
+    {
+        return $this->createQueryBuilder('figure')
+            ->andWhere('figure.slug = :slug')
+            ->setParameter('slug', $slug)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }
