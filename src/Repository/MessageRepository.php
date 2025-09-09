@@ -4,7 +4,9 @@ namespace App\Repository;
 
 use App\Entity\Message;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @extends ServiceEntityRepository<Message>
@@ -42,13 +44,17 @@ class MessageRepository extends ServiceEntityRepository
     //    }
 
 
-    public function findByFigureId(int $figureId): array
+    public function findByFigureId(int $page, int $limit, int $figureId):
+    Paginator
     {
-        return $this->createQueryBuilder('message')
+        return new Paginator($this
+            ->createQueryBuilder('message')
             ->andWhere('figure.id = :figureId')
             ->leftJoin('message.figure', 'figure')
+            ->orderBy('message.dateOfLastUpdate', 'DESC')
             ->setParameter('figureId', $figureId)
-            ->getQuery()
-            ->getResult();
+            ->setFirstResult(($page - 1) * $limit)
+            ->setMaxResults($limit)
+            ->getQuery());
     }
 }

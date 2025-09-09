@@ -142,7 +142,11 @@ final class FigureController extends AbstractController
         {
             $message = new Message();
             $formMessage = $this->createForm(MessageType::class, $message);
-            $messages = $messageRepository->findBy(['figure' => $figure->getId()]);
+            $page = $request->query->getInt('page', 1);
+            $limit = 10;
+            $messages = $messageRepository->findByFigureId($page, $limit,
+                $figure->getId());
+            $maxPage = ceil($messages->count() / $limit);
             return new JsonResponse([
                'content' => $this->renderView('figure/_figure.html.twig',
                    [
@@ -151,6 +155,9 @@ final class FigureController extends AbstractController
                        'pictures' => $figurePictures,
                        'formMessage' => $formMessage,
                        'messages' => $messages,
+                       'maxPage' => $maxPage,
+                       'page' => $page,
+                       'figureSlug' => $figure->getSlug(),
                    ])
             ]);
         }
@@ -266,23 +273,20 @@ final class FigureController extends AbstractController
 
 
 
-    #[Route('/delete/{slug}', name: 'app_figure_delete', methods:
-['GET','POST'])]
+    #[Route('/delete/{slug}', name: 'app_figure_delete', methods: ['GET','POST'])]
     #[IsGranted('ROLE_VERIFIED')]
     public function delete(Request $request, Figure $figure, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$figure->getId(), $request->getPayload()->getString('_token'))) {
-            foreach ($figure->getPictureFigures() as $picture)
-            {
-                $entityManager->remove($picture);
-            }
-            foreach ($figure->getVideoFigures() as $video)
-            {
-                $entityManager->remove($video);
-            }
-            $entityManager->remove($figure);
-            $entityManager->flush();
+        foreach ($figure->getPictureFigures() as $picture)
+        {
+            $entityManager->remove($picture);
         }
+        foreach ($figure->getVideoFigures() as $video)
+        {
+            $entityManager->remove($video);
+        }
+        $entityManager->remove($figure);
+        $entityManager->flush();
 
         return $this->redirectToRoute('app_figure_index', [], Response::HTTP_SEE_OTHER);
     }

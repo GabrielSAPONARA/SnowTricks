@@ -25,6 +25,42 @@ final class MessageController extends AbstractController
         ]);
     }
 
+    #[Route('/to/one/figure/{figureSlug}',name: 'app_message_to_one_figure',
+        methods: ['GET', 'POST'])]
+    public function getMessageToOneFigure(Request $request, MessageRepository
+    $messageRepository, FigureRepository $figureRepository, string
+    $figureSlug): Response
+    {
+        if($request->isXmlHttpRequest())
+        {
+//            $data = json_decode($request->getContent());
+//            $figureSlug = $data->figureSlug;
+//            $page = intval($data->currentPage);
+            $page = $request->query->get('page');
+            $limit = 10;
+            $messages = $messageRepository->findByFigureId
+            ($page, $limit, $figureRepository->findBySlug($figureSlug)->getId
+            ());
+            $maxPage = ceil($messages->count() / $limit);
+
+            return new JsonResponse([
+                'content' => $this->renderView('figure/_messages.html.twig',
+                    [
+                        "messages"   => $messages,
+                        'figureSlug' => $figureSlug,
+                    ]),
+                'pagination' => $this->renderView('figure/_pagination.html.twig',
+                [
+                    'maxPage'    => $maxPage,
+                    'page'       => $page,
+                    'figureSlug' => $figureSlug,
+                ])
+            ]);
+        }
+
+        return $this->redirectToRoute('app_welcome');
+    }
+
     #[Route('/new', name: 'app_message_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface
     $entityManager, FigureRepository $figureRepository, MessageRepository
@@ -57,13 +93,25 @@ final class MessageController extends AbstractController
             $entityManager->persist($message);
             $entityManager->flush();
 
-            $messages = $messageRepository->findByFigureId($figureRepository->findBySlug($figureSlug)->getId());
+            $page = $request->query->getInt('page', 1);
+            $limit = 10;
+            $messages = $messageRepository->findByFigureId
+            ($page, $limit, $figureRepository->findBySlug($figureSlug)->getId
+            ());
+            $maxPage = ceil($messages->count() / $limit);
 
             return new JsonResponse([
                 'content' => $this->renderView('figure/_messages.html.twig',
                 [
                     "messages" => $messages,
-                ])
+                    'figureSlug' => $figureSlug,
+                ]),
+                'pagination' => $this->renderView('figure/_pagination.html.twig',
+                    [
+                        'maxPage'    => $maxPage,
+                        'page'       => $page,
+                        'figureSlug' => $figureSlug,
+                    ])
             ]);
         }
 

@@ -16,15 +16,6 @@ class MessageType extends AbstractType
     {
         $builder
             ->add('content')
-            ->add('dateOfLastUpdate')
-            ->add('figure', EntityType::class, [
-                'class' => Figure::class,
-                'choice_label' => 'id',
-            ])
-            ->add('user', EntityType::class, [
-                'class' => User::class,
-                'choice_label' => 'id',
-            ])
         ;
     }
 

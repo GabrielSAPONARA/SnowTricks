@@ -1,5 +1,13 @@
 {% for message in messages %}
-    <div>
-        {{ message.content }}
+    <div class="row d-flex justify-content-center my-3">
+        <div class="col-1">
+            {{ message.user.username }}
+        </div>
+        <div class="col-1">
+            {{ message.dateOfLastUpdate|date("d/m/Y H:i:s") }}
+        </div>
+        <div class="col-5" style="max-height: 20dvh; overflow: scroll;">
+            {{ message.content }}
+        </div>
     </div>
 {% endfor %}

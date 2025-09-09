@@ -15,7 +15,10 @@ figureLinks.forEach(link =>
             console.log(saveMessageButton);
             let messages = document.getElementById("messages");
             console.log(messages);
+            let figureSlug =link.querySelector("h5").textContent;
 
+            let pagination = document.getElementById("pagination");
+            console.log(pagination);
 
             saveMessageButton.addEventListener("click", async (e) =>
             {
@@ -23,13 +26,29 @@ figureLinks.forEach(link =>
                 try
                 {
                     let messageContent = document.getElementById("message_content").value;
-                    let figureSlug =link.querySelector("h5").textContent;
-                    messages.innerHTML = await fetchMessages(figureSlug, messageContent)
+
+                    let data = await fetchMessages(figureSlug, messageContent)
+                    messages.innerHTML = data.content;
+                    pagination.innerHTML = data.pagination;
                 }
                 catch (error)
                 {
                     console.error(error)
                 }
+            })
+
+            pagination.addEventListener("click", async (e) =>
+            {
+                if(e.target.tagName === 'A')
+                {
+                    e.preventDefault();
+                    let url = e.target.href;
+                    let currentPage = pagination.querySelector("#currentPage").innerText;
+                    let data = await fecthMessagesAndPagination(url);
+                    messages.innerHTML = data.content;
+                    pagination.innerHTML = data.pagination;
+                }
+
             })
 
         }
@@ -42,7 +61,27 @@ figureLinks.forEach(link =>
     })
 })
 
-
+async function fecthMessagesAndPagination(url)
+{
+    // let url = "http://localhost:8080/message/to/one/figure/" + figureSlug + "?page";
+    const response = await fetch(url,
+        {
+            method: "POST",
+            headers:
+                {
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+            body: JSON.stringify(
+                {
+                    // figureSlug: figureSlug,
+                    // currentPage: currentPage,
+                })
+        })
+    if(response.status >= 200 && response.status < 300)
+    {
+        return await response.json();
+    }
+}
 
 async function fetchMessages(figureSlug, messageContent)
 {
@@ -61,8 +100,7 @@ async function fetchMessages(figureSlug, messageContent)
     });
     if(messageResponse.status >= 200 && messageResponse.status < 300)
     {
-        let data = await messageResponse.json();
-        return data.content;
+        return  await messageResponse.json();
     }
     throw new Error("Failed to add the new message");
 }
@@ -70,7 +108,6 @@ async function fetchMessages(figureSlug, messageContent)
 async function fetchFigure(figureSlug)
 {
     let url = "http://localhost:8080/figure/" + figureSlug
-    console.log(url)
     const figureResponse = await fetch(url,{
         headers: {
                 'X-Requested-With': 'XMLHttpRequest',
