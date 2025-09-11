@@ -35,8 +35,6 @@ class FigureForm extends AbstractType
                     "placeholder" => "Description"
                 ]
             ])
-            ->add('creationDate')
-            ->add('dateOfLastUpdate')
             ->add('groupes', EntityType::class, [
                 'class' => Group::class,
                 'choice_label' => 'name',

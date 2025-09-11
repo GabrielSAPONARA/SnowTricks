@@ -52,6 +52,10 @@ class VideoFigure
             return str_replace('watch?v=', 'embed/', $this->embedUrl);
         }
 
+        if (str_contains($this->embedUrl, 'youtube.com/shorts')) {
+            return str_replace('shorts', 'embed', $this->embedUrl);
+        }
+
         if (str_contains($this->embedUrl, 'youtu.be/')) {
             return str_replace('youtu.be/', 'www.youtube.com/embed/', $this->embedUrl);
         }

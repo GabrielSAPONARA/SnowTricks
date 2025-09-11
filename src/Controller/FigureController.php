@@ -117,13 +117,16 @@ final class FigureController extends AbstractController
                 $entityManager->persist($video);
             }
 
+            $figure->setCreationDate(new \DateTime('now', new \DateTimeZone('Europe/Paris')));
+            $figure->setDateOfLastUpdate(new \DateTime('now', new
+            \DateTimeZone('Europe/Paris')));
 
             $entityManager->persist($figure);
             $entityManager->flush();
 
             $this->addFlash('success', 'La figure a bien été créée.');
 
-            return $this->redirectToRoute('app_figure_index');
+            return $this->redirectToRoute('app_figure_show', ['slug' => $figure->getSlug()]);
         }
 
         return $this->render('figure/new.html.twig', [
@@ -258,11 +261,13 @@ final class FigureController extends AbstractController
             // 🧠 SLUG
             $slug = $slugger->slug($figure->getName())->lower();
             $figure->setSlug($slug);
+            $figure->setDateOfLastUpdate(new \DateTime('now', new
+            \DateTimeZone('Europe/Paris')));
 
             $entityManager->flush();
 
             $this->addFlash('success', 'Figure mise à jour avec succès.');
-            return $this->redirectToRoute('app_figure_index');
+            return $this->redirectToRoute('app_figure_show', ['slug' => $figure->getSlug()]);
         }
 
         return $this->render('figure/edit.html.twig', [
