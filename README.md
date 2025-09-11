@@ -16,3 +16,7 @@ Stop container with : `docker-compose down`
 ##  Use Symfony commands
 
  Run `docker exec -it symfony_php bash` to launch bash and Symfony commands.
+ 
+## Improvements
+
+1. Replace Types::DATE_MUTABLE by Types::DATETIME_MUTABLE if it's necessary.
