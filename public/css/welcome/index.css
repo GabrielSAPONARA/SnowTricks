@@ -42,3 +42,11 @@ dialog::backdrop {
 {
     height: 300px;
 }
+
+#messages
+{
+    min-height: 50vh;
+    max-height: 50vh;
+    overflow-y: scroll;
+    width: 90%;
+}
