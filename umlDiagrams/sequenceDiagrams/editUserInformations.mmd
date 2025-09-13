@@ -1,0 +1,17 @@
+sequenceDiagram
+  participant Member as Member
+  participant SnowTricks as SnowTricks
+
+  Member ->> SnowTricks: Visit the site
+  SnowTricks -->> Member: Display welcome page
+  Member ->> SnowTricks: Click on icon to see his profile
+  SnowTricks -->> Member: Display the page with the user's informations
+  Member ->> SnowTricks: Click to edit his profile
+  loop the form isn't valid and the form isn't submit
+    SnowTricks -->> Member: Display the form to edit user's informations with errors
+    Member ->> SnowTricks: fill the form with his new informations
+
+  end
+  SnowTricks --x Member: Display the user's profile
+
+
