@@ -35,10 +35,18 @@ final class FigureController extends AbstractController
     }
 
     #[Route(name: 'app_figure_index', methods: ['GET'])]
-    public function index(FigureRepository $figureRepository): Response
+    public function index(FigureRepository $figureRepository, Request $request):
+    Response
     {
+        $page = $request->query->getInt('page', 1);
+        $limit = 2;
+        $figures = $figureRepository->paginateFigures($page, $limit);
+        $maxPage = ceil(count($figures) / 2);
+
         return $this->render('figure/index.html.twig', [
-            'figures' => $figureRepository->findAll(),
+            'figures' => $figures,
+            'maxPage' => $maxPage,
+            'page' => $page,
         ]);
     }
 
