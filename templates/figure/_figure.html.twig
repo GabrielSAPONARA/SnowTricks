@@ -7,6 +7,18 @@
                  alt="Picture of {{ figure.name }}">
         </div>
     {% endif %}
+    <div class="col-2 d-flex position-absolute symbols">
+        <a class="container px-0"
+           href="{{ path('app_figure_edit', {'slug' : figure.slug}) }}">
+            <img class="col-12" src="{{ asset('assets/img/pencilToEdit.svg') }}"
+                 alt="a pencil to edit a figure">
+        </a>
+        <a class="container px-0"
+           href="{{ path('app_figure_delete', {'slug' : figure.slug}) }}">
+            <img class="col-12" src="{{ asset('assets/img/bin.svg') }}"
+                 alt="a bin to delete a figure">
+        </a>
+    </div>
 </div>
 <div class="container-fluid">
     <div class="row flex-nowrap overflow-scroll">
