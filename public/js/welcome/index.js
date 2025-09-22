@@ -1,3 +1,7 @@
+import Filter from "../Filter.js";
+
+new Filter(document.querySelector(".js-ajax"));
+
 let figureLinks = Array.from(document.getElementsByClassName("js-figure-details"));
 let figureModal = document.getElementById("js-figure-informations");
 

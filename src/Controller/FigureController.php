@@ -43,6 +43,23 @@ final class FigureController extends AbstractController
         $figures = $figureRepository->paginateFigures($page, $limit);
         $maxPage = ceil(count($figures) / 2);
 
+        if($request->get('ajax'))
+        {
+            return new JsonResponse([
+                'content' => $this->renderView('figure/_figures.html.twig',
+                    [
+                        'figures' => $figures,
+                    ]),
+                'pagination' => $this->renderView('figure/_pagination_figures.html.twig',
+                    [
+                        'figures' => $figures,
+                        'maxPage' => $maxPage,
+                        'page' => $page,
+                    ]),
+                'pages' => $maxPage,
+            ]);
+        }
+
         return $this->render('figure/index.html.twig', [
             'figures' => $figures,
             'maxPage' => $maxPage,
