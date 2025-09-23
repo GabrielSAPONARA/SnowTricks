@@ -37,18 +37,18 @@ figureLinks.forEach(link =>
             })
 
             new FilterMessage(document.querySelector(".js-figure-informations"));
-            // pagination.addEventListener("click", async (e) =>
-            // {
-            //     if(e.target.tagName === 'A')
-            //     {
-            //         e.preventDefault();
-            //         let url = e.target.href;
-            //         let currentPage = pagination.querySelector("#currentPage").innerText;
-            //         let data = await fecthMessagesAndPagination(url);
-            //         messages.innerHTML = data.content;
-            //         pagination.innerHTML = data.pagination;
-            //     }
-            // })
+            pagination.addEventListener("click", async (e) =>
+            {
+                if(e.target.tagName === 'A')
+                {
+                    e.preventDefault();
+                    let url = e.target.href;
+                    let currentPage = pagination.querySelector("#currentPage").innerText;
+                    let data = await fecthMessagesAndPagination(url);
+                    messages.innerHTML = data.content;
+                    pagination.innerHTML = data.pagination;
+                }
+            })
         }
         catch (error)
         {
@@ -58,26 +58,26 @@ figureLinks.forEach(link =>
     })
 })
 
-// async function fecthMessagesAndPagination(url)
-// {
-//     const response = await fetch(url,
-//         {
-//             method: "POST",
-//             headers:
-//                 {
-//                     'X-Requested-With': 'XMLHttpRequest',
-//                 },
-//             body: JSON.stringify(
-//                 {
-//                     // figureSlug: figureSlug,
-//                     // currentPage: currentPage,
-//                 })
-//         })
-//     if(response.status >= 200 && response.status < 300)
-//     {
-//         return await response.json();
-//     }
-// }
+async function fecthMessagesAndPagination(url)
+{
+    const response = await fetch(url,
+        {
+            method: "POST",
+            headers:
+                {
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+            body: JSON.stringify(
+                {
+                    // figureSlug: figureSlug,
+                    // currentPage: currentPage,
+                })
+        })
+    if(response.status >= 200 && response.status < 300)
+    {
+        return await response.json();
+    }
+}
 
 async function fetchMessages(figureSlug, messageContent)
 {
