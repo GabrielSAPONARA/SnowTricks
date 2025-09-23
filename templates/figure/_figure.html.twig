@@ -77,12 +77,13 @@
     <div class="border border-dark col-6"></div>
 </div>
 
+<a class="js-message-page d-none" href="{{ path('app_message_to_one_figure', {'figureSlug' : figure.slug}) }}"></a>
 
-<div class="container" id="messages">
+<div class="container js-figure-messages" id="messages">
     {% include 'figure/_messages.html.twig' with {'messages' : messages} only %}
 </div>
 
-<div id="pagination">
+<div id="pagination" class="js-message-pagination d-flex justify-content-center my-3">
     {% include 'figure/_pagination.html.twig' with {'page' : page, 'maxPage' : maxPage, 'figureSlug': figureSlug} only %}
 </div>
 

@@ -30,11 +30,13 @@
         </div>
     </section>
 
-    <dialog id="js-figure-informations" class="container-fluid w-75 border-1 rounded-3 p-0" aria-hidden="true" role="alertdialog" aria-labelledby="title-model">
+    <dialog class="container-fluid w-75 border-1 rounded-3 p-0 js-figure-informations" aria-hidden="true" role="alertdialog" aria-labelledby="title-model">
+
     </dialog>
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
     <script type="module" src="{{ asset('js/welcome/index.js') }}"></script>
     <script type="module" src="{{ asset('js/Filter.js') }}"></script>
+    <script type="module" src="{{ asset('js/welcome/FilterMessage.js') }}"></script>
 {% endblock %}

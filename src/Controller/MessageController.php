@@ -54,7 +54,8 @@ final class MessageController extends AbstractController
                     'maxPage'    => $maxPage,
                     'page'       => $page,
                     'figureSlug' => $figureSlug,
-                ])
+                ]),
+                'pages' => $maxPage,
             ]);
         }
 
@@ -157,4 +158,6 @@ final class MessageController extends AbstractController
 
         return $this->redirectToRoute('app_message_index', [], Response::HTTP_SEE_OTHER);
     }
+
+
 }

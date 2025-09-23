@@ -1,36 +1,31 @@
 import Filter from "../Filter.js";
+import FilterMessage from "./FilterMessage.js";
 
 new Filter(document.querySelector(".js-ajax"));
 
-let figureLinks = Array.from(document.getElementsByClassName("js-figure-details"));
-let figureModal = document.getElementById("js-figure-informations");
 
+
+let figureLinks = Array.from(document.getElementsByClassName("js-figure-details"));
+let figureModal = document.querySelector(".js-figure-informations");
 
 figureLinks.forEach(link =>
 {
     link.addEventListener("click", async (e) =>
     {
         e.preventDefault();
-        console.log(link.querySelector("h5").textContent)
         try
         {
             figureModal.innerHTML = await fetchFigure(link.querySelector("h5").textContent)
             let saveMessageButton = document.getElementById("save-message");
-            console.log(saveMessageButton);
             let messages = document.getElementById("messages");
-            console.log(messages);
             let figureSlug =link.querySelector("h5").textContent;
-
             let pagination = document.getElementById("pagination");
-            console.log(pagination);
-
             saveMessageButton.addEventListener("click", async (e) =>
             {
                 e.preventDefault();
                 try
                 {
                     let messageContent = document.getElementById("message_content").value;
-
                     let data = await fetchMessages(figureSlug, messageContent)
                     messages.innerHTML = data.content;
                     pagination.innerHTML = data.pagination;
@@ -41,51 +36,48 @@ figureLinks.forEach(link =>
                 }
             })
 
-            pagination.addEventListener("click", async (e) =>
-            {
-                if(e.target.tagName === 'A')
-                {
-                    e.preventDefault();
-                    let url = e.target.href;
-                    let currentPage = pagination.querySelector("#currentPage").innerText;
-                    let data = await fecthMessagesAndPagination(url);
-                    messages.innerHTML = data.content;
-                    pagination.innerHTML = data.pagination;
-                }
-
-            })
-
+            new FilterMessage(document.querySelector(".js-figure-informations"));
+            // pagination.addEventListener("click", async (e) =>
+            // {
+            //     if(e.target.tagName === 'A')
+            //     {
+            //         e.preventDefault();
+            //         let url = e.target.href;
+            //         let currentPage = pagination.querySelector("#currentPage").innerText;
+            //         let data = await fecthMessagesAndPagination(url);
+            //         messages.innerHTML = data.content;
+            //         pagination.innerHTML = data.pagination;
+            //     }
+            // })
         }
         catch (error)
         {
             console.log(error)
         }
-        console.log(link)
         openModal(e, link)
     })
 })
 
-async function fecthMessagesAndPagination(url)
-{
-    // let url = "http://localhost:8080/message/to/one/figure/" + figureSlug + "?page";
-    const response = await fetch(url,
-        {
-            method: "POST",
-            headers:
-                {
-                    'X-Requested-With': 'XMLHttpRequest',
-                },
-            body: JSON.stringify(
-                {
-                    // figureSlug: figureSlug,
-                    // currentPage: currentPage,
-                })
-        })
-    if(response.status >= 200 && response.status < 300)
-    {
-        return await response.json();
-    }
-}
+// async function fecthMessagesAndPagination(url)
+// {
+//     const response = await fetch(url,
+//         {
+//             method: "POST",
+//             headers:
+//                 {
+//                     'X-Requested-With': 'XMLHttpRequest',
+//                 },
+//             body: JSON.stringify(
+//                 {
+//                     // figureSlug: figureSlug,
+//                     // currentPage: currentPage,
+//                 })
+//         })
+//     if(response.status >= 200 && response.status < 300)
+//     {
+//         return await response.json();
+//     }
+// }
 
 async function fetchMessages(figureSlug, messageContent)
 {
