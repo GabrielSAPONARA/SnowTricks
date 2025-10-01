@@ -36,6 +36,8 @@ services:
       MYSQL_ROOT_PASSWORD: root
     volumes:
       - mysql_data:/var/lib/mysql
+      - ./docker/mysql/ssl:/etc/mysql/ssl
+    command: --ssl-ca=/etc/mysql/ssl/ca.pem --ssl-cert=/etc/mysql/ssl/server-cert.pem --ssl-key=/etc/mysql/ssl/server-key.pem
     ports:
       - "3307:3306"
 
