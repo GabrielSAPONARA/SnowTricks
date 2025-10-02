@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Picture Figure{% endblock %}
+
+{% block body %}
+    <section class="py-5">
+        <div class="container px-5">
+            <div class="bg-light rounded-3 py-5 px-4 px-md-5 mb-5">
+                <div class="text-center mb-5">
+                    <h1>Edit Picture Figure</h1>
+                </div>
+                {{ include('picture_figure/_form.html.twig', {'button_label': 'Update'}) }}
+            </div>
+        </div>
+    </section>
+{% endblock %}

@@ -1,0 +1,14 @@
+<div class="row gx-5 justify-content-center">
+    <div class="col-lg-8 col-xl-6">
+        {{ form_start(form) }}
+        <div class="form-floating mb-3">
+            {{ form_widget(form.image) }}
+            {{ form_label(form.image) }}
+            <div class="invalid-feedback">
+                {{ form_errors(form.image) }}
+            </div>
+        </div>
+        <button class="btn btn-primary">{{ button_label|default('Save') }}</button>
+        {{ form_end(form) }}
+    </div>
+</div>
