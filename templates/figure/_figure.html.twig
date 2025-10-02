@@ -5,8 +5,9 @@
             <img class="img-fluid mb-5 fixed-size px-0 w-100 top-picture-popup"
                  src="{{ asset('uploads/figures/' ~ pictures[0].name) }}"
                  alt="Picture of {{ figure.name }}">
-            <a class="btn btn-warning" href="{{ path('app_picture_figure_edit', {id : pictures[0].id}) }}">Edit this picture</a>
+
         </div>
+        <a class="btn btn-warning position-absolute w-25 symbols" href="{{ path('app_picture_figure_edit', {id : pictures[0].id}) }}">Edit this picture</a>
     {% endif %}
     <div class="col-2 d-flex position-absolute symbols">
         <a class="container px-0"
@@ -25,9 +26,12 @@
     <div class="row flex-nowrap overflow-scroll">
         {% if pictures|length > 1 %}
             {% for picture in pictures %}
-                <img class="img-fluid rounded-3 mb-5 fixed-size col-3"
-                     src="{{ asset('uploads/figures/' ~ picture.name) }}"
-                     alt="Picture of {{ figure.name }}">
+                <div class="col-3">
+                    <img class="img-fluid rounded-3 mb-5 fixed-size "
+                         src="{{ asset('uploads/figures/' ~ picture.name) }}"
+                         alt="Picture of {{ figure.name }}">
+                    <a class="btn btn-warning" href="{{ path('app_picture_figure_edit', {id : picture.id}) }}">Edit this picture</a>
+                </div>
             {% endfor %}
         {% endif %}
         {% if videos|length > 0 %}
