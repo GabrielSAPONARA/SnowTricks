@@ -1,0 +1,76 @@
+header
+{
+    height: 95dvh;
+}
+
+nav
+{
+    height: 5dvh;
+}
+
+.arrow-down
+{
+    bottom: 3vh;
+    right: 1vw;
+}
+
+.catchphrase
+{
+    top: 80%;
+}
+
+#js-figure-informations
+{
+    width: 600px;
+    max-width: calc(100vw - 50px);
+    max-height: calc(100vh - 50px);
+    padding: 20px;
+    overflow: auto;
+    position: fixed;
+}
+
+dialog::backdrop {
+    background-color: rgba(0, 0, 0, 0.75);
+}
+
+.top-div-popup-picture
+{
+    height: fit-content;
+}
+
+.top-picture-popup
+{
+    height: 300px;
+}
+
+#messages
+{
+    min-height: 50dvh;
+    max-height: 50dvh;
+    overflow-y: scroll;
+    width: 90%;
+}
+.card
+{
+    min-height: 35dvh;
+    max-height: 35dvh;
+}
+.card-symbols
+{
+    min-height: 35px;
+    max-height: 35px;
+    column-gap: 10px;
+}
+.symbols
+{
+    min-height: 5dvh;
+    top: 1%;
+    right: 1%;
+    border: 2px solid black;
+    background-color: white;
+}
+.symbols>a
+{
+    width: 50px;
+    height: 50px;
+}

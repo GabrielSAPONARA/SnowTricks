@@ -1,0 +1,11 @@
+.fixed-size
+{
+    max-height: 400px;
+    object-fit: cover;
+}
+
+.description
+{
+    max-height: 10dvh;
+    overflow: scroll;
+}

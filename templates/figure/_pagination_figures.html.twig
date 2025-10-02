@@ -1,0 +1,9 @@
+{% if page > 1 %}
+    <a href="{{ path("app_figure_index", {page : page - 1}) }}" class="btn btn-secondary">Previous Page</a>
+{% endif %}
+<div class="mx-3">
+    {{ page }}
+</div>
+{% if page < maxPage %}
+    <a href="{{ path("app_figure_index", {page : page + 1}) }}" class="btn btn-secondary">Next Page</a>
+{% endif %}

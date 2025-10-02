@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello WelcomeController!{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/welcome/index.css') }}">
+{% endblock %}
+
+{% block body %}
+    <header class="bg-dark">
+        <img class="h-100 w-100" src="{{ asset('assets/img/snowboard_neige_figure_saut_shutterstock.jpg') }}"
+             alt="a snowboard jump figure">
+        <a href="#figures" class="position-absolute arrow-down">
+            <img src="{{ asset('assets/img/arrowDown.svg') }}" alt="an arrow down" width="50" height="50">
+        </a>
+        <p class="px-5 fs-4 fw-bold fst-italic position-absolute catchphrase">
+            "Rejoignez notre communauté de riders passionnés et partagez vos meilleures figures de snowboard. Que vous
+            soyez un pro des tricks ou un débutant en quête de conseils, trouvez l'inspiration et le
+            soutien pour dominer les pistes comme jamais !"
+        </p>
+    </header>
+    <section class="py-5" id="figures">
+        <div class="container px-5 my-5 js-ajax">
+            <div class="row gx-5 js-content">
+                {% include 'welcome/_figures.html.twig' %}
+            </div>
+            <div class="d-flex align-items-center js-pagination">
+                {% include 'welcome/_pagination.html.twig' with {'page' : page, 'maxPage' : maxPage} only %}
+            </div>
+        </div>
+    </section>
+
+    <dialog class="container-fluid w-75 border-1 rounded-3 p-0 js-figure-informations" aria-hidden="true" role="alertdialog" aria-labelledby="title-model">
+
+    </dialog>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="module" src="{{ asset('js/welcome/index.js') }}"></script>
+    <script type="module" src="{{ asset('js/Filter.js') }}"></script>
+    <script type="module" src="{{ asset('js/welcome/FilterMessage.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Figure index{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/figure/index.css') }}">
+{% endblock %}
+
+{% block body %}
+    <section class="py-5">
+        <div class="container px-5 my-5 js-ajax">
+            <div class="text-center mb-5">
+                <h1 class="fw-bolder">Tricks</h1>
+                <p class="lead fw-normal text-muted mb-0">List of tricks</p>
+            </div>
+            {% if is_granted('IS_AUTHENTICATED') %}
+                <div class="mb-5">
+                    <a class="btn btn-primary" href="{{ path('app_figure_new') }}">Create new Figure</a>
+                </div>
+            {% endif %}
+            <div class="row gx-5 js-content">
+                {% include 'figure/_figures.html.twig' %}
+            </div>
+            <div class="d-flex align-items-center js-pagination">
+                {% include 'figure/_pagination_figures.html.twig' with {'page' : page, 'maxPage' : maxPage} only %}
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="module" src="{{ asset('js/figure/index.js') }}"></script>
+    <script type="module" src="{{ asset('js/Filter.js') }}"></script>
+{% endblock %}

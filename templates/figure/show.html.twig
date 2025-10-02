@@ -1,0 +1,109 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Figure{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/figure/show.css') }}">
+{% endblock %}
+
+{% block body %}
+
+    <section class="py-5">
+        <div class="container px-5 my-5">
+            <div class="row gx-5 justify-content-center">
+                <div class="col-lg-6">
+                    <div class="text-center mb-5">
+                        <h1 class="fw-bolder">{{ figure.name }}</h1>
+                        <p class="lead fw-normal text-muted mb-0">{{ figure.description }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row gx-5 my-5">
+                {% if videos is defined and videos is not empty %}
+                    {# Première vidéo en grand format #}
+                    {% set embedUrl = videos[0].embedUrl %}
+                    {% if embedUrl %}
+                        <div class="col-12 mb-4">
+                            <div class="ratio ratio-16x9">
+                                <iframe
+                                        class="w-100"
+                                        title="Vidéo de {{ figure.name }}"
+                                        src="{{ embedUrl }}"
+                                        frameborder="0"
+                                        allowfullscreen
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share">
+                                </iframe>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    {# Vidéos suivantes en 2 colonnes #}
+                    {% if videos|length > 1 %}
+                        {% for video in videos|slice(1) %}
+                            {% set embedUrl = video.embedUrl %}
+                            {% if embedUrl %}
+                                <div class="col-lg-6 mb-4">
+                                    <div class="ratio ratio-16x9">
+                                        <iframe
+                                            class="w-100"
+                                            title="Vidéo de {{ figure.name }}"
+                                            src="{{ embedUrl }}"
+                                            frameborder="0"
+                                            allowfullscreen
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share">
+                                        </iframe>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <div class="col-12 text-danger">
+                                    <p>URL non supportée : {{ video.embedUrl }}</p>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                {% else %}
+                    <div class="col-12">
+                        <p class="">No video available</p>
+                    </div>
+                {% endif %}
+            </div>
+
+
+
+
+
+
+
+            <div class="row gx-5">
+                <div class="col-12">
+                    {% if figure.pictureFigures|length > 0 %}
+                        <img class="img-fluid rounded-3 mb-5 fixed-size" width="1300" height="700"
+                             src="{{ asset('uploads/figures/' ~ figure.pictureFigures[0].name) }}"
+                             alt="Picture of {{ figure.name }}">
+                    {% else %}
+                        <p class="">No picture available</p>
+                    {% endif %}
+
+                </div>
+                {% if figure.pictureFigures|length > 1 %}
+                    {% for index in 1..figure.pictureFigures|length-1 %}
+                        <div class="col-lg-6">
+                            <img class="img-fluid rounded-3 mb-5 fixed-size2" width="600" height="400" src="{{ asset('uploads/figures/' ~ figure.pictureFigures[index].name) }}"
+                                 alt="Picture of {{ figure.name }}"/>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div class="col-1">
+                <a class="btn btn-warning mb-3" href="{{ path('app_figure_index') }}">back to list</a>
+                {% if is_granted('IS_AUTHENTICATED') %}
+                    <a class="btn btn-warning mb-3" href="{{ path('app_figure_edit', {'slug': figure.slug}) }}">edit</a>
+
+                    {{ include('figure/_delete_form.html.twig') }}
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Figure{% endblock %}
+
+{% block body %}
+
+    <section class="py-5">
+        <div class="container px-5">
+            <div class="bg-light rounded-3 py-5 px-4 px-md-5 mb-5">
+                <div class="text-center mb-5">
+                    <h1 class="fw-bolder">Edit Figure</h1>
+                </div>
+                {{ include('figure/_form.html.twig', {
+                    form: form,
+                    button_label: 'Update',
+                    figure: figure
+                }) }}
+            </div>
+            <div class="container px-5">
+                <a class="btn btn-warning mb-3" href="{{ path('app_figure_index') }}">back to list</a>
+
+                {{ include('figure/_delete_form.html.twig') }}
+            </div>
+        </div>
+
+    </section>
+
+
+
+{% endblock %}

@@ -1,0 +1,11 @@
+<div class="d-flex justify-content-center">
+    {% if page > 1 %}
+        <a class="btn btn-secondary" id="previousPage" href="{{ path('app_message_to_one_figure', {page : page - 1, 'figureSlug' : figureSlug}) }}">Previous page</a>
+    {% endif %}
+    <div class="mx-3" id="currentPage">
+        {{ page }}
+    </div>
+    {% if page < maxPage %}
+        <a class="btn btn-secondary" href="{{ path('app_message_to_one_figure', {page : page + 1, 'figureSlug' : figureSlug}) }}">Next page</a>
+    {% endif %}
+</div>
