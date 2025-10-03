@@ -4,7 +4,6 @@ import FilterMessage from "./FilterMessage.js";
 new Filter(document.querySelector(".js-ajax"));
 
 
-
 let figureLinks = Array.from(document.getElementsByClassName("js-figure-details"));
 let figureModal = document.querySelector(".js-figure-informations");
 
@@ -18,7 +17,7 @@ figureLinks.forEach(link =>
             figureModal.innerHTML = await fetchFigure(link.querySelector("h5").textContent)
             let saveMessageButton = document.getElementById("save-message");
             let messages = document.getElementById("messages");
-            let figureSlug =link.querySelector("h5").textContent;
+            let figureSlug = link.querySelector("h5").textContent;
             let pagination = document.getElementById("pagination");
             saveMessageButton.addEventListener("click", async (e) =>
             {
@@ -39,7 +38,7 @@ figureLinks.forEach(link =>
             new FilterMessage(document.querySelector(".js-figure-informations"));
             pagination.addEventListener("click", async (e) =>
             {
-                if(e.target.tagName === 'A')
+                if (e.target.tagName === 'A')
                 {
                     e.preventDefault();
                     let url = e.target.href;
@@ -60,20 +59,15 @@ figureLinks.forEach(link =>
 
 async function fecthMessagesAndPagination(url)
 {
-    const response = await fetch(url,
-        {
-            method: "POST",
-            headers:
-                {
-                    'X-Requested-With': 'XMLHttpRequest',
-                },
-            body: JSON.stringify(
-                {
-                    // figureSlug: figureSlug,
-                    // currentPage: currentPage,
-                })
+    const response = await fetch(url, {
+        method: "POST", headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+        }, body: JSON.stringify({
+            // figureSlug: figureSlug,
+            // currentPage: currentPage,
         })
-    if(response.status >= 200 && response.status < 300)
+    })
+    if (response.status >= 200 && response.status < 300)
     {
         return await response.json();
     }
@@ -82,21 +76,16 @@ async function fecthMessagesAndPagination(url)
 async function fetchMessages(figureSlug, messageContent)
 {
     let url = "http://localhost:8080/message/new";
-    const messageResponse = await  fetch(url, {
-        method: "POST",
-        headers:
-            {
-                'X-Requested-With': 'XMLHttpRequest',
-            },
-        body: JSON.stringify(
-        {
-                messageContent : messageContent,
-                figureSlug : figureSlug,
-            })
+    const messageResponse = await fetch(url, {
+        method: "POST", headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+        }, body: JSON.stringify({
+            messageContent: messageContent, figureSlug: figureSlug,
+        })
     });
-    if(messageResponse.status >= 200 && messageResponse.status < 300)
+    if (messageResponse.status >= 200 && messageResponse.status < 300)
     {
-        return  await messageResponse.json();
+        return await messageResponse.json();
     }
     throw new Error("Failed to add the new message");
 }
@@ -104,11 +93,11 @@ async function fetchMessages(figureSlug, messageContent)
 async function fetchFigure(figureSlug)
 {
     let url = "http://localhost:8080/figure/" + figureSlug
-    const figureResponse = await fetch(url,{
+    const figureResponse = await fetch(url, {
         headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-            }
-        });
+            'X-Requested-With': 'XMLHttpRequest',
+        }
+    });
     if (figureResponse.status >= 200 && figureResponse.status < 300)
     {
         let data = await figureResponse.json()
@@ -118,23 +107,30 @@ async function fetchFigure(figureSlug)
     throw new Error("Failed to fetch figure" + figureSlug);
 }
 
-const openModal = function (event, link) {
+const openModal = function (event, link)
+{
     event.preventDefault();
     const target = document.querySelector(link.getAttribute("href"));
     target.showModal(); // Utilisez showModal() pour ouvrir le dialog
 };
 
-document.addEventListener('keydown', function(event) {
-    if (event.key === 'Escape' || event.key === 'Esc') {
+document.addEventListener('keydown', function (event)
+{
+    if (event.key === 'Escape' || event.key === 'Esc')
+    {
         const dialog = document.querySelector('dialog[open]');
-        if (dialog) {
+        if (dialog)
+        {
             dialog.close();
         }
     }
 });
 
-figureModal.addEventListener('click', function(event) {
-    if (event.target === figureModal) {
+figureModal.addEventListener('click', function (event)
+{
+    if (event.target === figureModal)
+    {
         figureModal.close();
     }
 });
+
