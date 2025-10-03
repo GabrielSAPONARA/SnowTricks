@@ -27,7 +27,7 @@
         {% if pictures|length > 0 %}
             {% for picture in pictures %}
                 <div class="col-3">
-                    <img class="img-fluid rounded-3 mb-5 fixed-size "
+                    <img class="img-fluid rounded-3 mb-5 fixed-size w-100 h-75"
                          src="{{ asset('uploads/figures/' ~ picture.name) }}"
                          alt="Picture of {{ figure.name }}">
                     <a class="btn btn-warning" href="{{ path('app_picture_figure_edit', {id : picture.id}) }}">Edit this picture</a>
