@@ -6,6 +6,7 @@ new Filter(document.querySelector(".js-ajax"));
 
 let figureLinks = Array.from(document.getElementsByClassName("js-figure-details"));
 let figureModal = document.querySelector(".js-figure-informations");
+let modalToEditPictureFigure = document.querySelector(".modal-picture-figure-to-edit");
 
 figureLinks.forEach(link =>
 {
@@ -48,6 +49,25 @@ figureLinks.forEach(link =>
                     pagination.innerHTML = data.pagination;
                 }
             })
+
+            let editPictureButtons = document.querySelectorAll(".edit-picture");
+            editPictureButtons.forEach(editPictureButton =>
+            {
+                editPictureButton.addEventListener("click", async (e) =>{
+                    e.preventDefault();
+                    let data = await fetchFormToEditPictureFigure(editPictureButton.id);
+                    console.log(data);
+                    let form = data.content;
+
+                    console.log(form);
+
+                    modalToEditPictureFigure.innerHTML = form;
+                    openModal(e, editPictureButton)
+                })
+
+            })
+
+
         }
         catch (error)
         {
@@ -56,6 +76,27 @@ figureLinks.forEach(link =>
         openModal(e, link)
     })
 })
+
+async function fetchFormToEditPictureFigure(pictureFigureId)
+{
+    let url = "http://localhost:8080/picture/figure/form/to/edit/" + pictureFigureId;
+    const formResponse = await  fetch(url,
+        {
+            method: 'POST',
+            headers:
+                {
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+            body: JSON.stringify({
+                id: pictureFigureId,
+            })
+
+        })
+    if(formResponse.status >= 200 && formResponse.status < 300)
+    {
+        return await formResponse.json();
+    }
+}
 
 async function fecthMessagesAndPagination(url)
 {
@@ -118,10 +159,13 @@ document.addEventListener('keydown', function (event)
 {
     if (event.key === 'Escape' || event.key === 'Esc')
     {
-        const dialog = document.querySelector('dialog[open]');
-        if (dialog)
+        const dialogs = document.querySelector('dialogs[open]');
+        for(let popup of dialogs)
         {
-            dialog.close();
+            if (event.target === popup)
+            {
+                popup.close();
+            }
         }
     }
 });
@@ -131,6 +175,13 @@ figureModal.addEventListener('click', function (event)
     if (event.target === figureModal)
     {
         figureModal.close();
+    }
+});
+modalToEditPictureFigure.addEventListener('click', function (event)
+{
+    if (event.target === modalToEditPictureFigure)
+    {
+        modalToEditPictureFigure.close();
     }
 });
 

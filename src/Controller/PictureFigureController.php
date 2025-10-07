@@ -4,9 +4,11 @@ namespace App\Controller;
 
 use App\Entity\PictureFigure;
 use App\Form\PictureFigureFormType;
+use App\Repository\PictureFigureRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -73,9 +75,39 @@ final class PictureFigureController extends AbstractController
             return $this->redirectToRoute('app_welcome');
         }
 
+        if($request->isXmlHttpRequest())
+        {
+            $data = json_decode($request->getContent());
+            dd($data);
+        }
+
         return $this->render('picture_figure/edit.html.twig',
             [
                 'form' => $form,
             ]);
+    }
+
+    #[Route('/picture/figure/form/to/edit/{id}', name: 'app_picture_figure_form_to_edit')]
+    public function getFormPictureFigureToEdit
+    (
+        Request                $request,
+        EntityManagerInterface $entityManager,
+        PictureFigureRepository $pictureFigureRepository,
+    ): Response
+    {
+        if($request->isXmlHttpRequest())
+        {
+            $data = json_decode($request->getContent());
+            $pictureFigure = $pictureFigureRepository->find($data->id);
+            $form = $this->createForm(PictureFigureFormType::class, $pictureFigure);
+
+            return new JsonResponse([
+               'content' => $this->renderView('picture_figure/_form.html.twig',
+               [
+                    'form' => $form,
+                    'pictureName' => $pictureFigure->getName(),
+               ])
+            ]);
+        }
     }
 }
