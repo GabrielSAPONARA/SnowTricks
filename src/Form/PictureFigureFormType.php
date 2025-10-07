@@ -17,7 +17,7 @@ class PictureFigureFormType extends AbstractType
         $builder
 //            ->add('name')
             ->add('image', FileType::class, [
-                'label' => "Figure's pictures",
+                'label' => false,
                 'multiple' => false,
                 'mapped' => false,
                 'required' => true,
