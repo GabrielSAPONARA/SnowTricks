@@ -57,12 +57,25 @@ figureLinks.forEach(link =>
                     e.preventDefault();
                     let data = await fetchFormToEditPictureFigure(editPictureButton.id);
                     console.log(data);
-                    let form = data.content;
-
-                    console.log(form);
-
-                    modalToEditPictureFigure.innerHTML = form;
+                    modalToEditPictureFigure.innerHTML = data.content;
                     openModal(e, editPictureButton)
+
+                    let saveNewPicureButton = document.getElementById("save-new-picture");
+                    console.log(saveNewPicureButton);
+                    saveNewPicureButton.addEventListener("click",  async (e) =>
+                    {
+                        e.preventDefault();
+                        let fileInput = document.getElementById("picture_figure_form_image");
+                        let filePicture = fileInput.files[0];
+                        console.log(filePicture);
+
+                        let formData = new FormData();
+                        formData.append("picture_figure_form[image]", filePicture);
+                        formData.append("picture_figure_form[_token]", document.getElementById("picture_figure_form__token").value);
+
+                        await fetchFilePicture(formData, editPictureButton.id);
+                        window.location.reload();
+                    })
                 })
 
             })
@@ -76,6 +89,31 @@ figureLinks.forEach(link =>
         openModal(e, link)
     })
 })
+
+/**
+ *
+ * @param formData
+ * @param pictureFigureId
+ * @returns {Promise<any>}
+ */
+async function fetchFilePicture(formData, pictureFigureId)
+{
+    let url = "http://localhost:8080/picture/figure/edit/" + pictureFigureId;
+    const response = await fetch(url,
+        {
+            method: "POST",
+            headers:
+                {
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+            body: formData
+        })
+    if (response.status >= 200 && response.status < 300)
+    {
+        return await response.json()
+
+    }
+}
 
 async function fetchFormToEditPictureFigure(pictureFigureId)
 {

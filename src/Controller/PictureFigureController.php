@@ -33,19 +33,26 @@ final class PictureFigureController extends AbstractController
         SluggerInterface       $slugger
     ): Response
     {
-        $form = $this->createForm(PictureFigureFormType::class, $pictureFigure);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid())
+        if ($request->isXmlHttpRequest())
         {
-            $image = $form->get('image')->getData();
-            $originalFilename = pathinfo($image
-                ->getClientOriginalName(), PATHINFO_FILENAME);
-            $safeFilename = $slugger->slug($originalFilename);
-            $newFilename = $safeFilename . '-' . uniqid() . '.' .
-                           $image->guessExtension();
+//            dd($request->request->get('picture_figure_form[_token]'));
+            if (is_array($request->request->all()) &&
+                isset($request->request->all()["picture_figure_form"]["_token"]))
+            {
+                $token = $request->request->all()["picture_figure_form"]["_token"];
+            }
+            else
+            {
+                return new JsonResponse([
+                    'error' => 'Token CSRF is missing or disabled
+                .'
+                ], 403);
+            }
+            $file = $request->files->get('picture_figure_form')['image'];
+            $newFilename = $file->getClientOriginalName();
+            $newFilename = explode('.', $newFilename)[0];
             $oldPictureName = explode("-", $pictureFigure->getName())[0];
-            if ($oldPictureName !== $originalFilename)
+            if ($oldPictureName !== $newFilename)
             {
                 $filePath = $this->getParameter('figures_images_directory') .
                             '/' . $pictureFigure->getName();
@@ -57,7 +64,7 @@ final class PictureFigureController extends AbstractController
 
                 try
                 {
-                    $image->move(
+                    $file->move(
                         $this->getParameter('figures_images_directory'),
                         $newFilename
                     );
@@ -70,21 +77,58 @@ final class PictureFigureController extends AbstractController
 
                 $entityManager->flush();
 
+                return new JsonResponse([
+                    'success' => true,
+                ]);
             }
-            $entityManager->flush();
-            return $this->redirectToRoute('app_welcome');
         }
 
-        if($request->isXmlHttpRequest())
-        {
-            $data = json_decode($request->getContent());
-            dd($data);
-        }
-
-        return $this->render('picture_figure/edit.html.twig',
-            [
-                'form' => $form,
-            ]);
+//        $form = $this->createForm(PictureFigureFormType::class, $pictureFigure);
+//        $form->handleRequest($request);
+//
+//        if ($form->isSubmitted() && $form->isValid())
+//        {
+//            $image = $form->get('image')->getData();
+//            $originalFilename = pathinfo($image
+//                ->getClientOriginalName(), PATHINFO_FILENAME);
+//            $safeFilename = $slugger->slug($originalFilename);
+//            $newFilename = $safeFilename . '-' . uniqid() . '.' .
+//                           $image->guessExtension();
+//            $oldPictureName = explode("-", $pictureFigure->getName())[0];
+//            if ($oldPictureName !== $originalFilename)
+//            {
+//                $filePath = $this->getParameter('figures_images_directory') .
+//                            '/' . $pictureFigure->getName();
+//                if (file_exists($filePath))
+//                {
+//                    unlink($filePath);
+//                }
+//                $pictureFigure->setName($newFilename);
+//
+//                try
+//                {
+//                    $image->move(
+//                        $this->getParameter('figures_images_directory'),
+//                        $newFilename
+//                    );
+//                }
+//                catch (FileException $e)
+//                {
+//                    $this->addFlash('error', 'Erreur lors de l’upload d’image : ' .
+//                                             $e->getMessage());
+//                }
+//
+//                $entityManager->flush();
+//
+//            }
+//            $entityManager->flush();
+//            return $this->redirectToRoute('app_welcome');
+//        }
+//
+//        return $this->render('picture_figure/edit.html.twig',
+//            [
+//                'form' => $form,
+//            ]);
     }
 
     #[Route('/picture/figure/form/to/edit/{id}', name: 'app_picture_figure_form_to_edit')]
@@ -92,21 +136,20 @@ final class PictureFigureController extends AbstractController
     (
         Request                $request,
         EntityManagerInterface $entityManager,
-        PictureFigureRepository $pictureFigureRepository,
+        PictureFigure          $pictureFigure,
     ): Response
     {
-        if($request->isXmlHttpRequest())
+        if ($request->isXmlHttpRequest())
         {
             $data = json_decode($request->getContent());
-            $pictureFigure = $pictureFigureRepository->find($data->id);
             $form = $this->createForm(PictureFigureFormType::class, $pictureFigure);
 
             return new JsonResponse([
-               'content' => $this->renderView('picture_figure/_form.html.twig',
-               [
-                    'form' => $form,
-                    'pictureName' => $pictureFigure->getName(),
-               ])
+                'content' => $this->renderView('picture_figure/_form.html.twig',
+                    [
+                        'form'        => $form,
+                        'pictureName' => $pictureFigure->getName(),
+                    ])
             ]);
         }
     }
