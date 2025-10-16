@@ -56,18 +56,15 @@ figureLinks.forEach(link =>
                 editPictureButton.addEventListener("click", async (e) =>{
                     e.preventDefault();
                     let data = await fetchFormToEditPictureFigure(editPictureButton.id);
-                    console.log(data);
                     modalToEditPictureFigure.innerHTML = data.content;
                     openModal(e, editPictureButton)
 
                     let saveNewPicureButton = document.getElementById("save-new-picture");
-                    console.log(saveNewPicureButton);
                     saveNewPicureButton.addEventListener("click",  async (e) =>
                     {
                         e.preventDefault();
                         let fileInput = document.getElementById("picture_figure_form_image");
                         let filePicture = fileInput.files[0];
-                        console.log(filePicture);
 
                         let formData = new FormData();
                         formData.append("picture_figure_form[image]", filePicture);
@@ -77,9 +74,32 @@ figureLinks.forEach(link =>
                         window.location.reload();
                     })
                 })
-
             })
+            let editVideoPictures = document.querySelectorAll(".edit-video");
+            editVideoPictures.forEach(editVideoButton =>
+            {
+                editVideoButton.addEventListener("click", async (e) =>{
+                    e.preventDefault();
+                    let data = await fetchFormToEditVideoFigure(editVideoButton.id);
+                    modalToEditPictureFigure.innerHTML = data.content;
+                    openModal(e, editVideoButton);
 
+                    let savedNewVideoButton = document.getElementById("save-new-video");
+                    savedNewVideoButton.addEventListener("click", async (e) =>
+                    {
+                        e.preventDefault();
+                        let urlInput = document.getElementById("video_figure_form_embedUrl");
+                        let urlToNewVideo = urlInput.value;
+
+                        let formData = new FormData();
+                        formData.append("video_figure_form[url]", urlToNewVideo);
+                        formData.append("video_figure_form[_token]", document.getElementById("video_figure_form__token").value);
+
+                        await fetchUrlVideo(formData, editVideoButton.id);
+                        window.location.reload();
+                    })
+                })
+            })
 
         }
         catch (error)
@@ -89,6 +109,45 @@ figureLinks.forEach(link =>
         openModal(e, link)
     })
 })
+
+async function fetchUrlVideo(formData, videoFigureId)
+{
+    let url = "http://localhost:8080/video/figure/edit/" + videoFigureId;
+    const response = await fetch(url,
+        {
+            method: 'POST',
+            headers:
+                {
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+            body: formData
+        });
+    if (response.status >= 200 && response.status < 300)
+    {
+        return await response.json();
+    }
+}
+
+async function fetchFormToEditVideoFigure(videoFigureId)
+{
+    let url = "http://localhost:8080/video/figure/form/to/edit/" + videoFigureId;
+    const formResponse = await  fetch(url,
+        {
+            method: 'POST',
+            headers:
+                {
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+            body: JSON.stringify({
+                id: videoFigureId,
+            })
+
+        })
+    if(formResponse.status >= 200 && formResponse.status < 300)
+    {
+        return await formResponse.json();
+    }
+}
 
 /**
  *
@@ -115,6 +174,10 @@ async function fetchFilePicture(formData, pictureFigureId)
     }
 }
 
+/**
+ * @param pictureFigureId
+ * @returns {Promise<any>}
+ */
 async function fetchFormToEditPictureFigure(pictureFigureId)
 {
     let url = "http://localhost:8080/picture/figure/form/to/edit/" + pictureFigureId;
@@ -136,6 +199,10 @@ async function fetchFormToEditPictureFigure(pictureFigureId)
     }
 }
 
+/**
+ * @param url
+ * @returns {Promise<any>}
+ */
 async function fecthMessagesAndPagination(url)
 {
     const response = await fetch(url, {
@@ -152,6 +219,11 @@ async function fecthMessagesAndPagination(url)
     }
 }
 
+/**
+ * @param figureSlug
+ * @param messageContent
+ * @returns {Promise<any>}
+ */
 async function fetchMessages(figureSlug, messageContent)
 {
     let url = "http://localhost:8080/message/new";
@@ -169,6 +241,10 @@ async function fetchMessages(figureSlug, messageContent)
     throw new Error("Failed to add the new message");
 }
 
+/**
+ * @param figureSlug
+ * @returns {Promise<*>}
+ */
 async function fetchFigure(figureSlug)
 {
     let url = "http://localhost:8080/figure/" + figureSlug
@@ -186,6 +262,10 @@ async function fetchFigure(figureSlug)
     throw new Error("Failed to fetch figure" + figureSlug);
 }
 
+/**
+ * @param event
+ * @param link
+ */
 const openModal = function (event, link)
 {
     event.preventDefault();
@@ -193,7 +273,7 @@ const openModal = function (event, link)
     target.showModal(); // Utilisez showModal() pour ouvrir le dialog
 };
 
-document.addEventListener('keydown', function (event)
+    document.addEventListener('keydown', function (event)
 {
     if (event.key === 'Escape' || event.key === 'Esc')
     {
