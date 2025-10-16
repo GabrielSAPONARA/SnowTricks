@@ -14,9 +14,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
+#[Route('/picture/figure')]
 final class PictureFigureController extends AbstractController
 {
-    #[Route('/picture/figure', name: 'app_picture_figure')]
+    #[Route(name: 'app_picture_figure')]
     public function index(): Response
     {
         return $this->render('picture_figure/index.html.twig', [
@@ -24,7 +25,7 @@ final class PictureFigureController extends AbstractController
         ]);
     }
 
-    #[Route('/picture/figure/edit/{id}', name: 'app_picture_figure_edit')]
+    #[Route('/edit/{id}', name: 'app_picture_figure_edit')]
     public function edit
     (
         PictureFigure          $pictureFigure,
@@ -131,7 +132,7 @@ final class PictureFigureController extends AbstractController
 //            ]);
     }
 
-    #[Route('/picture/figure/form/to/edit/{id}', name: 'app_picture_figure_form_to_edit')]
+    #[Route('/form/to/edit/{id}', name: 'app_picture_figure_form_to_edit')]
     public function getFormPictureFigureToEdit
     (
         Request                $request,
