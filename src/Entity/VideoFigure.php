@@ -39,31 +39,32 @@ class VideoFigure
 
     public function getEmbedUrl(): ?string
     {
-
-        if (!$this->embedUrl) {
+        if (empty($this->embedUrl)) {
             return null;
         }
 
-        if (str_contains($this->embedUrl, 'youtube.com/embed')) {
-            return $this->embedUrl;
+        $url = $this->embedUrl;
+
+        // Si l'URL est déjà au format embed
+        if (str_contains($url, 'youtube.com/embed') || str_contains($url, 'dailymotion.com/embed')) {
+            return $url;
         }
 
-        if (str_contains($this->embedUrl, 'youtube.com/watch')) {
-            return str_replace('watch?v=', 'embed/', $this->embedUrl);
+        // YouTube (inclut shorts, watch, youtu.be, live, etc.)
+        if (preg_match(
+            '#(?:youtube\.com/(?:watch\?v=|embed/|v/|shorts/|live/)|youtu\.be/)([A-Za-z0-9_-]{11})#',
+            $url,
+            $matches
+        )) {
+            return 'https://www.youtube.com/embed/' . $matches[1];
         }
 
-        if (str_contains($this->embedUrl, 'youtube.com/shorts')) {
-            return str_replace('shorts', 'embed', $this->embedUrl);
+        // Dailymotion
+        if (preg_match('#dailymotion\.com/video/([a-zA-Z0-9]+)#', $url, $matches)) {
+            return 'https://www.dailymotion.com/embed/video/' . $matches[1];
         }
 
-        if (str_contains($this->embedUrl, 'youtu.be/')) {
-            return str_replace('youtu.be/', 'www.youtube.com/embed/', $this->embedUrl);
-        }
-
-        if (str_contains($this->embedUrl, 'dailymotion.com/video')) {
-            $id = basename($this->embedUrl);
-            return 'https://www.dailymotion.com/embed/video/' . $id;
-        }
+        // Aucun format reconnu
         return null;
     }
 

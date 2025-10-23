@@ -160,46 +160,44 @@ final class FigureController extends AbstractController
     }
 
     #[Route('/{slug}', name: 'app_figure_show', methods: ['GET'])]
-    public function show(Figure $figure, Request $request, MessageRepository $messageRepository
-    ): Response
+    public function show(Figure $figure, Request $request, MessageRepository $messageRepository): Response
     {
         $figureVideos = $figure->getVideoFigures();
         $figurePictures = $figure->getPictureFigures();
 
-        if($request->isXmlHttpRequest())
-        {
+        if ($request->isXmlHttpRequest()) {
             $message = new Message();
             $formMessage = $this->createForm(MessageType::class, $message);
             $page = $request->query->getInt('page', 1);
             $limit = 10;
-            $messages = $messageRepository->findByFigureId($page, $limit,
-                $figure->getId());
-            $maxPage = ceil($messages->count() / $limit);
-            return new JsonResponse([
-               'content' => $this->renderView('figure/_figure.html.twig',
-                   [
-                       'figure' => $figure,
-                       'videos' => $figureVideos,
-                       'pictures' => $figurePictures,
-                       'formMessage' => $formMessage,
-                       'messages' => $messages,
-                       'maxPage' => $maxPage,
-                       'page' => $page,
-                       'figureSlug' => $figure->getSlug(),
-                   ])
+            $messages = $messageRepository->findByFigureId($page, $limit, $figure->getId());
+            $maxPage = (int) ceil($messages->count() / $limit);
+
+            $html = $this->renderView('figure/_figure.html.twig', [
+                'figure' => $figure,
+                'videos' => $figureVideos,
+                'pictures' => $figurePictures,
+                'formMessage' => $formMessage,
+                'messages' => $messages,
+                'maxPage' => $maxPage,
+                'page' => $page,
+                'figureSlug' => $figure->getSlug(),
             ]);
+
+            // encoder explicitement le payload, en évitant l'échappement des slashs
+            $payload = json_encode(['content' => $html], JSON_UNESCAPED_SLASHES);
+
+            // On passe true pour indiquer que $payload est déjà une chaîne JSON
+            return new JsonResponse($payload, 200, [], true);
         }
 
-//        foreach ($figure->getVideoFigures() as $videoFigure) {
-//            dump($videoFigure);
-//        }
-//        dd($figure->getVideoFigures());
         return $this->render('figure/show.html.twig', [
             'figure' => $figure,
             'videos' => $figureVideos,
             'pictures' => $figurePictures,
         ]);
     }
+
 
     #[Route('/edit/{slug}', name: 'app_figure_edit', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_VERIFIED')]

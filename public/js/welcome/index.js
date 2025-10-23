@@ -15,91 +15,104 @@ figureLinks.forEach(link =>
         e.preventDefault();
         try
         {
-            figureModal.innerHTML = await fetchFigure(link.querySelector("h5").textContent)
-            let saveMessageButton = document.getElementById("save-message");
-            let messages = document.getElementById("messages");
-            let figureSlug = link.querySelector("h5").textContent;
-            let pagination = document.getElementById("pagination");
-            saveMessageButton.addEventListener("click", async (e) =>
-            {
-                e.preventDefault();
-                try
-                {
-                    let messageContent = document.getElementById("message_content").value;
-                    let data = await fetchMessages(figureSlug, messageContent)
-                    messages.innerHTML = data.content;
-                    pagination.innerHTML = data.pagination;
-                }
-                catch (error)
-                {
-                    console.error(error)
-                }
-            })
+            const html = await fetchFigure(link.querySelector("h5").textContent);
 
-            new FilterMessage(document.querySelector(".js-figure-informations"));
-            pagination.addEventListener("click", async (e) =>
-            {
-                if (e.target.tagName === 'A')
+            // Vider le modal proprement sans casser le DOM
+            while (figureModal.firstChild) {
+                figureModal.removeChild(figureModal.firstChild);
+            }
+
+            // Attendre que le modal soit ouvert avant d'injecter le HTML
+            setTimeout(() => {
+                figureModal.insertAdjacentHTML('afterbegin', html);
+
+                let saveMessageButton = document.getElementById("save-message");
+                console.log(saveMessageButton);
+                let messages = document.getElementById("messages");
+                let figureSlug = link.querySelector("h5").textContent;
+                let pagination = document.getElementById("pagination");
+                saveMessageButton.addEventListener("click", async (e) =>
                 {
                     e.preventDefault();
-                    let url = e.target.href;
-                    let currentPage = pagination.querySelector("#currentPage").innerText;
-                    let data = await fecthMessagesAndPagination(url);
-                    messages.innerHTML = data.content;
-                    pagination.innerHTML = data.pagination;
-                }
-            })
+                    try
+                    {
+                        let messageContent = document.getElementById("message_content").value;
+                        let data = await fetchMessages(figureSlug, messageContent)
+                        messages.innerHTML = data.content;
+                        pagination.innerHTML = data.pagination;
+                    }
+                    catch (error)
+                    {
+                        console.error(error)
+                    }
+                })
 
-            let editPictureButtons = document.querySelectorAll(".edit-picture");
-            editPictureButtons.forEach(editPictureButton =>
-            {
-                editPictureButton.addEventListener("click", async (e) =>{
-                    e.preventDefault();
-                    let data = await fetchFormToEditPictureFigure(editPictureButton.id);
-                    modalToEditPictureFigure.innerHTML = data.content;
-                    openModal(e, editPictureButton)
-
-                    let saveNewPicureButton = document.getElementById("save-new-picture");
-                    saveNewPicureButton.addEventListener("click",  async (e) =>
+                new FilterMessage(document.querySelector(".js-figure-informations"));
+                pagination.addEventListener("click", async (e) =>
+                {
+                    if (e.target.tagName === 'A')
                     {
                         e.preventDefault();
-                        let fileInput = document.getElementById("picture_figure_form_image");
-                        let filePicture = fileInput.files[0];
-
-                        let formData = new FormData();
-                        formData.append("picture_figure_form[image]", filePicture);
-                        formData.append("picture_figure_form[_token]", document.getElementById("picture_figure_form__token").value);
-
-                        await fetchFilePicture(formData, editPictureButton.id);
-                        window.location.reload();
-                    })
+                        let url = e.target.href;
+                        let currentPage = pagination.querySelector("#currentPage").innerText;
+                        let data = await fecthMessagesAndPagination(url);
+                        messages.innerHTML = data.content;
+                        pagination.innerHTML = data.pagination;
+                    }
                 })
-            })
-            let editVideoPictures = document.querySelectorAll(".edit-video");
-            editVideoPictures.forEach(editVideoButton =>
-            {
-                editVideoButton.addEventListener("click", async (e) =>{
-                    e.preventDefault();
-                    let data = await fetchFormToEditVideoFigure(editVideoButton.id);
-                    modalToEditPictureFigure.innerHTML = data.content;
-                    openModal(e, editVideoButton);
 
-                    let savedNewVideoButton = document.getElementById("save-new-video");
-                    savedNewVideoButton.addEventListener("click", async (e) =>
-                    {
+                let editPictureButtons = document.querySelectorAll(".edit-picture");
+                editPictureButtons.forEach(editPictureButton =>
+                {
+                    editPictureButton.addEventListener("click", async (e) =>{
                         e.preventDefault();
-                        let urlInput = document.getElementById("video_figure_form_embedUrl");
-                        let urlToNewVideo = urlInput.value;
+                        let data = await fetchFormToEditPictureFigure(editPictureButton.id);
+                        modalToEditPictureFigure.innerHTML = data.content;
+                        openModal(e, editPictureButton)
 
-                        let formData = new FormData();
-                        formData.append("video_figure_form[url]", urlToNewVideo);
-                        formData.append("video_figure_form[_token]", document.getElementById("video_figure_form__token").value);
+                        let saveNewPicureButton = document.getElementById("save-new-picture");
+                        saveNewPicureButton.addEventListener("click",  async (e) =>
+                        {
+                            e.preventDefault();
+                            let fileInput = document.getElementById("picture_figure_form_image");
+                            let filePicture = fileInput.files[0];
 
-                        await fetchUrlVideo(formData, editVideoButton.id);
-                        window.location.reload();
+                            let formData = new FormData();
+                            formData.append("picture_figure_form[image]", filePicture);
+                            formData.append("picture_figure_form[_token]", document.getElementById("picture_figure_form__token").value);
+
+                            await fetchFilePicture(formData, editPictureButton.id);
+                            window.location.reload();
+                        })
                     })
                 })
-            })
+                let editVideoPictures = document.querySelectorAll(".edit-video");
+                editVideoPictures.forEach(editVideoButton =>
+                {
+                    editVideoButton.addEventListener("click", async (e) =>{
+                        e.preventDefault();
+                        let data = await fetchFormToEditVideoFigure(editVideoButton.id);
+                        modalToEditPictureFigure.innerHTML = data.content;
+                        openModal(e, editVideoButton);
+
+                        let savedNewVideoButton = document.getElementById("save-new-video");
+                        savedNewVideoButton.addEventListener("click", async (e) =>
+                        {
+                            e.preventDefault();
+                            let urlInput = document.getElementById("video_figure_form_embedUrl");
+                            let urlToNewVideo = urlInput.value;
+
+                            let formData = new FormData();
+                            formData.append("video_figure_form[url]", urlToNewVideo);
+                            formData.append("video_figure_form[_token]", document.getElementById("video_figure_form__token").value);
+
+                            await fetchUrlVideo(formData, editVideoButton.id);
+                            window.location.reload();
+                        })
+                    })
+                })
+
+            }, 100);
 
         }
         catch (error)
