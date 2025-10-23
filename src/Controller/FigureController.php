@@ -7,6 +7,7 @@ use App\Entity\Message;
 use App\Entity\PictureFigure;
 use App\Entity\VideoFigure;
 use App\Form\FigureForm;
+use App\Form\FigureForm2;
 use App\Form\MessageType;
 use App\Repository\FigureRepository;
 use App\Repository\MessageRepository;
@@ -196,6 +197,33 @@ final class FigureController extends AbstractController
             'videos' => $figureVideos,
             'pictures' => $figurePictures,
         ]);
+    }
+
+    #[Route('/edit/modal/{slug}', name: 'app_figure_edit_modal', methods: ['GET', 'POST'])]
+    public function getEditModal(
+        Figure $figure,
+        Request $request,
+    ) : Response
+    {
+        $figureVideos = $figure->getVideoFigures();
+        $figurePictures = $figure->getPictureFigures();
+
+        if ($request->isXmlHttpRequest())
+        {
+            $form = $this->createForm(FigureForm2::class, $figure);
+
+            return new JsonResponse([
+                'content' => $this->renderView('figure/_modal_to_edit_figure.html.twig',
+                [
+                    'figure' => $figure,
+                    'videos' => $figureVideos,
+                    'pictures' => $figurePictures,
+                    'form' => $form,
+                ])
+            ]);
+        }
+
+        return new Response();
     }
 
 

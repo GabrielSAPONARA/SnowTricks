@@ -15,7 +15,7 @@ figureLinks.forEach(link =>
         e.preventDefault();
         try
         {
-            const html = await fetchFigure(link.querySelector("h5").textContent);
+            let html = await fetchFigure(link.querySelector("h5").textContent);
 
             // Vider le modal proprement sans casser le DOM
             while (figureModal.firstChild) {
@@ -26,8 +26,20 @@ figureLinks.forEach(link =>
             setTimeout(() => {
                 figureModal.insertAdjacentHTML('afterbegin', html);
 
+                let pencilToEditModal = document.getElementById("pencil-to-edit-figure");
+                console.log(pencilToEditModal);
+
+                pencilToEditModal.addEventListener("click", async (e) => {
+                    e.preventDefault();
+                    html = await fetchFormToEditFigure(link.querySelector("h5").textContent);
+                    console.log(html);
+                    while (figureModal.firstChild) {
+                        figureModal.removeChild(figureModal.firstChild);
+                    }
+                    figureModal.insertAdjacentHTML('afterbegin', html);
+                })
+
                 let saveMessageButton = document.getElementById("save-message");
-                console.log(saveMessageButton);
                 let messages = document.getElementById("messages");
                 let figureSlug = link.querySelector("h5").textContent;
                 let pagination = document.getElementById("pagination");
@@ -122,6 +134,23 @@ figureLinks.forEach(link =>
         openModal(e, link)
     })
 })
+
+async function fetchFormToEditFigure(figureSlug)
+{
+    let url = "http://localhost:8080/figure/edit/modal/" + figureSlug
+    const figureResponse = await fetch(url, {
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+        }
+    });
+    if (figureResponse.status >= 200 && figureResponse.status < 300)
+    {
+        let data = await figureResponse.json()
+        return data.content
+
+    }
+    throw new Error("Failed to fetch figure" + figureSlug);
+}
 
 async function fetchUrlVideo(formData, videoFigureId)
 {

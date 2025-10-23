@@ -1,0 +1,73 @@
+<h3 id="title-model" class="position-absolute top-0 start-50 translate-middle-x">{{ figure.name }}</h3>
+<div class="row mx-0">
+    {% if pictures|length > 0 %}
+        <div class="col-12 px-0 top-div-popup-picture">
+            <img class="img-fluid mb-5 fixed-size px-0 w-100 top-picture-popup"
+                 src="{{ asset('uploads/figures/' ~ pictures[0].name) }}"
+                 alt="Picture of {{ figure.name }}">
+
+        </div>
+        <a class="btn btn-warning position-absolute w-25 edit-picture" href="#modal-picture-to-edit" id="{{ pictures[0].id }}">Edit this picture</a>
+    {% endif %}
+</div>
+<div class="container-fluid">
+    <div class="row flex-nowrap overflow-scroll">
+        {% if pictures|length > 0 %}
+            {% for picture in pictures %}
+                <div class="col-3">
+                    <img class="img-fluid rounded-3 mb-5 fixed-size w-100 h-75"
+                         src="{{ asset('uploads/figures/' ~ picture.name) }}"
+                         alt="Picture of {{ figure.name }}">
+                    <a class="btn btn-warning edit-picture" href="#modal-picture-to-edit" id="{{ picture.id }}">Edit this picture</a>
+                </div>
+            {% endfor %}
+        {% endif %}
+        {% if videos|length > 0 %}
+            {% for video in videos %}
+                <div class="col-3">
+                    <iframe
+                            class="h-75 mb-5"
+                            title="Vidéo de {{ figure.name }}"
+                            src="{{ video.embedUrl|raw }}"
+                            frameborder="0"
+                            allowfullscreen
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share">
+                    </iframe>
+                    <a class="btn btn-warning edit-video" href="#modal-picture-to-edit" id="{{ video.id }}">Edit this video</a>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+</div>
+<div class="row gx-5 justify-content-center my-5">
+    <div class="col-lg-8 col-xl-6">
+        {{ form_start(form) }}
+        <div class="form-floating mb-3">
+            {{ form_widget(form.name) }}
+            {{ form_label(form.name) }}
+            <div class="invalid-feedback">
+                {{ form_errors(form.name) }}
+            </div>
+        </div>
+        <div class="form-floating mb-3">
+            {{ form_widget(form.description) }}
+            {{ form_label(form.description) }}
+            <div class="invalid-feedback">
+                {{ form_errors(form.description) }}
+            </div>
+        </div>
+
+        <div>
+            {{ form_label(form.groupes) }}
+            {% for child in form.groupes %}
+                <div class="form-check px-0">
+                    {{ form_widget(child) }}
+                    {{ form_label(child) }}
+                </div>
+            {% endfor %}
+        </div>
+
+        <button class="d-flex btn btn-primary my-3">{{ button_label|default('Save') }}</button>
+        {{ form_end(form) }}
+    </div>
+</div>
