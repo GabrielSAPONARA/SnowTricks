@@ -88,6 +88,16 @@ figureLinks.forEach(link =>
                             })
                         })
                     })
+
+                    let buttonToSaveFigureChange = document.getElementById('save-figure-change');
+                    buttonToSaveFigureChange.addEventListener("click",  async (e) => {
+                        e.preventDefault();
+                        let figureForm = document.querySelector("form")
+                        let formData = new FormData(figureForm);
+
+                        await updateFigure(figureSlug, formData);
+                        window.location.reload();
+                    })
                 })
 
                 let saveMessageButton = document.getElementById("save-message");
@@ -136,6 +146,24 @@ figureLinks.forEach(link =>
         openModal(e, link)
     })
 })
+
+async function updateFigure(figureSlug, formData)
+{
+    let url = "http://localhost:8080/figure/update/" + figureSlug;
+    formData.append('figureSlug', figureSlug);
+    const response = await fetch(url, {
+        method : 'POST',
+        headers : {
+            'X-Requested-With': 'XMLHttpRequest',
+        },
+        body: formData,
+    });
+    if (response.status >= 200 && response.status < 300)
+    {
+        let data = await response.json()
+        return data.content;
+    }
+}
 
 async function fetchFormToEditFigure(figureSlug)
 {

@@ -10,6 +10,7 @@ use App\Form\FigureForm;
 use App\Form\FigureForm2;
 use App\Form\MessageType;
 use App\Repository\FigureRepository;
+use App\Repository\GroupRepository;
 use App\Repository\MessageRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -327,7 +328,42 @@ final class FigureController extends AbstractController
         ]);
     }
 
+    #[Route('/update/{slug}', name: 'app_figure_update', methods: ['POST'])]
+    #[IsGranted('ROLE_VERIFIED')]
+    public function update(
+        Request $request,
+        Figure $figure,
+        EntityManagerInterface $entityManager,
+        GroupRepository $groupRepository,
+    ): Response
+    {
+        if($request->isXmlHttpRequest())
+        {
+            $figure->setName($request->request->all()['figure_form2']['name']);
+            $figure->setSlug($request->request->all()['figure_form2']['name']);
+            $figure->setDescription($request->request->all()['figure_form2']['description']);
+            $figure->setDateOfLastUpdate(new \DateTime('now', new
+            \DateTimeZone('Europe/Paris')));
+            $figure->getGroupes()->clear();
+            foreach($request->request->all()['figure_form2']['groupes'] as
+                    $groupId)
+            {
+               $group = $groupRepository->find($groupId);
+               $figure->addGroupe($group);
+            }
 
+            $entityManager->flush();
+
+            return $this->json([
+                'success' => true,
+                'message' => 'La figure a été mise à jour avec succès !',
+            ]);
+        }
+        return $this->json([
+            'success' => false,
+            'message' => 'Requête invalide.'
+        ], 400);
+    }
 
     #[Route('/delete/{slug}', name: 'app_figure_delete', methods: ['GET','POST'])]
     #[IsGranted('ROLE_VERIFIED')]
