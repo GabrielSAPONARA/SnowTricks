@@ -19,7 +19,7 @@ final class WelcomeController extends AbstractController
         $page = $request->query->getInt('page', 1);
         $limit = 2;
         $figures = $figureRepository->paginateFigures($page, $limit);
-        $maxPage = ceil(count($figures) / 2);
+        $maxPage = ceil(count($figures) / $limit);
 
         if($request->get('ajax'))
         {
