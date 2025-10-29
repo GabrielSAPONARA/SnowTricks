@@ -7,6 +7,7 @@ new Filter(document.querySelector(".js-ajax"));
 let figureLinks = Array.from(document.getElementsByClassName("js-figure-details"));
 let figureModal = document.querySelector(".js-figure-informations");
 let modalToEditPictureFigure = document.querySelector(".modal-picture-figure-to-edit");
+let popupToConfirmDeletion = document.getElementById("confirm-deletion");
 
 figureLinks.forEach(link =>
 {
@@ -18,22 +19,26 @@ figureLinks.forEach(link =>
             let html = await fetchFigure(link.querySelector("h5").textContent);
 
             // Vider le modal proprement sans casser le DOM
-            while (figureModal.firstChild) {
+            while (figureModal.firstChild)
+            {
                 figureModal.removeChild(figureModal.firstChild);
             }
 
             // Attendre que le modal soit ouvert avant d'injecter le HTML
-            setTimeout(() => {
+            setTimeout(() =>
+            {
                 figureModal.insertAdjacentHTML('afterbegin', html);
 
                 let pencilToEditModal = document.getElementById("pencil-to-edit-figure");
                 console.log(pencilToEditModal);
 
-                pencilToEditModal.addEventListener("click", async (e) => {
+                pencilToEditModal.addEventListener("click", async (e) =>
+                {
                     e.preventDefault();
                     html = await fetchFormToEditFigure(link.querySelector("h5").textContent);
                     console.log(html);
-                    while (figureModal.firstChild) {
+                    while (figureModal.firstChild)
+                    {
                         figureModal.removeChild(figureModal.firstChild);
                     }
                     figureModal.insertAdjacentHTML('afterbegin', html);
@@ -41,14 +46,15 @@ figureLinks.forEach(link =>
                     let editPictureButtons = document.querySelectorAll(".edit-picture");
                     editPictureButtons.forEach(editPictureButton =>
                     {
-                        editPictureButton.addEventListener("click", async (e) =>{
+                        editPictureButton.addEventListener("click", async (e) =>
+                        {
                             e.preventDefault();
                             let data = await fetchFormToEditPictureFigure(editPictureButton.id);
                             modalToEditPictureFigure.innerHTML = data.content;
                             openModal(e, editPictureButton)
 
                             let saveNewPicureButton = document.getElementById("save-new-picture");
-                            saveNewPicureButton.addEventListener("click",  async (e) =>
+                            saveNewPicureButton.addEventListener("click", async (e) =>
                             {
                                 e.preventDefault();
                                 let fileInput = document.getElementById("picture_figure_form_image");
@@ -66,7 +72,8 @@ figureLinks.forEach(link =>
                     let editVideoPictures = document.querySelectorAll(".edit-video");
                     editVideoPictures.forEach(editVideoButton =>
                     {
-                        editVideoButton.addEventListener("click", async (e) =>{
+                        editVideoButton.addEventListener("click", async (e) =>
+                        {
                             e.preventDefault();
                             let data = await fetchFormToEditVideoFigure(editVideoButton.id);
                             modalToEditPictureFigure.innerHTML = data.content;
@@ -90,7 +97,8 @@ figureLinks.forEach(link =>
                     })
 
                     let buttonToSaveFigureChange = document.getElementById('save-figure-change');
-                    buttonToSaveFigureChange.addEventListener("click",  async (e) => {
+                    buttonToSaveFigureChange.addEventListener("click", async (e) =>
+                    {
                         e.preventDefault();
                         let figureForm = document.querySelector("form")
                         let formData = new FormData(figureForm);
@@ -98,6 +106,26 @@ figureLinks.forEach(link =>
                         await updateFigure(figureSlug, formData);
                         window.location.reload();
                     })
+
+                    let buttonToDeleteFigure = figureModal.getElementsByClassName("delete-figure-button");
+
+                    for(let deleteButtonIterator = 0; deleteButtonIterator < buttonToDeleteFigure.length; deleteButtonIterator++)
+                    {
+                        buttonToDeleteFigure[deleteButtonIterator].addEventListener("click", async (e) => {
+                            e.preventDefault();
+                            openModal(e, buttonToDeleteFigure[deleteButtonIterator]);
+                        })
+                    }
+                })
+
+                let deleteFigureButton = document.getElementById('dustbin-to-delete-figure');
+
+                deleteFigureButton.addEventListener("click", async (e) =>
+                {
+                    e.preventDefault();
+                    openModal(e, deleteFigureButton);
+
+
                 })
 
                 let saveMessageButton = document.getElementById("save-message");
@@ -134,8 +162,11 @@ figureLinks.forEach(link =>
                     }
                 })
 
-
-
+                popupToConfirmDeletion.querySelector("a").addEventListener("click", async (e) =>{
+                    e.preventDefault();
+                    let response = await deleteFigure(link.querySelector("h5").textContent, deleteFigureButton.getAttribute('data-token'));
+                    window.location.reload();
+                })
             }, 100);
 
         }
@@ -144,16 +175,41 @@ figureLinks.forEach(link =>
             console.log(error)
         }
         openModal(e, link)
+
+
+
     })
 })
+
+async function deleteFigure(figureSlug, token)
+{
+    let url = "http://localhost:8080/figure/delete/" + figureSlug;
+    const response = await fetch(url, {
+        method: "DELETE",
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': token
+        },
+        body: JSON.stringify({figureSlug: figureSlug})
+    })
+    if (response.ok)
+    {
+        return await response.json();
+    }
+    else
+    {
+        throw new Error(`HTTP error: ${response.status}`);
+    }
+}
 
 async function updateFigure(figureSlug, formData)
 {
     let url = "http://localhost:8080/figure/update/" + figureSlug;
     formData.append('figureSlug', figureSlug);
     const response = await fetch(url, {
-        method : 'POST',
-        headers : {
+        method: 'POST',
+        headers: {
             'X-Requested-With': 'XMLHttpRequest',
         },
         body: formData,
@@ -203,7 +259,7 @@ async function fetchUrlVideo(formData, videoFigureId)
 async function fetchFormToEditVideoFigure(videoFigureId)
 {
     let url = "http://localhost:8080/video/figure/form/to/edit/" + videoFigureId;
-    const formResponse = await  fetch(url,
+    const formResponse = await fetch(url,
         {
             method: 'POST',
             headers:
@@ -215,7 +271,7 @@ async function fetchFormToEditVideoFigure(videoFigureId)
             })
 
         })
-    if(formResponse.status >= 200 && formResponse.status < 300)
+    if (formResponse.status >= 200 && formResponse.status < 300)
     {
         return await formResponse.json();
     }
@@ -253,7 +309,7 @@ async function fetchFilePicture(formData, pictureFigureId)
 async function fetchFormToEditPictureFigure(pictureFigureId)
 {
     let url = "http://localhost:8080/picture/figure/form/to/edit/" + pictureFigureId;
-    const formResponse = await  fetch(url,
+    const formResponse = await fetch(url,
         {
             method: 'POST',
             headers:
@@ -265,7 +321,7 @@ async function fetchFormToEditPictureFigure(pictureFigureId)
             })
 
         })
-    if(formResponse.status >= 200 && formResponse.status < 300)
+    if (formResponse.status >= 200 && formResponse.status < 300)
     {
         return await formResponse.json();
     }
@@ -342,15 +398,16 @@ const openModal = function (event, link)
 {
     event.preventDefault();
     const target = document.querySelector(link.getAttribute("href"));
+    console.log(link);
     target.showModal(); // Utilisez showModal() pour ouvrir le dialog
 };
 
-    document.addEventListener('keydown', function (event)
+document.addEventListener('keydown', function (event)
 {
     if (event.key === 'Escape' || event.key === 'Esc')
     {
         const dialogs = document.querySelector('dialogs[open]');
-        for(let popup of dialogs)
+        for (let popup of dialogs)
         {
             if (event.target === popup)
             {
@@ -375,3 +432,18 @@ modalToEditPictureFigure.addEventListener('click', function (event)
     }
 });
 
+popupToConfirmDeletion.addEventListener('click', function (event)
+{
+    if (event.target === popupToConfirmDeletion)
+    {
+        popupToConfirmDeletion.close();
+    }
+})
+
+popupToConfirmDeletion.querySelectorAll("button").forEach(button =>
+{
+    button.addEventListener("click", async (e) => {
+        e.preventDefault();
+        popupToConfirmDeletion.close();
+    })
+})

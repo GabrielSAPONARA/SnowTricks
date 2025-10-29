@@ -24,7 +24,7 @@
             <div class="row gx-5 js-content">
                 {% include 'welcome/_figures.html.twig' %}
             </div>
-            <div class="d-flex align-items-center js-pagination">
+            <div class="d-flex align-items-center js-pagination" data-max-page ="{{ maxPage }}">
                 {% include 'welcome/_pagination.html.twig' with {'page' : page, 'maxPage' : maxPage} only %}
             </div>
         </div>
@@ -32,6 +32,15 @@
 
     <dialog class="container-fluid w-75 border-1 rounded-3 p-0 js-figure-informations" aria-hidden="true" role="alertdialog" aria-labelledby="title-model">
 
+    </dialog>
+
+    <dialog id="confirm-deletion" class="container-fluid w-50 border-1 rounded-3 p-0" aria-hidden="true" role="alertdialog" aria-labelledby="title-model">
+        <h3 class="mb-3 text-center">Are you sure to delete this figure ?</h3>
+        <button class="btn btn-close btn-warning position-absolute top-0 end-0"></button>
+        <div class="row d-flex justify-content-center">
+            <a href="#" class="col-4 btn btn-danger mx-3">Yes</a>
+            <button class="col-4 btn btn-warning">No</button>
+        </div>
     </dialog>
 
     {{ include('welcome/_edit_picture_figure.html.twig') }}

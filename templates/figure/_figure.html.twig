@@ -19,7 +19,7 @@
             <a class="container px-0"
                id="dustbin-to-delete-figure"
                data-token="{{ csrf_token('delete' ~ figure.id) }}"
-               href="#">
+               href="#confirm-deletion">
                 <img class="col-12" src="{{ asset('assets/img/bin.svg') }}"
                      alt="a bin to delete a figure">
             </a>
@@ -91,7 +91,7 @@
     {% include 'figure/_messages.html.twig' with {'messages' : messages} only %}
 </div>
 
-<div id="pagination" class="js-message-pagination d-flex justify-content-center my-3">
+<div id="pagination" class="js-message-pagination d-flex justify-content-center my-3" data-max-page="{{ maxPage }}">
     {% include 'figure/_pagination.html.twig' with {'page' : page, 'maxPage' : maxPage, 'figureSlug': figureSlug} only %}
 </div>
 

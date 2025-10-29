@@ -365,10 +365,18 @@ final class FigureController extends AbstractController
         ], 400);
     }
 
-    #[Route('/delete/{slug}', name: 'app_figure_delete', methods: ['GET','POST'])]
+    #[Route('/delete/{slug}', name: 'app_figure_delete', methods: ['GET','POST', 'DELETE'])]
     #[IsGranted('ROLE_VERIFIED')]
     public function delete(Request $request, Figure $figure, EntityManagerInterface $entityManager): Response
     {
+        $token = $request->headers->get('X-CSRF-TOKEN') ?? $request->request->get('_token');
+        if (!$this->isCsrfTokenValid('delete' . $figure->getId(), $token)) {
+            return $this->json([
+                'success' => false,
+                'message' => "Invalid CSRF token.",
+            ], 400);
+        }
+
         foreach ($figure->getPictureFigures() as $picture)
         {
             $entityManager->remove($picture);
@@ -380,6 +388,34 @@ final class FigureController extends AbstractController
         $entityManager->remove($figure);
         $entityManager->flush();
 
-        return $this->redirectToRoute('app_figure_index', [], Response::HTTP_SEE_OTHER);
+//        if($request->isXmlHttpRequest())
+//        {
+//            $data = json_decode($request->getContent(), true);
+//            dd($data);
+//            foreach ($figure->getPictureFigures() as $picture)
+//            {
+//                $entityManager->remove($picture);
+//            }
+//            foreach ($figure->getVideoFigures() as $video)
+//            {
+//                $entityManager->remove($video);
+//            }
+//            $entityManager->remove($figure);
+//            $entityManager->flush();
+//
+//            return $this->json([
+//                'success' => true,
+//                'message' => "The figure was successfully deleted.",
+//            ]);
+//        }
+
+        if ($request->isXmlHttpRequest()) {
+            return $this->json([
+                'success' => true,
+                'message' => "The figure was successfully deleted.",
+            ]);
+        } else {
+            return $this->redirectToRoute('app_figure_index', [], Response::HTTP_SEE_OTHER);
+        }
     }
 }
