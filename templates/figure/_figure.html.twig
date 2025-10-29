@@ -17,7 +17,9 @@
                      alt="a pencil to edit a figure">
             </a>
             <a class="container px-0"
-               href="{{ path('app_figure_delete', {'slug' : figure.slug}) }}">
+               id="dustbin-to-delete-figure"
+               data-token="{{ csrf_token('delete' ~ figure.id) }}"
+               href="#">
                 <img class="col-12" src="{{ asset('assets/img/bin.svg') }}"
                      alt="a bin to delete a figure">
             </a>
@@ -63,11 +65,9 @@
     <p class="col-3 border border-dark mx-3">
         Modification date: {{ figure.dateOfLastUpdate|date('Y-m-d') }}
     </p>
-    {% for group in figure.groupes %}
     <div class="col-1 border border-dark mx-3 h-100">
-        {{ group.name }}
+        {{ figure.group.name }}
     </div>
-    {% endfor %}
 </div>
 
 <div class="row d-flex justify-content-center mt-5">

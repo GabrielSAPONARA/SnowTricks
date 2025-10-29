@@ -35,10 +35,10 @@ class FigureForm2 extends AbstractType
                     "placeholder" => "Description"
                 ]
             ])
-            ->add('groupes', EntityType::class, [
+            ->add('group', EntityType::class, [
                 'class' => Group::class,
                 'choice_label' => 'name',
-                'multiple' => true,
+                'multiple' => false,
                 'expanded' => true,
                 'attr' =>
                 [

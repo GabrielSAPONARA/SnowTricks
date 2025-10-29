@@ -46,8 +46,10 @@ class Figure
     /**
      * @var Collection<int, Group>
      */
-    #[ORM\ManyToMany(targetEntity: Group::class, inversedBy: 'figures')]
-    private Collection $groupes;
+    #[ORM\ManyToOne(inversedBy: 'figures')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Group $group = null;
+
 
     /**
      * @var Collection<int, Message>
@@ -59,7 +61,6 @@ class Figure
     {
         $this->videoFigures = new ArrayCollection();
         $this->pictureFigures = new ArrayCollection();
-        $this->groupes = new ArrayCollection();
         $this->messages = new ArrayCollection();
     }
 
@@ -188,27 +189,14 @@ class Figure
         return $this;
     }
 
-    /**
-     * @return Collection<int, Group>
-     */
-    public function getGroupes(): Collection
+    public function getGroup(): ?Group
     {
-        return $this->groupes;
+        return $this->group;
     }
 
-    public function addGroupe(Group $groupe): static
+    public function setGroup(?Group $group): static
     {
-        if (!$this->groupes->contains($groupe)) {
-            $this->groupes->add($groupe);
-        }
-
-        return $this;
-    }
-
-    public function removeGroupe(Group $groupe): static
-    {
-        $this->groupes->removeElement($groupe);
-
+        $this->group = $group;
         return $this;
     }
 

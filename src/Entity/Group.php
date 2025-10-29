@@ -22,8 +22,9 @@ class Group
     /**
      * @var Collection<int, Figure>
      */
-    #[ORM\ManyToMany(targetEntity: Figure::class, mappedBy: 'groupes')]
+    #[ORM\OneToMany(targetEntity: Figure::class, mappedBy: 'group', orphanRemoval: false)]
     private Collection $figures;
+
 
     public function __construct()
     {
@@ -59,7 +60,7 @@ class Group
     {
         if (!$this->figures->contains($figure)) {
             $this->figures->add($figure);
-            $figure->addGroupe($this);
+            $figure->setGroup($this);
         }
 
         return $this;
@@ -68,9 +69,12 @@ class Group
     public function removeFigure(Figure $figure): static
     {
         if ($this->figures->removeElement($figure)) {
-            $figure->removeGroupe($this);
+            if ($figure->getGroup() === $this) {
+                $figure->setGroup(null);
+            }
         }
 
         return $this;
     }
+
 }
