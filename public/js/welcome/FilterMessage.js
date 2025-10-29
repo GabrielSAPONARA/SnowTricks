@@ -21,7 +21,7 @@ export default class Filter
         this.content = element.querySelector(".js-figure-messages");
         this.currentUrl = element.querySelector(".js-message-page").href;
         this.page = parseInt(new URLSearchParams(this.currentUrl.search).get("page") || 1);
-        this.moreNav = this.page === 1;
+        this.moreNav = this.page === 1 && this.page < this.pagination.getAttribute("data-max-page");
         this.bindEvents();
 
     }
