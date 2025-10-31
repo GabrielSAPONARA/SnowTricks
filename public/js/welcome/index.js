@@ -113,6 +113,7 @@ figureLinks.forEach(link =>
                     {
                         buttonToDeleteFigure[deleteButtonIterator].addEventListener("click", async (e) => {
                             e.preventDefault();
+                            document.getElementById('confirm-deletion').querySelector('a').setAttribute('data-figure-slug',figureSlug);
                             openModal(e, buttonToDeleteFigure[deleteButtonIterator]);
                         })
                     }
@@ -123,6 +124,7 @@ figureLinks.forEach(link =>
                 deleteFigureButton.addEventListener("click", async (e) =>
                 {
                     e.preventDefault();
+                    document.getElementById('confirm-deletion').querySelector('a').setAttribute('data-figure-slug',figureSlug);
                     openModal(e, deleteFigureButton);
 
 
@@ -162,11 +164,7 @@ figureLinks.forEach(link =>
                     }
                 })
 
-                popupToConfirmDeletion.querySelector("a").addEventListener("click", async (e) =>{
-                    e.preventDefault();
-                    let response = await deleteFigure(link.querySelector("h5").textContent, deleteFigureButton.getAttribute('data-token'));
-                    window.location.reload();
-                })
+
             }, 100);
 
         }
@@ -181,8 +179,13 @@ figureLinks.forEach(link =>
     })
 })
 
+
+
+
 async function deleteFigure(figureSlug, token)
 {
+    console.log(figureSlug);
+    console.log(token);
     let url = "http://localhost:8080/figure/delete/" + figureSlug;
     const response = await fetch(url, {
         method: "DELETE",
@@ -446,4 +449,28 @@ popupToConfirmDeletion.querySelectorAll("button").forEach(button =>
         e.preventDefault();
         popupToConfirmDeletion.close();
     })
+})
+
+popupToConfirmDeletion.querySelector("a").addEventListener("click", async (e) =>{
+    e.preventDefault();
+    let dataToken = "";
+    if(figureModal.open)
+    {
+        console.log(figureModal);
+        if(figureModal.querySelector("#dustbin-to-delete-figure") !== null)
+        {
+            dataToken = figureModal.querySelector("#dustbin-to-delete-figure").getAttribute('data-token');
+        }
+        else
+        {
+            dataToken = figureModal.querySelector('#delete-button-in-modal-to-edit-figure').getAttribute('data-token');
+        }
+    }
+    else
+    {
+        dataToken = popupToConfirmDeletion.querySelector('a').getAttribute('data-token');
+    }
+    console.log(dataToken);
+    let response = await deleteFigure(popupToConfirmDeletion.querySelector('a').getAttribute("data-figure-slug"), dataToken);
+    window.location.reload();
 })

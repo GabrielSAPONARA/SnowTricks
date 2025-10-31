@@ -69,9 +69,11 @@
 
         <button class="d-flex btn btn-primary my-3" id="save-figure-change">{{ button_label|default('Save') }}</button>
         {{ form_end(form) }}
-        <a class="btn btn-danger delete-figure-button"
-           href="#confirm-deletion"
-           data-token="{{ csrf_token('delete' ~ figure.id) }}">
+        <a
+            id="delete-button-in-modal-to-edit-figure"
+            class="btn btn-danger delete-figure-button"
+            href="#confirm-deletion"
+            data-token="{{ csrf_token('delete' ~ figure.id) }}">
             Delete
         </a>
     </div>
