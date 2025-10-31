@@ -39,7 +39,7 @@ class FigureForm extends AbstractType
                 'class' => Group::class,
                 'choice_label' => 'name',
                 'multiple' => false,
-                'expanded' => true,
+                'expanded' => false,
                 'attr' =>
                 [
                     "class" => "vertical-checkboxes",
