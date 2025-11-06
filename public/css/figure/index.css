@@ -9,3 +9,8 @@
     max-height: 10dvh;
     overflow: scroll;
 }
+.video-size
+{
+    width: 600px;
+    height: 400px;
+}
