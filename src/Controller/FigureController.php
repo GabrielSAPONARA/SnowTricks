@@ -388,27 +388,6 @@ final class FigureController extends AbstractController
         $entityManager->remove($figure);
         $entityManager->flush();
 
-//        if($request->isXmlHttpRequest())
-//        {
-//            $data = json_decode($request->getContent(), true);
-//            dd($data);
-//            foreach ($figure->getPictureFigures() as $picture)
-//            {
-//                $entityManager->remove($picture);
-//            }
-//            foreach ($figure->getVideoFigures() as $video)
-//            {
-//                $entityManager->remove($video);
-//            }
-//            $entityManager->remove($figure);
-//            $entityManager->flush();
-//
-//            return $this->json([
-//                'success' => true,
-//                'message' => "The figure was successfully deleted.",
-//            ]);
-//        }
-
         if ($request->isXmlHttpRequest()) {
             return $this->json([
                 'success' => true,
