@@ -43,6 +43,11 @@ dialog::backdrop {
     height: 300px;
 }
 
+.top-video-popup
+{
+    height: 300px;
+}
+
 #messages
 {
     min-height: 50dvh;

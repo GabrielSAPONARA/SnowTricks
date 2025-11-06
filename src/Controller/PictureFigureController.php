@@ -36,7 +36,6 @@ final class PictureFigureController extends AbstractController
     {
         if ($request->isXmlHttpRequest())
         {
-//            dd($request->request->get('picture_figure_form[_token]'));
             if (is_array($request->request->all()) &&
                 isset($request->request->all()["picture_figure_form"]["_token"]))
             {
@@ -45,8 +44,7 @@ final class PictureFigureController extends AbstractController
             else
             {
                 return new JsonResponse([
-                    'error' => 'Token CSRF is missing or disabled
-                .'
+                    'error' => 'Token CSRF is missing or disabled.'
                 ], 403);
             }
             $file = $request->files->get('picture_figure_form')['image'];
@@ -82,54 +80,17 @@ final class PictureFigureController extends AbstractController
                     'success' => true,
                 ]);
             }
+            else
+            {
+                return new JsonResponse([
+                    'error' => 'It is the same file.'
+                ], 403);
+            }
         }
-
-//        $form = $this->createForm(PictureFigureFormType::class, $pictureFigure);
-//        $form->handleRequest($request);
-//
-//        if ($form->isSubmitted() && $form->isValid())
-//        {
-//            $image = $form->get('image')->getData();
-//            $originalFilename = pathinfo($image
-//                ->getClientOriginalName(), PATHINFO_FILENAME);
-//            $safeFilename = $slugger->slug($originalFilename);
-//            $newFilename = $safeFilename . '-' . uniqid() . '.' .
-//                           $image->guessExtension();
-//            $oldPictureName = explode("-", $pictureFigure->getName())[0];
-//            if ($oldPictureName !== $originalFilename)
-//            {
-//                $filePath = $this->getParameter('figures_images_directory') .
-//                            '/' . $pictureFigure->getName();
-//                if (file_exists($filePath))
-//                {
-//                    unlink($filePath);
-//                }
-//                $pictureFigure->setName($newFilename);
-//
-//                try
-//                {
-//                    $image->move(
-//                        $this->getParameter('figures_images_directory'),
-//                        $newFilename
-//                    );
-//                }
-//                catch (FileException $e)
-//                {
-//                    $this->addFlash('error', 'Erreur lors de l’upload d’image : ' .
-//                                             $e->getMessage());
-//                }
-//
-//                $entityManager->flush();
-//
-//            }
-//            $entityManager->flush();
-//            return $this->redirectToRoute('app_welcome');
-//        }
-//
-//        return $this->render('picture_figure/edit.html.twig',
-//            [
-//                'form' => $form,
-//            ]);
+        else
+        {
+            return $this->redirectToRoute('app_welcome', [], Response::HTTP_SEE_OTHER);
+        }
     }
 
     #[Route('/form/to/edit/{id}', name: 'app_picture_figure_form_to_edit')]
@@ -152,6 +113,39 @@ final class PictureFigureController extends AbstractController
                         'pictureName' => $pictureFigure->getName(),
                     ])
             ]);
+        }
+        else
+        {
+            return $this->redirectToRoute('app_welcome', [], Response::HTTP_SEE_OTHER);
+        }
+    }
+
+    #[Route('/delete/{id}', name: 'app_picture_figure_to_delete')]
+    public function delete
+    (
+        Request                $request,
+        EntityManagerInterface $entityManager,
+        PictureFigure          $pictureFigure,
+    ): Response
+    {
+        $token = $request->headers->get('X-CSRF-TOKEN') ?? $request->request->get('_token');
+        if (!$this->isCsrfTokenValid('delete' . $pictureFigure->getId(), $token)) {
+            return $this->json([
+                'success' => false,
+                'message' => "Invalid CSRF token.",
+            ], 400);
+        }
+
+        $entityManager->remove($pictureFigure);
+        $entityManager->flush();
+
+        if ($request->isXmlHttpRequest()) {
+            return $this->json([
+                'success' => true,
+                'message' => "The figure was successfully deleted.",
+            ]);
+        } else {
+            return $this->redirectToRoute('app_welcome', [], Response::HTTP_SEE_OTHER);
         }
     }
 }

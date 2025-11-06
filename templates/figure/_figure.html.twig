@@ -7,6 +7,21 @@
                  alt="Picture of {{ figure.name }}">
 
         </div>
+    {% elseif videos|length > 0 %}
+        <div class="col-12 px-0 mb-5">
+            <iframe
+                    class="w-100 top-video-popup"
+                    title="Vidéo de {{ figure.name }}"
+                    src="{{ videos[0].embedUrl|raw }}"
+                    frameborder="0"
+                    allowfullscreen
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share">
+            </iframe>
+        </div>
+    {% else %}
+        <div class="top-div-popup-picture">
+            There isn't picture or video.
+        </div>
     {% endif %}
     {%  if is_granted('IS_AUTHENTICATED') %}
         <div class="col-2 d-flex position-absolute symbols">
@@ -41,7 +56,7 @@
             {% for video in videos %}
                 <div class="col-3">
                     <iframe
-                            class="h-75 mb-5"
+                            class="h-100 mb-5"
                             title="Vidéo de {{ figure.name }}"
                             src="{{ video.embedUrl|raw }}"
                             frameborder="0"

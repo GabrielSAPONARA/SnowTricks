@@ -8,6 +8,21 @@
 
         </div>
         <a class="btn btn-warning position-absolute w-25 edit-picture" href="#modal-picture-to-edit" id="{{ pictures[0].id }}">Edit this picture</a>
+    {% elseif videos|length > 0 %}
+        <div class="col-12 px-0 mb-5">
+            <iframe
+                    class="w-100 top-video-popup"
+                    title="Vidéo de {{ figure.name }}"
+                    src="{{ videos[0].embedUrl|raw }}"
+                    frameborder="0"
+                    allowfullscreen
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share">
+            </iframe>
+        </div>
+    {% else %}
+        <div class="top-div-popup-picture">
+            There isn't picture or video.
+        </div>
     {% endif %}
 </div>
 <div class="container-fluid">
@@ -19,6 +34,7 @@
                          src="{{ asset('uploads/figures/' ~ picture.name) }}"
                          alt="Picture of {{ figure.name }}">
                     <a class="btn btn-warning edit-picture" href="#modal-picture-to-edit" id="{{ picture.id }}">Edit this picture</a>
+                    <a class="btn btn-danger delete-picture" href="#modal-picture-to-delete" id="{{ picture.id }}" data-token="{{ csrf_token('delete' ~ picture.id) }}">Delete this picture</a>
                 </div>
             {% endfor %}
         {% endif %}
@@ -34,6 +50,7 @@
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share">
                     </iframe>
                     <a class="btn btn-warning edit-video" href="#modal-picture-to-edit" id="{{ video.id }}">Edit this video</a>
+                    <a class="btn btn-danger delete-video" href="#modal-video-to-delete" id="{{ video.id }}" data-token="{{ csrf_token('delete' ~ video.id) }}">Delete this video</a>
                 </div>
             {% endfor %}
         {% endif %}
@@ -58,13 +75,7 @@
         </div>
 
         <div>
-            {{ form_label(form.group) }}
-            {% for child in form.group %}
-                <div class="form-check px-0">
-                    {{ form_widget(child) }}
-                    {{ form_label(child) }}
-                </div>
-            {% endfor %}
+            {{ form_row(form.group) }}
         </div>
 
         <button class="d-flex btn btn-primary my-3" id="save-figure-change">{{ button_label|default('Save') }}</button>

@@ -8,6 +8,8 @@ let figureLinks = Array.from(document.getElementsByClassName("js-figure-details"
 let figureModal = document.querySelector(".js-figure-informations");
 let modalToEditPictureFigure = document.querySelector(".modal-picture-figure-to-edit");
 let popupToConfirmDeletion = document.getElementById("confirm-deletion");
+let popupToConfirmPictureDeletion = document.getElementById("modal-picture-to-delete");
+let popupToConfirmVideoDeletion = document.getElementById("modal-video-to-delete");
 
 figureLinks.forEach(link =>
 {
@@ -30,13 +32,11 @@ figureLinks.forEach(link =>
                 figureModal.insertAdjacentHTML('afterbegin', html);
 
                 let pencilToEditModal = document.getElementById("pencil-to-edit-figure");
-                console.log(pencilToEditModal);
 
                 pencilToEditModal.addEventListener("click", async (e) =>
                 {
                     e.preventDefault();
                     html = await fetchFormToEditFigure(link.querySelector("h5").textContent);
-                    console.log(html);
                     while (figureModal.firstChild)
                     {
                         figureModal.removeChild(figureModal.firstChild);
@@ -93,6 +93,34 @@ figureLinks.forEach(link =>
                                 await fetchUrlVideo(formData, editVideoButton.id);
                                 window.location.reload();
                             })
+                        })
+                    })
+
+                    let buttonsToDeletePicture = figureModal.querySelectorAll(".delete-picture");
+                    buttonsToDeletePicture.forEach(buttonToDeletePicture =>
+                    {
+                        buttonToDeletePicture.addEventListener("click", async (e) =>
+                        {
+                            e.preventDefault();
+                            let pictureId = buttonToDeletePicture.id;
+                            let pictureToken = buttonToDeletePicture.getAttribute("data-token");
+                            document.getElementById('modal-picture-to-delete').querySelector('a').setAttribute('data-picture-id',pictureId);
+                            document.getElementById('modal-picture-to-delete').querySelector('a').setAttribute('data-token',pictureToken);
+                            openModal(e, buttonToDeletePicture);
+                        })
+                    })
+
+                    let buttonsToDeleteVideo = figureModal.querySelectorAll(".delete-video");
+                    buttonsToDeleteVideo.forEach(buttonToDeleteVideo =>
+                    {
+                        buttonToDeleteVideo.addEventListener("click", async (e) =>
+                        {
+                            e.preventDefault();
+                            let pictureId = buttonToDeleteVideo.id;
+                            let pictureToken = buttonToDeleteVideo.getAttribute("data-token");
+                            document.getElementById('modal-video-to-delete').querySelector('a').setAttribute('data-video-id',pictureId);
+                            document.getElementById('modal-video-to-delete').querySelector('a').setAttribute('data-token',pictureToken);
+                            openModal(e, buttonToDeleteVideo);
                         })
                     })
 
@@ -170,7 +198,7 @@ figureLinks.forEach(link =>
         }
         catch (error)
         {
-            console.log(error)
+            console.error(error)
         }
         openModal(e, link)
 
@@ -179,13 +207,52 @@ figureLinks.forEach(link =>
     })
 })
 
+async function deletePicture(pictureId, token)
+{
+    let url = "http://localhost:8080/picture/figure/delete/" + pictureId;
+    const response = await fetch(url, {
+        method: "DELETE",
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': token
+        }
+    })
+    if (response.ok)
+    {
+        return await response.json();
+    }
+    else
+    {
+        throw new Error(`HTTP error: ${response.status}`);
+    }
 
+}
+async function deleteVideo(videoId, token)
+{
+    let url = "http://localhost:8080/video/figure/delete/" + videoId;
+    const response = await fetch(url, {
+        method: "DELETE",
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': token
+        }
+    })
+    if (response.ok)
+    {
+        return await response.json();
+    }
+    else
+    {
+        throw new Error(`HTTP error: ${response.status}`);
+    }
+
+}
 
 
 async function deleteFigure(figureSlug, token)
 {
-    console.log(figureSlug);
-    console.log(token);
     let url = "http://localhost:8080/figure/delete/" + figureSlug;
     const response = await fetch(url, {
         method: "DELETE",
@@ -401,7 +468,6 @@ const openModal = function (event, link)
 {
     event.preventDefault();
     const target = document.querySelector(link.getAttribute("href"));
-    console.log(link);
     target.showModal(); // Utilisez showModal() pour ouvrir le dialog
 };
 
@@ -456,7 +522,6 @@ popupToConfirmDeletion.querySelector("a").addEventListener("click", async (e) =>
     let dataToken = "";
     if(figureModal.open)
     {
-        console.log(figureModal);
         if(figureModal.querySelector("#dustbin-to-delete-figure") !== null)
         {
             dataToken = figureModal.querySelector("#dustbin-to-delete-figure").getAttribute('data-token');
@@ -470,7 +535,56 @@ popupToConfirmDeletion.querySelector("a").addEventListener("click", async (e) =>
     {
         dataToken = popupToConfirmDeletion.querySelector('a').getAttribute('data-token');
     }
-    console.log(dataToken);
     let response = await deleteFigure(popupToConfirmDeletion.querySelector('a').getAttribute("data-figure-slug"), dataToken);
     window.location.reload();
 })
+
+popupToConfirmPictureDeletion.addEventListener('click', function (event)
+{
+    if (event.target === popupToConfirmPictureDeletion)
+    {
+        popupToConfirmPictureDeletion.close();
+    }
+})
+
+popupToConfirmPictureDeletion.querySelectorAll("button").forEach(button =>
+{
+    button.addEventListener("click", async (e) => {
+        e.preventDefault();
+        popupToConfirmPictureDeletion.close();
+    })
+})
+
+
+popupToConfirmPictureDeletion.querySelector("a").addEventListener("click", async (e) => {
+    e.preventDefault();
+    let dataToken = popupToConfirmPictureDeletion.querySelector("a").getAttribute("data-token");
+    let pictureId = popupToConfirmPictureDeletion.querySelector("a").getAttribute("data-picture-id");
+    let response = await  deletePicture(pictureId, dataToken);
+    window.location.reload();
+})
+popupToConfirmVideoDeletion.addEventListener('click', function (event)
+{
+    if (event.target === popupToConfirmVideoDeletion)
+    {
+        popupToConfirmVideoDeletion.close();
+    }
+})
+
+popupToConfirmVideoDeletion.querySelectorAll("button").forEach(button =>
+{
+    button.addEventListener("click", async (e) => {
+        e.preventDefault();
+        popupToConfirmVideoDeletion.close();
+    })
+})
+
+
+popupToConfirmVideoDeletion.querySelector("a").addEventListener("click", async (e) => {
+    e.preventDefault();
+    let dataToken = popupToConfirmVideoDeletion.querySelector("a").getAttribute("data-token");
+    let videoId = popupToConfirmVideoDeletion.querySelector("a").getAttribute("data-video-id");
+    let response = await  deleteVideo(videoId, dataToken);
+    window.location.reload();
+})
+

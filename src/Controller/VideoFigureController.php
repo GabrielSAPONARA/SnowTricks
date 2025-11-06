@@ -73,4 +73,33 @@ final class VideoFigureController extends AbstractController
             ]);
         }
     }
+
+    #[Route('/delete/{id}', name: 'app_video_figure_to_delete')]
+    public function delete
+    (
+        Request                $request,
+        EntityManagerInterface $entityManager,
+        VideoFigure          $videoFigure,
+    ): Response
+    {
+        $token = $request->headers->get('X-CSRF-TOKEN') ?? $request->request->get('_token');
+        if (!$this->isCsrfTokenValid('delete' . $videoFigure->getId(), $token)) {
+            return $this->json([
+                'success' => false,
+                'message' => "Invalid CSRF token.",
+            ], 400);
+        }
+
+        $entityManager->remove($videoFigure);
+        $entityManager->flush();
+
+        if ($request->isXmlHttpRequest()) {
+            return $this->json([
+                'success' => true,
+                'message' => "The figure was successfully deleted.",
+            ]);
+        } else {
+            return $this->redirectToRoute('app_welcome', [], Response::HTTP_SEE_OTHER);
+        }
+    }
 }
