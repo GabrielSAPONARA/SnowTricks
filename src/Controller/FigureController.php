@@ -268,7 +268,7 @@ final class FigureController extends AbstractController
                             $newFilename
                         );
                     } catch (FileException $e) {
-                        $this->addFlash('error', 'Erreur lors de l’upload d’image : ' . $e->getMessage());
+                        $this->addFlash('error', 'Error while picture upload : ' . $e->getMessage());
                         continue;
                     }
 
