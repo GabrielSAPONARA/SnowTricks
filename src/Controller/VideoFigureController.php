@@ -14,14 +14,6 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/video/figure')]
 final class VideoFigureController extends AbstractController
 {
-    #[Route(name: 'app_video_figure')]
-    public function index(): Response
-    {
-        return $this->render('video_figure/index.html.twig', [
-            'controller_name' => 'VideoFigureController',
-        ]);
-    }
-
     #[Route('/edit/{id}', name: 'app_video_figure_edit')]
     public function edit
     (
