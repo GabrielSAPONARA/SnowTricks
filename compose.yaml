@@ -10,8 +10,21 @@ services:
       - ./:/var/www/symfony
     environment:
       - DATABASE_URL=mysql://symfony:symfony@mysql:3306/symfony
+
+    command: >
+      bash -c "
+      mkdir -p /var/www/symfony/var/tmp &&
+      chown -R www-data:www-data /var/www/symfony/var/tmp &&
+      chmod -R 777 /var/www/symfony/var/tmp &&
+      php-fpm
+      "
+
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
     depends_on:
       - mysql
+
   # Service Nginx
   nginx:
     image: nginx:alpine

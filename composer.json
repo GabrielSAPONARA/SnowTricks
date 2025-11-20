@@ -25,7 +25,8 @@
         "symfony/twig-bundle": "6.4.*",
         "symfony/validator": "6.4.*",
         "symfony/yaml": "6.4.*",
-        "symfonycasts/verify-email-bundle": "^1.17"
+        "symfonycasts/verify-email-bundle": "^1.17",
+      "ext-gd": "*"
     },
     "config": {
         "allow-plugins": {
@@ -76,6 +77,11 @@
         }
     },
     "require-dev": {
+        "aalaap/faker-youtube": "^2.0",
+        "bluemmb/faker-picsum-photos-provider": "^2.0",
+        "doctrine/doctrine-fixtures-bundle": "^4.3",
+        "fakerphp/faker": "^1.24",
+        "smknstd/fakerphp-picsum-images": "^1.0",
         "symfony/maker-bundle": "^1.63",
         "symfony/stopwatch": "6.4.*",
         "symfony/web-profiler-bundle": "6.4.*"
