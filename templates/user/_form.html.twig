@@ -15,6 +15,13 @@
                     {{ form_errors(form.email) }}
                 </div>
             </div>
+            {{ form_label(form.avatar) }}
+            <div class="form-floating mb-3">
+                {{ form_widget(form.avatar) }}
+                <div class="invalid-feedback">
+                    {{ form_errors(form.avatar) }}
+                </div>
+            </div>
             <button class="btn btn-primary">{{ button_label|default('Save') }}</button>
         {{ form_end(form) }}
     </div>
