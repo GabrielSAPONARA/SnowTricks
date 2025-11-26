@@ -10,15 +10,25 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[Route('/user')]
 final class UserController extends AbstractController
 {
+    public function __construct(
+        private SluggerInterface $slugger,
+    )
+    {
+
+    }
+
     #[Route(name: 'app_user_index', methods: ['GET'])]
     public function index(UserRepository $userRepository): Response
     {
@@ -67,26 +77,56 @@ final class UserController extends AbstractController
     }
 
     #[Route('/edit/{id}', name: 'app_user_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, User $user, EntityManagerInterface $entityManager): Response
+    public function edit(
+        Request                $request,
+        User                   $user,
+        EntityManagerInterface $entityManager,
+        ValidatorInterface     $validator
+    ):
+    Response
     {
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid())
         {
-//            if (!$passwordHasher->isPasswordValid($user, $form->get
-//            ('password')->getData()))
-//            {
-//                $this->addFlash('danger', 'Your password is invalid.');
-//                return $this->redirectToRoute('app_user_edit', ['id' => $user->getId()]);
-//            }
-//
-//            if ($form->get('newPassword')->get('first')->getData() !==
-//                $form->get('newPassword')->get('second')->getData())
-//            {
-//                $this->addFlash('danger', "Your new password isn't the same in the two field.");
-//                return $this->redirectToRoute('app_user_edit', ['id' => $user->getId()]);
-//            }
+
+            $avatar = $form->get('avatar')->getData();
+            if ($avatar)
+            {
+                $violations = $validator->validate(
+                    $avatar,
+                    new \Symfony\Component\Validator\Constraints\Image([
+                        'maxSize'          => '5M',
+                        'mimeTypesMessage' => 'Merci d\'uploader une image valide (jpeg/png/webp)',
+                    ])
+                );
+
+                if (count($violations) > 0)
+                {
+                    $this->addFlash('error', (string)$violations);
+                }
+
+                $originalFilename = pathinfo($avatar->getClientOriginalName(),
+                    PATHINFO_FILENAME);
+                $safeFilename = $this->slugger->slug($originalFilename);
+                $newFilename = $safeFilename . '-' . uniqid() . '.' .
+                               $avatar->guessExtension();
+
+                try
+                {
+                    $avatar->move(
+                        $this->getParameter('user_images_directory'),
+                        $newFilename
+                    );
+                }
+                catch (FileException $e)
+                {
+                    $this->addFlash('error', 'Erreur lors de l’upload : ' .
+                                             $e->getMessage());
+                }
+                $user->setAvatar($newFilename);
+            }
 
             $entityManager->flush();
 
@@ -102,9 +142,9 @@ final class UserController extends AbstractController
 
     #[Route('/change/password/{id}', name: 'app_user_change_password',
         methods: [
-        'GET', 'POST'
-    ])]
-    public function changePassword(Request $request, User $user,
+            'GET', 'POST'
+        ])]
+    public function changePassword(Request                $request, User $user,
                                    EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
     {
         $form = $this->createForm(ChangePasswordType::class, $user);
@@ -125,7 +165,9 @@ final class UserController extends AbstractController
                 $this->addFlash('danger', "Your new password isn't the same in the two field.");
                 return $this->redirectToRoute('app_user_edit', ['id' => $user->getId()]);
             }
-            $user->setPassword($passwordHasher->hashPassword($user, $form->get('newPassword')->get('first')->getData()));
+            $user->setPassword($passwordHasher->hashPassword($user, $form->get('newPassword')
+                                                                         ->get('first')
+                                                                         ->getData()));
             $entityManager->persist($user);
             $entityManager->flush();
 
@@ -145,8 +187,9 @@ final class UserController extends AbstractController
     public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete' .
-                                    $user->getId(), $request->getPayload()
-                                                            ->getString('_token')))
+                                    $user->getId(), $request
+            ->getPayload()
+            ->getString('_token')))
         {
             $entityManager->remove($user);
             $entityManager->flush();

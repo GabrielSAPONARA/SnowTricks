@@ -1,12 +1,21 @@
 {% for message in messages %}
     <div class="row d-flex justify-content-center my-3">
         <div class="col-1">
+            {% if message.user.avatar %}
+                <img class="col-12 rounded-circle"
+                     src="{{ asset('uploads/avatars/' ~ message.user.avatar) }}"
+                     alt="Avatar of {{ message.user.username }}">
+            {% else %}
+                <img class="col-12 rounded-circle"
+                     src="{{ asset('assets/img/defaultUserAvatar.png') }}"
+                     alt="Avatar of {{ message.user.username }}">
+            {% endif %}
             {{ message.user.username }}
         </div>
         <div class="col-1">
             {{ message.dateOfLastUpdate|date("d/m/Y H:i:s") }}
         </div>
-        <div class="col-5" style="max-height: 20dvh; overflow: scroll;">
+        <div class="col-10" style="max-height: 20dvh; overflow: scroll;">
             {{ message.content }}
         </div>
     </div>
