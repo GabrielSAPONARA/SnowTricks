@@ -7,19 +7,65 @@
         <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
     {% endfor %}
 
-    <h1>Register</h1>
+    <section class="py-5">
+        <div class="container px-5">
+            <div class="bg-light rounded-3 py-5 px-4 px-md-5 mb-5">
+                <div class="text-center mb-5">
+                    <h1 class="fw-bolder">Register</h1>
+                </div>
+                <div class="row gx-5 justify-content-center">
+                    <div class="col-lg-8 col-xl-6">
+                            {{ form_errors(registrationForm) }}
 
-    {{ form_errors(registrationForm) }}
+                            {{ form_start(registrationForm) }}
+                            <div class="form-floating mb-3">
+                                {{ form_widget(registrationForm.username) }}
+                                {{ form_label(registrationForm.username) }}
+                                <div class="invalid-feedback">
+                                    {{ form_errors(registrationForm.username) }}
+                                </div>
+                            </div>
+                            <div class="form-floating mb-3">
+                                {{ form_widget(registrationForm.email) }}
+                                {{ form_label(registrationForm.email) }}
+                                <div class="invalid-feedback">
+                                    {{ form_errors(registrationForm.email) }}
+                                </div>
+                            </div>
+                            <div class="form-floating mb-3">
+                                {{ form_widget(registrationForm.plainPassword.first) }}
+                                {{ form_label(registrationForm.plainPassword.first) }}
+                                <div class="invalid-feedback">
+                                    {{ form_errors(registrationForm.plainPassword.first) }}
+                                </div>
+                            </div>
+                            <div class="form-floating mb-3">
+                                {{ form_widget(registrationForm.plainPassword.second) }}
+                                {{ form_label(registrationForm.plainPassword.second) }}
+                                <div class="invalid-feedback">
+                                    {{ form_errors(registrationForm.plainPassword.second) }}
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                {{ form_label(registrationForm.avatar) }}
+                                {{ form_widget(registrationForm.avatar) }}
+                                <div class="invalid-feedback">
+                                    {{ form_errors(registrationForm.avatar) }}
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                {{ form_widget(registrationForm.agreeTerms) }}
+                                {{ form_label(registrationForm.agreeTerms) }}
+                                <div class="invalid-feedback">
+                                    {{ form_errors(registrationForm.agreeTerms) }}
+                                </div>
+                            </div>
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.username) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.avatar) }}
-        {{ form_row(registrationForm.agreeTerms) }}
-
-        <button class="btn btn-primary" type="submit">Register</button>
-    {{ form_end(registrationForm) }}
+                            <button class="btn btn-primary" type="submit">Register</button>
+                        {{ form_end(registrationForm) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 {% endblock %}
