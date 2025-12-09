@@ -10,21 +10,34 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
 class RegistrationController extends AbstractController
 {
-    public function __construct(private EmailVerifier $emailVerifier)
+    public function __construct(
+        private EmailVerifier $emailVerifier,
+        private SluggerInterface $slugger,
+    )
     {
     }
 
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager): Response
+    public function register(
+        Request $request,
+        UserPasswordHasherInterface $userPasswordHasher,
+        Security $security,
+        EntityManagerInterface $entityManager,
+        ValidatorInterface     $validator,
+        UserPasswordHasherInterface $passwordHasher
+    ): Response
     {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
@@ -34,8 +47,54 @@ class RegistrationController extends AbstractController
             /** @var string $plainPassword */
             $plainPassword = $form->get('plainPassword')->getData();
 
+            if ($form->get('plainPassword')->get('first')->getData() !==
+                $form->get('plainPassword')->get('second')->getData())
+            {
+                $this->addFlash('danger', "Your new password isn't the same in the two field.");
+                return $this->redirectToRoute('app_register');
+            }
+            $user->setPassword($passwordHasher->hashPassword($user, $form->get('plainPassword')
+                                                                         ->get('first')
+                                                                         ->getData()));
             // encode the plain password
             $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
+
+            $avatar = $form->get('avatar')->getData();
+            if ($avatar)
+            {
+                $violations = $validator->validate(
+                    $avatar,
+                    new \Symfony\Component\Validator\Constraints\Image([
+                        'maxSize'          => '5M',
+                        'mimeTypesMessage' => 'Merci d\'uploader une image valide (jpeg/png/webp)',
+                    ])
+                );
+
+                if (count($violations) > 0)
+                {
+                    $this->addFlash('error', (string)$violations);
+                }
+
+                $originalFilename = pathinfo($avatar->getClientOriginalName(),
+                    PATHINFO_FILENAME);
+                $safeFilename = $this->slugger->slug($originalFilename);
+                $newFilename = $safeFilename . '-' . uniqid() . '.' .
+                               $avatar->guessExtension();
+
+                try
+                {
+                    $avatar->move(
+                        $this->getParameter('user_images_directory'),
+                        $newFilename
+                    );
+                }
+                catch (FileException $e)
+                {
+                    $this->addFlash('error', 'Erreur lors de l’upload : ' .
+                                             $e->getMessage());
+                }
+                $user->setAvatar($newFilename);
+            }
 
             $entityManager->persist($user);
             $entityManager->flush();
