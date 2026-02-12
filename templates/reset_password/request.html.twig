@@ -6,17 +6,36 @@
     {% for flash_error in app.flashes('reset_password_error') %}
         <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
     {% endfor %}
-    <h1>Reset your password</h1>
-
-    {{ form_start(requestForm) }}
-        {{ form_row(requestForm.email) }}
-        <div>
-            <small>
-                Enter your email address, and we will send you a
-                link to reset your password.
-            </small>
+    <section class="py-5">
+        <div class="container px-5">
+            <!-- Contact form-->
+            <div class="bg-light rounded-3 py-5 px-4 px-md-5 mb-5">
+                <div class="text-center mb-5">
+                    <h1 class="fw-bolder">Reset your password</h1>
+                </div>
+                <div class="row gx-5 justify-content-center">
+                    <div class="col-lg-8 col-xl-6">
+                        {{ form_start(requestForm) }}
+                        <div class="form-floating mb-3">
+                            {{ form_widget(requestForm.email, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_label(requestForm.email) }}
+                            <div class="invalid-feedback">
+                                {{ form_errors(requestForm.email) }}
+                            </div>
+                        </div>
+                        <div>
+                            <small>
+                                Enter your email address, and we will send you a
+                                link to reset your password.
+                            </small>
+                        </div>
+                        <div class="d-grid my-3">
+                            <button class="btn btn-primary">Send password reset email</button>
+                            {{ form_end(requestForm) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <button class="btn btn-primary">Send password reset email</button>
-    {{ form_end(requestForm) }}
+    </section>
 {% endblock %}
