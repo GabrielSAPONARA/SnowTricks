@@ -44,10 +44,10 @@
         {# Ajout dynamique de vidéos #}
         <h3>Add some videos</h3>
         <div id="video-fields" class="row mb-3"
-             data-prototype="{{ form_row(form.videoFigures.vars.prototype)|e('html_attr') }}">
+             data-prototype="{{ form_widget(form.videoFigures.vars.prototype)|e('html_attr') }}">
 
             {% for videoUrl in form.videoFigures %}
-                {{ form_row(videoFigures) }}
+                {{ form_row(videoUrl) }}
             {% endfor %}
         </div>
         <button type="button" id="add-video-field" class="btn btn-secondary mb-3">+ Add a video</button>
