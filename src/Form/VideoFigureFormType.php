@@ -17,7 +17,7 @@ class VideoFigureFormType extends AbstractType
     {
         $builder
             ->add('embedUrl', TextareaType::class, [
-                'label' => 'false',
+                'label' => false,
                 'attr' =>
                     [
                         'class' => 'w-100',
