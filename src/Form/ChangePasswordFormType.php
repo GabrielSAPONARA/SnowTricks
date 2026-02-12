@@ -39,9 +39,19 @@ class ChangePasswordFormType extends AbstractType
                         new NotCompromisedPassword(),
                     ],
                     'label' => 'New password',
+                    'attr' =>
+                        [
+                            "class" => "form-control",
+                            "placeholder" => "**************",
+                        ]
                 ],
                 'second_options' => [
                     'label' => 'Repeat Password',
+                    'attr' =>
+                        [
+                            "class" => "form-control",
+                            "placeholder" => "**************",
+                        ]
                 ],
                 'invalid_message' => 'The password fields must match.',
                 // Instead of being set onto the object directly,
