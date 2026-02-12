@@ -4,16 +4,19 @@
 
 {% block stylesheets %}
     <link rel="stylesheet" href="{{ asset('css/welcome/index.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/responsive/576px/welcome/index.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/responsive/992px/welcome/index.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/responsive/1200px/welcome/index.css') }}">
 {% endblock %}
 
 {% block body %}
     <header class="bg-dark">
         <img class="h-100 w-100" src="{{ asset('assets/img/snowboard_neige_figure_saut_shutterstock.jpg') }}"
              alt="a snowboard jump figure">
-        <a href="#figures" class="position-absolute arrow-down rounded-circle bg-light">
+        <a href="#figures" class="position-absolute rounded-circle bg-light bottom-0 end-0 me-3 z-3">
             <img src="{{ asset('assets/img/arrowDown.svg') }}" alt="an arrow down" width="50" height="50">
         </a>
-        <p class="px-5 fs-4 fw-bold fst-italic position-absolute catchphrase">
+        <p class="px-5 mx-3 fs-4 fw-bold fst-italic position-absolute bottom-0">
             "Rejoignez notre communauté de riders passionnés et partagez vos meilleures figures de snowboard. Que vous
             soyez un pro des tricks ou un débutant en quête de conseils, trouvez l'inspiration et le
             soutien pour dominer les pistes comme jamais !"

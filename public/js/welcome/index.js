@@ -11,6 +11,7 @@ let popupToConfirmDeletion = document.getElementById("confirm-deletion");
 let popupToConfirmPictureDeletion = document.getElementById("modal-picture-to-delete");
 let popupToConfirmVideoDeletion = document.getElementById("modal-video-to-delete");
 
+
 figureLinks.forEach(link =>
 {
     link.addEventListener("click", async (e) =>
@@ -192,6 +193,42 @@ figureLinks.forEach(link =>
                     }
                 })
 
+                let buttonToSeeMedias = document.querySelector(".see-medias");
+                let medias = document.querySelector(".medias");
+                let buttonsToHideMedias = document.querySelectorAll(".hide-medias");
+                console.log(buttonsToHideMedias);
+
+                buttonToSeeMedias.addEventListener("click", (e) =>
+                {
+                    e.preventDefault();
+                    medias.classList.remove("d-none");
+                    medias.classList.add("d-grid");
+                    buttonToSeeMedias.classList.remove("d-grid");
+                    buttonToSeeMedias.classList.add("d-none");
+                    buttonsToHideMedias.forEach(buttonToHideMedias =>
+                    {
+                        buttonToHideMedias.classList.remove("d-none");
+                        buttonToHideMedias.classList.add("d-grid");
+                    })
+                })
+
+                for (let buttonsToHideMediaIterator = 0; buttonsToHideMediaIterator < buttonsToHideMedias.length; buttonsToHideMediaIterator++)
+                {
+
+                    buttonsToHideMedias[buttonsToHideMediaIterator].addEventListener("click", (e) =>
+                    {
+                        buttonToSeeMedias.classList.remove("d-none");
+                        buttonToSeeMedias.classList.add("d-grid");
+                        e.preventDefault();
+                        medias.classList.remove("d-grid");
+                        medias.classList.add("d-none");
+                        for (let buttonsToHideMediaIterator = 0; buttonsToHideMediaIterator < buttonsToHideMedias.length; buttonsToHideMediaIterator++)
+                        {
+                            buttonsToHideMedias[buttonsToHideMediaIterator].classList.remove("d-grid");
+                            buttonsToHideMedias[buttonsToHideMediaIterator].classList.add("d-none");
+                        }
+                    })
+                }
 
             }, 100);
 
