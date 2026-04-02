@@ -12,6 +12,7 @@ use App\Form\MessageType;
 use App\Repository\FigureRepository;
 use App\Repository\GroupRepository;
 use App\Repository\MessageRepository;
+use App\Service\FigureService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -31,6 +32,7 @@ final class FigureController extends AbstractController
 
     public function __construct(
         private SluggerInterface $slugger,
+        private FigureService $figureService,
     )
     {
 
@@ -47,19 +49,8 @@ final class FigureController extends AbstractController
 
         if($request->get('ajax'))
         {
-            return new JsonResponse([
-                'content' => $this->renderView('figure/_figures.html.twig',
-                    [
-                        'figures' => $figures,
-                    ]),
-                'pagination' => $this->renderView('figure/_pagination_figures.html.twig',
-                    [
-                        'figures' => $figures,
-                        'maxPage' => $maxPage,
-                        'page' => $page,
-                    ]),
-                'pages' => $maxPage,
-            ]);
+            return $this->figureService->getJsonResponse($figures, $maxPage,
+                    $page, $this);
         }
 
         return $this->render('figure/index.html.twig', [
@@ -397,4 +388,5 @@ final class FigureController extends AbstractController
             return $this->redirectToRoute('app_figure_index', [], Response::HTTP_SEE_OTHER);
         }
     }
+
 }
