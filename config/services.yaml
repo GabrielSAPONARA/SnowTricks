@@ -30,3 +30,9 @@ services:
         arguments:
             $figuresImagesDirectory: '%figures_images_directory%'
         tags: [ 'doctrine.fixture.orm' ]
+
+    # Register your specific service and inject the parameter
+    App\Service\FigureService:
+        arguments:
+            $figuresImagesDirectory: '%figures_images_directory%'
+

@@ -79,38 +79,13 @@ final class FigureController extends AbstractController
             // 📷 Gestion des images uploadées
             $images = $form->get('images')->getData();
             if ($images) {
-                foreach ($images as $image) {
-                    $violations = $validator->validate(
-                        $image,
-                        new \Symfony\Component\Validator\Constraints\Image([
-                            'maxSize' => '5M',
-                            'mimeTypesMessage' => 'Merci d\'uploader une image valide (jpeg/png/webp)',
-                        ])
-                    );
+                $result = $this->figureService->recordImages($images, $figure);
 
-                    if (count($violations) > 0) {
-                        $this->addFlash('error', (string) $violations);
-                        continue;
+                if (!$result['valid']) {
+                    foreach ($result['errors'] as $error) {
+                        $this->addFlash('error', $error);
                     }
-
-                    $originalFilename = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
-                    $safeFilename = $this->slugger->slug($originalFilename);
-                    $newFilename = $safeFilename . '-' . uniqid() . '.' . $image->guessExtension();
-
-                    try {
-                        $image->move(
-                            $this->getParameter('figures_images_directory'),
-                            $newFilename
-                        );
-                    } catch (FileException $e) {
-                        $this->addFlash('error', 'Erreur lors de l’upload : ' . $e->getMessage());
-                        continue;
-                    }
-
-                    $picture = new PictureFigure();
-                    $picture->setName($newFilename);
-                    $picture->setFigure($figure);
-                    $entityManager->persist($picture);
+                    return $this->render('figure/new.html.twig', ['form' => $form->createView()]);
                 }
             }
 
