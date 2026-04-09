@@ -127,8 +127,9 @@ final class FigureController extends AbstractController
         ]);
     }
 
-    #[Route('/{slug}', name: 'app_figure_show', methods: ['GET'])]
-    public function show(Figure $figure, Request $request, MessageRepository $messageRepository): Response
+    #[Route('/{groupName}/{slug}', name: 'app_figure_show', methods: ['GET'])]
+    public function show(string $groupName, Figure $figure, Request $request,
+MessageRepository $messageRepository): Response
     {
         $figureVideos = $figure->getVideoFigures();
         $figurePictures = $figure->getPictureFigures();
