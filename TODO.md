@@ -23,3 +23,5 @@ refactor code in JavaScript
 add theme in user page update
 
 fix error of detail about figure in welcome page when user click on a figure
+
+translate every comment in english
