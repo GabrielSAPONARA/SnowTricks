@@ -1,4 +1,4 @@
-add group in url to figure presentation
+~~add group in url to figure presentation~~
 
 add attribut unique to figure
 
