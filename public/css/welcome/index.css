@@ -3,22 +3,6 @@ header
     height: 95dvh;
 }
 
-nav
-{
-    height: 5dvh;
-}
-
-.arrow-down
-{
-    bottom: 3vh;
-    right: 1vw;
-}
-
-.catchphrase
-{
-    top: 80%;
-}
-
 #js-figure-informations
 {
     width: 600px;
@@ -82,4 +66,18 @@ dialog::backdrop {
 #figure_form2_description
 {
     height: 25dvh;
+}
+
+#message_content
+{
+    height: 25dvh;
+}
+.figure-pictures
+{
+    height: 15rem;
+}
+.edit-hot-topic-picture
+{
+    top: 250px;
+    right: 0;
 }

@@ -93,6 +93,10 @@
       <path value="$PROJECT_DIR$/vendor/aalaap/faker-youtube" />
       <path value="$PROJECT_DIR$/vendor/bluemmb/faker-picsum-photos-provider" />
       <path value="$PROJECT_DIR$/vendor/smknstd/fakerphp-picsum-images" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/cache" />
+      <path value="$PROJECT_DIR$/vendor/symfonycasts/reset-password-bundle" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client-contracts" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.1" />

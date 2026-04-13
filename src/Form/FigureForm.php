@@ -46,7 +46,7 @@ class FigureForm extends AbstractType
                 ],
             ])
             ->add('images', FileType::class, [
-                'label' => "Figure's pictures",
+                'label' => false,
                 'multiple' => true,
                 'mapped' => false,
                 'required' => false,
@@ -69,7 +69,7 @@ class FigureForm extends AbstractType
                 'entry_options' => ['label' => 'URL de la vidéo (YouTube, Dailymotion...)'],
                 'allow_add' => true,
                 'allow_delete' => true,
-//                'prototype' => true,
+                'prototype' => true,
                 'mapped' => false, // on les traite manuellement
                 'required' => false,
                 'by_reference' => false,

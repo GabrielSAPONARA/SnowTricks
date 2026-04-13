@@ -12,6 +12,7 @@ use App\Form\MessageType;
 use App\Repository\FigureRepository;
 use App\Repository\GroupRepository;
 use App\Repository\MessageRepository;
+use App\Service\FigureService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -31,6 +32,7 @@ final class FigureController extends AbstractController
 
     public function __construct(
         private SluggerInterface $slugger,
+        private FigureService $figureService,
     )
     {
 
@@ -47,19 +49,8 @@ final class FigureController extends AbstractController
 
         if($request->get('ajax'))
         {
-            return new JsonResponse([
-                'content' => $this->renderView('figure/_figures.html.twig',
-                    [
-                        'figures' => $figures,
-                    ]),
-                'pagination' => $this->renderView('figure/_pagination_figures.html.twig',
-                    [
-                        'figures' => $figures,
-                        'maxPage' => $maxPage,
-                        'page' => $page,
-                    ]),
-                'pages' => $maxPage,
-            ]);
+            return $this->figureService->getJsonResponse($figures, $maxPage,
+                    $page, $this);
         }
 
         return $this->render('figure/index.html.twig', [
@@ -88,38 +79,13 @@ final class FigureController extends AbstractController
             // 📷 Gestion des images uploadées
             $images = $form->get('images')->getData();
             if ($images) {
-                foreach ($images as $image) {
-                    $violations = $validator->validate(
-                        $image,
-                        new \Symfony\Component\Validator\Constraints\Image([
-                            'maxSize' => '5M',
-                            'mimeTypesMessage' => 'Merci d\'uploader une image valide (jpeg/png/webp)',
-                        ])
-                    );
+                $result = $this->figureService->recordImages($images, $figure);
 
-                    if (count($violations) > 0) {
-                        $this->addFlash('error', (string) $violations);
-                        continue;
+                if (!$result['valid']) {
+                    foreach ($result['errors'] as $error) {
+                        $this->addFlash('error', $error);
                     }
-
-                    $originalFilename = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
-                    $safeFilename = $this->slugger->slug($originalFilename);
-                    $newFilename = $safeFilename . '-' . uniqid() . '.' . $image->guessExtension();
-
-                    try {
-                        $image->move(
-                            $this->getParameter('figures_images_directory'),
-                            $newFilename
-                        );
-                    } catch (FileException $e) {
-                        $this->addFlash('error', 'Erreur lors de l’upload : ' . $e->getMessage());
-                        continue;
-                    }
-
-                    $picture = new PictureFigure();
-                    $picture->setName($newFilename);
-                    $picture->setFigure($figure);
-                    $entityManager->persist($picture);
+                    return $this->render('figure/new.html.twig', ['form' => $form->createView()]);
                 }
             }
 
@@ -155,14 +121,24 @@ final class FigureController extends AbstractController
 
             return $this->redirectToRoute('app_figure_show', ['slug' => $figure->getSlug()]);
         }
+        else
+        {
+            $this->addFlash('error', 'The figure was not valid.');
+            $figureRepository = $entityManager->getRepository(Figure::class);
+            if($figureRepository->findBy(['name' => $figure->getName()]))
+            {
+                $this->addFlash('error', 'A figure with the same name already exists.');
+            }
+        }
 
         return $this->render('figure/new.html.twig', [
             'form' => $form->createView(),
         ]);
     }
 
-    #[Route('/{slug}', name: 'app_figure_show', methods: ['GET'])]
-    public function show(Figure $figure, Request $request, MessageRepository $messageRepository): Response
+    #[Route('/{groupName}/{slug}', name: 'app_figure_show', methods: ['GET'])]
+    public function show(string $groupName, Figure $figure, Request $request,
+MessageRepository $messageRepository): Response
     {
         $figureVideos = $figure->getVideoFigures();
         $figurePictures = $figure->getPictureFigures();
@@ -397,4 +373,5 @@ final class FigureController extends AbstractController
             return $this->redirectToRoute('app_figure_index', [], Response::HTTP_SEE_OTHER);
         }
     }
+
 }
