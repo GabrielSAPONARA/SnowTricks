@@ -14,12 +14,13 @@ let popupToConfirmVideoDeletion = document.getElementById("modal-video-to-delete
 
 figureLinks.forEach(link =>
 {
+    console.log(link);
     link.addEventListener("click", async (e) =>
     {
         e.preventDefault();
         try
         {
-            let html = await fetchFigure(link.querySelector("h5").textContent);
+            let html = await fetchFigure(link.querySelector("p").textContent, link.querySelector("h5").textContent);
 
             // Vider le modal proprement sans casser le DOM
             while (figureModal.firstChild)
@@ -480,9 +481,10 @@ async function fetchMessages(figureSlug, messageContent)
  * @param figureSlug
  * @returns {Promise<*>}
  */
-async function fetchFigure(figureSlug)
+async function fetchFigure(figureGroup, figureSlug)
 {
-    let url = "http://localhost:8080/figure/" + figureSlug
+    // TODO variabiliser le nom des groupes
+    let url = "http://localhost:8080/figure/" + figureGroup +"/" + figureSlug
     const figureResponse = await fetch(url, {
         headers: {
             'X-Requested-With': 'XMLHttpRequest',
