@@ -1,27 +1,33 @@
 ~~add group in url to figure presentation~~
 
-add attribut unique to figure
+~~add attribut unique to figure~~
 
-add unique attribut on figure's name
 
-verify flash messages
+**fix error of detail about figure in welcome page when user click on a figure
+(high)**
 
-update Symfony and PHP
+**check messages pagination (high)**
 
-check messages pagination
+**verify empty message -> not send (high)**
 
-verify empty message -> not send
+add theme in user page update (high)
 
-verify PSR 1 and 2 with PHPSTAN
+verify PSR 1 and 2 with PHPSTAN (high)
 
-verify code with codacy
+update Symfony and PHP (high)
 
-refactor code in controller
 
-refactor code in JavaScript
+verify flash messages (average)
 
-add theme in user page update
+add style to error and notice flash messages (average)
 
-fix error of detail about figure in welcome page when user click on a figure
 
-translate every comment in english
+verify code with codacy (low)
+
+refactor code in controller (low)
+
+refactor code in JavaScript (low)
+
+translate every comment in english (low)
+
+change group names in fixturesgroup --> create array and use a loop (low)

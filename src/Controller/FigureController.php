@@ -121,6 +121,15 @@ final class FigureController extends AbstractController
 
             return $this->redirectToRoute('app_figure_show', ['slug' => $figure->getSlug()]);
         }
+        else
+        {
+            $this->addFlash('error', 'The figure was not valid.');
+            $figureRepository = $entityManager->getRepository(Figure::class);
+            if($figureRepository->findBy(['name' => $figure->getName()]))
+            {
+                $this->addFlash('error', 'A figure with the same name already exists.');
+            }
+        }
 
         return $this->render('figure/new.html.twig', [
             'form' => $form->createView(),
