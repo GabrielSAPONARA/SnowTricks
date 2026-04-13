@@ -3,8 +3,8 @@
 ~~add attribut unique to figure~~
 
 
-**fix error of detail about figure in welcome page when user click on a figure
-(high)**
+~~fix error of detail about figure in welcome page when user click on a figure
+(high)~~
 
 **check messages pagination (high)**
 
