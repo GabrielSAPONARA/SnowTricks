@@ -17,7 +17,6 @@ export default class Filter
         }
 
         this.pagination = element.querySelector(".js-message-pagination");
-        console.log(this.pagination);
         this.content = element.querySelector(".js-figure-messages");
         this.currentUrl = element.querySelector(".js-message-page").href;
         this.page = parseInt(new URLSearchParams(this.currentUrl.search).get("page") || 1);
