@@ -3,10 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Message;
+use App\Entity\User;
 use App\Form\MessageType;
 use App\Repository\FigureRepository;
 use App\Repository\MessageRepository;
-use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -25,37 +25,42 @@ final class MessageController extends AbstractController
         ]);
     }
 
-    #[Route('/to/one/figure/{figureSlug}',name: 'app_message_to_one_figure',
-        methods: ['GET', 'POST'])]
-    public function getMessageToOneFigure(Request $request, MessageRepository
-    $messageRepository, FigureRepository $figureRepository, string
-    $figureSlug): Response
+    #[Route('/to/one/figure/{figureSlug}', name: 'app_message_to_one_figure', methods: [
+        'GET', 'POST'
+    ])]
+    public function getMessageToOneFigure(
+        Request           $request,
+        MessageRepository $messageRepository,
+        FigureRepository  $figureRepository,
+        string            $figureSlug
+    ): Response
     {
-        if($request->isXmlHttpRequest())
+        if ($request->isXmlHttpRequest())
         {
-//            $data = json_decode($request->getContent());
-//            $figureSlug = $data->figureSlug;
-//            $page = intval($data->currentPage);
-            $page = $request->query->get('page');
+            $page = $request->query->get('page', 1);
             $limit = 10;
-            $messages = $messageRepository->findByFigureId
-            ($page, $limit, $figureRepository->findBySlug($figureSlug)->getId
-            ());
-            $maxPage = ceil($messages->count() / $limit);
+
+            $figure = $figureRepository->findBySlug($figureSlug);
+            if (!$figure)
+            {
+                return new JsonResponse(['error' => 'Figure not found'], 404);
+            }
+
+            $messages = $messageRepository->findByFigureId($page, $limit, $figure->getId());
+            $maxPage = (int)ceil($messages->count() / $limit);
 
             return new JsonResponse([
-                'content' => $this->renderView('figure/_messages.html.twig',
-                    [
-                        "messages"   => $messages,
-                        'figureSlug' => $figureSlug,
-                    ]),
-                'pagination' => $this->renderView('figure/_pagination.html.twig',
-                [
+                'content'    => $this->renderView('figure/_messages.html.twig', [
+                    "messages"   => $messages,
+                    'figureSlug' => $figureSlug,
+                    'figure'     => $figure,// Pass figure if needed in template
+                ]),
+                'pagination' => $this->renderView('figure/_pagination.html.twig', [
                     'maxPage'    => $maxPage,
                     'page'       => $page,
                     'figureSlug' => $figureSlug,
                 ]),
-                'pages' => $maxPage,
+                'pages'      => $maxPage,
             ]);
         }
 
@@ -63,62 +68,117 @@ final class MessageController extends AbstractController
     }
 
     #[Route('/new', name: 'app_message_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface
-    $entityManager, FigureRepository $figureRepository, MessageRepository
-    $messageRepository, UserRepository $userRepository):
-    Response
+    public function new(
+        Request                $request,
+        EntityManagerInterface $entityManager,
+        FigureRepository       $figureRepository,
+        MessageRepository      $messageRepository
+    ): Response
     {
         $message = new Message();
         $form = $this->createForm(MessageType::class, $message);
-        $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($message);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_message_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        if($request->isXmlHttpRequest())
+        // ✅ AJAX handling
+        if ($request->isXmlHttpRequest())
         {
-            $data = json_decode($request->getContent());
-            $messageContent = $data->messageContent;
-            $figureSlug = $data->figureSlug;
-            $userId = $this->getUser()->getId();
-            $user = $userRepository->find($userId);
+
+            $data = json_decode($request->getContent(), true);
+
+            if (!$data || !isset($data['messageContent']) ||
+                !isset($data['figureSlug']))
+            {
+                return new JsonResponse(['error' => 'Invalid data received.'], 400);
+            }
+
+            // ✅ Get CSRF token from header
+            $csrfToken = $request->headers->get('X-CSRF-TOKEN');
+
+            // ✅ Submit form INCLUDING token
+            $form->submit([
+                'content' => $data['messageContent'],
+                '_token'  => $csrfToken
+            ]);
+
+            // ❌ If invalid → includes CSRF failure automatically
+            if (!$form->isValid())
+            {
+                $errors = [];
+                foreach ($form->getErrors(true) as $error)
+                {
+                    $errors[] = $error->getMessage();
+                }
+
+                return new JsonResponse([
+                    'error' => implode(', ', $errors) ?: 'Invalid CSRF token or form data.'
+                ], 400);
+            }
+
+            // ✅ Fetch Figure
+            $figure = $figureRepository->findBySlug($data['figureSlug']);
+            if (!$figure)
+            {
+                return new JsonResponse(['error' => 'Figure not found.'], 404);
+            }
+
+            // ✅ Set entity data
+            $message->setContent($data['messageContent']);
+            $message->setFigure($figure);
+
+            if (!$this->getUser())
+            {
+                return new JsonResponse(['error' => 'You must be logged in.'], 401);
+            }
+
+            $currentUser = $this->getUser();
+
+            if (!$currentUser)
+            {
+                return new JsonResponse(['error' => 'You must be logged in.'], 401);
+            }
+
+            $user = $entityManager->getReference(User::class, $currentUser->getId());
+
             $message->setUser($user);
-            $message->setContent($messageContent);
-            $message->setFigure($figureRepository->findBySlug($figureSlug));
-            date_default_timezone_set('Europe/Paris');
-            $message->setDateOfLastUpdate(new \DateTime('now', new \DateTimeZone('Europe/Paris')));
+            $message->setDateOfLastUpdate(new \DateTime());
+
+            // ✅ Save
             $entityManager->persist($message);
             $entityManager->flush();
 
-            $page = $request->query->getInt('page', 1);
+            // ✅ Reload messages
+            $page = 1;
             $limit = 10;
-            $messages = $messageRepository->findByFigureId
-            ($page, $limit, $figureRepository->findBySlug($figureSlug)->getId
-            ());
-            $maxPage = ceil($messages->count() / $limit);
+            $messages = $messageRepository->findByFigureId($page, $limit, $figure->getId());
+            $maxPage = (int)ceil($messages->count() / $limit);
 
             return new JsonResponse([
-                'content' => $this->renderView('figure/_messages.html.twig',
-                [
-                    "messages" => $messages,
-                    'figureSlug' => $figureSlug,
+                'content'    => $this->renderView('figure/_messages.html.twig', [
+                    'messages'   => $messages,
+                    'figureSlug' => $figure->getSlug(),
+                    'figure'     => $figure,
                 ]),
-                'pagination' => $this->renderView('figure/_pagination.html.twig',
-                    [
-                        'maxPage'    => $maxPage,
-                        'page'       => $page,
-                        'figureSlug' => $figureSlug,
-                    ])
+                'pagination' => $this->renderView('figure/_pagination.html.twig', [
+                    'maxPage'    => $maxPage,
+                    'page'       => $page,
+                    'figureSlug' => $figure->getSlug(),
+                ])
             ]);
+        }
+
+        // ✅ Standard (non-AJAX)
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid())
+        {
+            $entityManager->persist($message);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_message_index');
         }
 
         return $this->render('message/new.html.twig', [
             'message' => $message,
-            'form' => $form,
+            'form'    => $form,
         ]);
     }
 
@@ -136,28 +196,30 @@ final class MessageController extends AbstractController
         $form = $this->createForm(MessageType::class, $message);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid())
+        {
             $entityManager->flush();
-
             return $this->redirectToRoute('app_message_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('message/edit.html.twig', [
             'message' => $message,
-            'form' => $form,
+            'form'    => $form,
         ]);
     }
 
     #[Route('/{id}', name: 'app_message_delete', methods: ['POST'])]
     public function delete(Request $request, Message $message, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$message->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' .
+                                    $message->getId(), $request
+            ->getPayload()
+            ->getString('_token')))
+        {
             $entityManager->remove($message);
             $entityManager->flush();
         }
 
         return $this->redirectToRoute('app_message_index', [], Response::HTTP_SEE_OTHER);
     }
-
-
 }
