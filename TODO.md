@@ -42,8 +42,8 @@ improve scrollbar to messages (low)
 
 reformat code with Ctrl + Alt + L (low)
 
-Shoe on the right the figure's name and the figure's description in the page 
-with the detail of a figure (low)
+~~Shoe on the right the figure's name and the figure's description in the page 
+with the detail of a figure (low)~~
 
 update responsive in user page account (low)
 
