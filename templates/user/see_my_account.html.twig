@@ -7,17 +7,25 @@
 
     <div class="container my-3">
         <div class="row">
-            <h5 class="label">
+            <h5 class="label mb-0">
                 Username
             </h5>
             <div class="col-12">
                 {{ user.username }}
             </div>
-            <h5>
+            <h5 class="mt-3 mb-0">
                 Email
             </h5>
             <div class="col-12">
                 {{ user.email }}
+            </div>
+            <h5 class="mt-3 mb-0">
+                Avatar
+            </h5>
+            <div class="col-12 w-25">
+                <img class="img-fluid mb-5 fixed-size px-0 w-100 top-picture-popup"
+                     src="{{ asset('uploads/avatars/' ~ user.avatar) }}"
+                     alt="Avatar of user {{ user.username }}">
             </div>
         </div>
         <div class="d-flex flex-column">

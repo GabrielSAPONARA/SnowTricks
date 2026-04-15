@@ -10,11 +10,15 @@
 
 ~~verify empty message -> not send (high)~~
 
-add theme in user page update (high)
+~~add theme in user page update (high)~~
 
 verify PSR 1 and 2 with PHPSTAN (high)
 
 update Symfony and PHP (high)
+
+fix avatar change in user edition --> we can't see the user's avatar in the 
+form (file)
+(high)
 
 
 verify flash messages (average)
@@ -40,3 +44,10 @@ reformat code with Ctrl + Alt + L (low)
 
 Shoe on the right the figure's name and the figure's description in the page 
 with the detail of a figure (low)
+
+update responsive in user page account (low)
+
+
+### Question ?
+
+Do I add slug to user page ?
