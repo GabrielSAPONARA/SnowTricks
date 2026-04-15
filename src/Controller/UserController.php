@@ -58,15 +58,6 @@ final class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_user_show', methods: ['GET'])]
-    #[IsGranted('ROLE_VERIFIED')]
-    public function show(User $user): Response
-    {
-        return $this->render('user/show.html.twig', [
-            'user' => $user,
-        ]);
-    }
-
     #[Route('/my/account/{id}', name: 'app_my_account', methods: ['GET'])]
     #[IsGranted('ROLE_VERIFIED')]
     public function seeMyAccount(User $user): Response
@@ -130,7 +121,7 @@ final class UserController extends AbstractController
 
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_user_show', ['id' => $user->getId()],
+            return $this->redirectToRoute('app_my_account', ['id' => $user->getId()],
                 Response::HTTP_SEE_OTHER);
         }
 
