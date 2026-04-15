@@ -2,20 +2,36 @@
 
 namespace App\Form;
 
-use App\Entity\Figure;
 use App\Entity\Message;
-use App\Entity\User;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Length;
 
 class MessageType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('content')
+            ->add('content', TextareaType::class, [
+                'required'    => true,
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'The message cannot be empty. Please write something.',
+                    ]),
+                    new Length([
+                        'min'        => 2,
+                        'minMessage' => 'Your message is too short. It must be at least {{ limit }} characters.',
+                    ]),
+                ],
+                'attr'        => [
+                    'rows'        => 3,
+                    'placeholder' => 'Write your comment here...',
+                    'id'          => 'message_content'
+                ],
+            ])
         ;
     }
 

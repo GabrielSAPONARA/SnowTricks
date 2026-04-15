@@ -6,9 +6,9 @@
 ~~fix error of detail about figure in welcome page when user click on a figure
 (high)~~
 
-**check messages pagination (high)**
+~~check messages pagination (high)~~
 
-**verify empty message -> not send (high)**
+~~verify empty message -> not send (high)~~
 
 add theme in user page update (high)
 
@@ -21,6 +21,8 @@ verify flash messages (average)
 
 add style to error and notice flash messages (average)
 
+standardize the name of form (average)
+
 
 verify code with codacy (low)
 
@@ -32,4 +34,9 @@ translate every comment in english (low)
 
 change group names in fixturesgroup --> create array and use a loop (low)
 
-improve scrollbar to messages
+improve scrollbar to messages (low)
+
+reformat code with Ctrl + Alt + L (low)
+
+Shoe on the right the figure's name and the figure's description in the page 
+with the detail of a figure (low)

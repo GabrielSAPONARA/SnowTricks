@@ -13,29 +13,36 @@ let popupToConfirmVideoDeletion = document.getElementById("modal-video-to-delete
 
 // --- EVENT DELEGATION FOR FIGURE LINKS ---
 // Attach the listener to the static container '.js-ajax' instead of individual links
-document.querySelector(".js-ajax").addEventListener("click", async (e) => {
+document.querySelector(".js-ajax").addEventListener("click", async (e) =>
+{
 
     // Find the closest ancestor (or self) that matches the selector
     let link = e.target.closest(".js-figure-details");
 
     // If the click wasn't on a figure link, ignore it
-    if (!link) return;
+    if (!link)
+    {
+        return;
+    }
 
     e.preventDefault();
 
-    try {
+    try
+    {
         let html = await fetchFigure(
             link.querySelector("p").textContent,
             link.querySelector("h5").textContent
         );
 
         // Clear modal content
-        while (figureModal.firstChild) {
+        while (figureModal.firstChild)
+        {
             figureModal.removeChild(figureModal.firstChild);
         }
 
         // Inject content after a short delay to ensure modal transition if needed
-        setTimeout(() => {
+        setTimeout(() =>
+        {
             figureModal.insertAdjacentHTML('afterbegin', html);
 
             // --- RE-ATTACH INTERNAL MODAL LISTENERS ---
@@ -43,11 +50,14 @@ document.querySelector(".js-ajax").addEventListener("click", async (e) => {
             // every time the modal opens.
 
             let pencilToEditModal = document.getElementById("pencil-to-edit-figure");
-            if(pencilToEditModal) {
-                pencilToEditModal.addEventListener("click", async (e) => {
+            if (pencilToEditModal)
+            {
+                pencilToEditModal.addEventListener("click", async (e) =>
+                {
                     e.preventDefault();
                     let html = await fetchFormToEditFigure(link.querySelector("h5").textContent);
-                    while (figureModal.firstChild) {
+                    while (figureModal.firstChild)
+                    {
                         figureModal.removeChild(figureModal.firstChild);
                     }
                     figureModal.insertAdjacentHTML('afterbegin', html);
@@ -65,7 +75,9 @@ document.querySelector(".js-ajax").addEventListener("click", async (e) => {
 
         }, 100);
 
-    } catch (error) {
+    }
+    catch (error)
+    {
         console.error(error);
     }
 
@@ -74,7 +86,8 @@ document.querySelector(".js-ajax").addEventListener("click", async (e) => {
 });
 
 // Helper function to organize the complex inner logic
-function initializeModalActions(link) {
+function initializeModalActions(link)
+{
     let figureModal = document.querySelector(".js-figure-informations");
     let modalToEditPictureFigure = document.querySelector(".modal-picture-figure-to-edit");
     let figureSlug = link.querySelector("h5").textContent;
@@ -84,16 +97,20 @@ function initializeModalActions(link) {
 
     // Edit Picture Logic
     let editPictureButtons = document.querySelectorAll(".edit-picture");
-    editPictureButtons.forEach(editPictureButton => {
-        editPictureButton.addEventListener("click", async (e) => {
+    editPictureButtons.forEach(editPictureButton =>
+    {
+        editPictureButton.addEventListener("click", async (e) =>
+        {
             e.preventDefault();
             let data = await fetchFormToEditPictureFigure(editPictureButton.id);
             modalToEditPictureFigure.innerHTML = data.content;
             openModal(e, editPictureButton);
 
             let saveNewPicureButton = document.getElementById("save-new-picture");
-            if(saveNewPicureButton) {
-                saveNewPicureButton.addEventListener("click", async (e) => {
+            if (saveNewPicureButton)
+            {
+                saveNewPicureButton.addEventListener("click", async (e) =>
+                {
                     e.preventDefault();
                     let fileInput = document.getElementById("picture_figure_form_image");
                     let filePicture = fileInput.files[0];
@@ -109,16 +126,20 @@ function initializeModalActions(link) {
 
     // Edit Video Logic
     let editVideoPictures = document.querySelectorAll(".edit-video");
-    editVideoPictures.forEach(editVideoButton => {
-        editVideoButton.addEventListener("click", async (e) => {
+    editVideoPictures.forEach(editVideoButton =>
+    {
+        editVideoButton.addEventListener("click", async (e) =>
+        {
             e.preventDefault();
             let data = await fetchFormToEditVideoFigure(editVideoButton.id);
             modalToEditPictureFigure.innerHTML = data.content;
             openModal(e, editVideoButton);
 
             let savedNewVideoButton = document.getElementById("save-new-video");
-            if(savedNewVideoButton) {
-                savedNewVideoButton.addEventListener("click", async (e) => {
+            if (savedNewVideoButton)
+            {
+                savedNewVideoButton.addEventListener("click", async (e) =>
+                {
                     e.preventDefault();
                     let urlInput = document.getElementById("video_figure_form_embedUrl");
                     let urlToNewVideo = urlInput.value;
@@ -134,8 +155,10 @@ function initializeModalActions(link) {
 
     // Delete Picture Logic
     let buttonsToDeletePicture = figureModal.querySelectorAll(".delete-picture");
-    buttonsToDeletePicture.forEach(buttonToDeletePicture => {
-        buttonToDeletePicture.addEventListener("click", async (e) => {
+    buttonsToDeletePicture.forEach(buttonToDeletePicture =>
+    {
+        buttonToDeletePicture.addEventListener("click", async (e) =>
+        {
             e.preventDefault();
             let pictureId = buttonToDeletePicture.id;
             let pictureToken = buttonToDeletePicture.getAttribute("data-token");
@@ -147,8 +170,10 @@ function initializeModalActions(link) {
 
     // Delete Video Logic
     let buttonsToDeleteVideo = figureModal.querySelectorAll(".delete-video");
-    buttonsToDeleteVideo.forEach(buttonToDeleteVideo => {
-        buttonToDeleteVideo.addEventListener("click", async (e) => {
+    buttonsToDeleteVideo.forEach(buttonToDeleteVideo =>
+    {
+        buttonToDeleteVideo.addEventListener("click", async (e) =>
+        {
             e.preventDefault();
             let videoId = buttonToDeleteVideo.id; // Changed variable name for clarity
             let videoToken = buttonToDeleteVideo.getAttribute("data-token");
@@ -160,8 +185,10 @@ function initializeModalActions(link) {
 
     // Save Figure Change Logic
     let buttonToSaveFigureChange = document.getElementById('save-figure-change');
-    if(buttonToSaveFigureChange) {
-        buttonToSaveFigureChange.addEventListener("click", async (e) => {
+    if (buttonToSaveFigureChange)
+    {
+        buttonToSaveFigureChange.addEventListener("click", async (e) =>
+        {
             e.preventDefault();
             let figureForm = document.querySelector("form");
             let formData = new FormData(figureForm);
@@ -172,8 +199,10 @@ function initializeModalActions(link) {
 
     // Delete Figure Logic (Inside Modal)
     let buttonToDeleteFigure = figureModal.getElementsByClassName("delete-figure-button");
-    for(let deleteButtonIterator = 0; deleteButtonIterator < buttonToDeleteFigure.length; deleteButtonIterator++) {
-        buttonToDeleteFigure[deleteButtonIterator].addEventListener("click", async (e) => {
+    for (let deleteButtonIterator = 0; deleteButtonIterator < buttonToDeleteFigure.length; deleteButtonIterator++)
+    {
+        buttonToDeleteFigure[deleteButtonIterator].addEventListener("click", async (e) =>
+        {
             e.preventDefault();
             document.getElementById('confirm-deletion').querySelector('a').setAttribute('data-figure-slug', figureSlug);
             openModal(e, buttonToDeleteFigure[deleteButtonIterator]);
@@ -182,8 +211,10 @@ function initializeModalActions(link) {
 
     // Delete Figure Logic (Dustbin icon)
     let deleteFigureButton = document.getElementById('dustbin-to-delete-figure');
-    if(deleteFigureButton) {
-        deleteFigureButton.addEventListener("click", async (e) => {
+    if (deleteFigureButton)
+    {
+        deleteFigureButton.addEventListener("click", async (e) =>
+        {
             e.preventDefault();
             document.getElementById('confirm-deletion').querySelector('a').setAttribute('data-figure-slug', figureSlug);
             openModal(e, deleteFigureButton);
@@ -191,59 +222,136 @@ function initializeModalActions(link) {
     }
 
     // Message Logic
-    if(saveMessageButton && messages && pagination) {
-        saveMessageButton.addEventListener("click", async (e) => {
+    if (saveMessageButton && messages && pagination)
+    {
+        // 1. Initialize FilterMessage for the initial state
+        let filterMessageInstance = new FilterMessage(document.querySelector(".js-figure-informations"));
+
+        // 2. Create/Error Container Setup (if it doesn't exist)
+        let errorContainer = document.getElementById("message-error-container");
+        if (!errorContainer)
+        {
+            errorContainer = document.createElement("div");
+            errorContainer.id = "message-error-container";
+            errorContainer.className = "col-12 text-danger mb-2 fw-bold small";
+
+            const messageInput = document.getElementById("message_content");
+            if (messageInput && messageInput.parentElement)
+            {
+                // Insert error message right before the input field
+                messageInput.parentElement.insertBefore(errorContainer, messageInput);
+            }
+        }
+
+        // 3. Add Message Listener
+        saveMessageButton.addEventListener("click", async (e) =>
+        {
             e.preventDefault();
-            try {
-                let messageContent = document.getElementById("message_content").value;
-                let data = await fetchMessages(figureSlug, messageContent);
+
+            const messageInput = document.getElementById("message_content");
+            if (!messageInput)
+            {
+                return;
+            }
+
+            let messageContent = messageInput.value.trim();
+
+            // --- CLIENT-SIDE VALIDATION ---
+            if (!messageContent)
+            {
+                errorContainer.textContent = "The message cannot be empty. Please write something.";
+                messageInput.classList.add("is-invalid"); // Bootstrap red border
+
+                // Remove error when user starts typing
+                const clearError = () =>
+                {
+                    messageInput.classList.remove("is-invalid");
+                    errorContainer.textContent = "";
+                    messageInput.removeEventListener('input', clearError);
+                };
+                messageInput.addEventListener('input', clearError);
+                return; // Stop execution, do NOT send request
+            }
+
+            // Clear previous errors
+            errorContainer.textContent = "";
+            messageInput.classList.remove("is-invalid");
+
+            try
+            {
+                // --- SEND REQUEST ---
+                let response = await fetchMessages(figureSlug, messageContent);
+
+                // Check HTTP status (Handle 400 Bad Request from Server Validation)
+                if (!response.ok)
+                {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || "Failed to save message.");
+                }
+
+                const data = await response.json();
+
+                // --- UPDATE DOM ---
                 messages.innerHTML = data.content;
                 pagination.innerHTML = data.pagination;
-            } catch (error) {
-                console.error(error);
+
+                // --- CRITICAL FIX: RE-INITIALIZE PAGINATION ---
+                // Since we replaced the HTML, old listeners are gone. Create a new instance.
+                const updatedContainer = document.querySelector(".js-figure-informations");
+                if (updatedContainer)
+                {
+                    filterMessageInstance = new FilterMessage(updatedContainer);
+                }
+
+                // Clear Input
+                messageInput.value = "";
+
+            }
+            catch (error)
+            {
+                console.error("Message error:", error);
+                // Display Server or Network Error
+                errorContainer.textContent = error.message;
+                messageInput.classList.add("is-invalid");
             }
         });
 
-        new FilterMessage(document.querySelector(".js-figure-informations"));
-
-        // Re-attach pagination listener for messages inside the modal
-        pagination.addEventListener("click", async (e) => {
-            if (e.target.tagName === 'A') {
-                e.preventDefault();
-                let url = e.target.href;
-                let data = await fecthMessagesAndPagination(url);
-                messages.innerHTML = data.content;
-                pagination.innerHTML = data.pagination;
-            }
-        });
+        // NOTE: Manual pagination.addEventListener removed. FilterMessage handles it exclusively.
     }
+
 
     // Media Visibility Logic
     let buttonToSeeMedias = document.querySelector(".see-medias");
     let medias = document.querySelector(".medias");
     let buttonsToHideMedias = document.querySelectorAll(".hide-medias");
 
-    if(buttonToSeeMedias && medias) {
-        buttonToSeeMedias.addEventListener("click", (e) => {
+    if (buttonToSeeMedias && medias)
+    {
+        buttonToSeeMedias.addEventListener("click", (e) =>
+        {
             e.preventDefault();
             medias.classList.remove("d-none");
             medias.classList.add("d-grid");
             buttonToSeeMedias.classList.remove("d-grid");
             buttonToSeeMedias.classList.add("d-none");
-            buttonsToHideMedias.forEach(btn => {
+            buttonsToHideMedias.forEach(btn =>
+            {
                 btn.classList.remove("d-none");
                 btn.classList.add("d-grid");
             });
         });
 
-        for (let i = 0; i < buttonsToHideMedias.length; i++) {
-            buttonsToHideMedias[i].addEventListener("click", (e) => {
+        for (let i = 0; i < buttonsToHideMedias.length; i++)
+        {
+            buttonsToHideMedias[i].addEventListener("click", (e) =>
+            {
                 e.preventDefault();
                 buttonToSeeMedias.classList.remove("d-none");
                 buttonToSeeMedias.classList.add("d-grid");
                 medias.classList.remove("d-grid");
                 medias.classList.add("d-none");
-                for (let j = 0; j < buttonsToHideMedias.length; j++) {
+                for (let j = 0; j < buttonsToHideMedias.length; j++)
+                {
                     buttonsToHideMedias[j].classList.remove("d-grid");
                     buttonsToHideMedias[j].classList.add("d-none");
                 }
@@ -255,64 +363,90 @@ function initializeModalActions(link) {
 // --- GLOBAL LISTENERS (Static elements) ---
 // These remain largely the same as they target static IDs
 
-document.addEventListener('keydown', function (event) {
-    if (event.key === 'Escape' || event.key === 'Esc') {
+document.addEventListener('keydown', function (event)
+{
+    if (event.key === 'Escape' || event.key === 'Esc')
+    {
         // Fix selector: 'dialogs' -> 'dialog'
         const dialogs = document.querySelectorAll('dialog[open]');
-        dialogs.forEach(popup => {
-            if (event.target === popup) {
+        dialogs.forEach(popup =>
+        {
+            if (event.target === popup)
+            {
                 popup.close();
             }
         });
     }
 });
 
-figureModal.addEventListener('click', function (event) {
-    if (event.target === figureModal) {
+figureModal.addEventListener('click', function (event)
+{
+    if (event.target === figureModal)
+    {
         figureModal.close();
     }
 });
 
-if(modalToEditPictureFigure) {
-    modalToEditPictureFigure.addEventListener('click', function (event) {
-        if (event.target === modalToEditPictureFigure) {
+if (modalToEditPictureFigure)
+{
+    modalToEditPictureFigure.addEventListener('click', function (event)
+    {
+        if (event.target === modalToEditPictureFigure)
+        {
             modalToEditPictureFigure.close();
         }
     });
 }
 
-if(popupToConfirmDeletion) {
-    popupToConfirmDeletion.addEventListener('click', function (event) {
-        if (event.target === popupToConfirmDeletion) {
+if (popupToConfirmDeletion)
+{
+    popupToConfirmDeletion.addEventListener('click', function (event)
+    {
+        if (event.target === popupToConfirmDeletion)
+        {
             popupToConfirmDeletion.close();
         }
     });
 
-    popupToConfirmDeletion.querySelectorAll("button").forEach(button => {
-        button.addEventListener("click", async (e) => {
+    popupToConfirmDeletion.querySelectorAll("button").forEach(button =>
+    {
+        button.addEventListener("click", async (e) =>
+        {
             e.preventDefault();
             popupToConfirmDeletion.close();
         });
     });
 
     let confirmDeleteLink = popupToConfirmDeletion.querySelector("a");
-    if(confirmDeleteLink) {
-        confirmDeleteLink.addEventListener("click", async (e) => {
+    if (confirmDeleteLink)
+    {
+        confirmDeleteLink.addEventListener("click", async (e) =>
+        {
             e.preventDefault();
             let dataToken = "";
-            if(figureModal.open) {
-                if(figureModal.querySelector("#dustbin-to-delete-figure") !== null) {
+            if (figureModal.open)
+            {
+                if (figureModal.querySelector("#dustbin-to-delete-figure") !== null)
+                {
                     dataToken = figureModal.querySelector("#dustbin-to-delete-figure").getAttribute('data-token');
-                } else {
-                    const editDeleteBtn = figureModal.querySelector('#delete-button-in-modal-to-edit-figure');
-                    if(editDeleteBtn) dataToken = editDeleteBtn.getAttribute('data-token');
                 }
-            } else {
+                else
+                {
+                    const editDeleteBtn = figureModal.querySelector('#delete-button-in-modal-to-edit-figure');
+                    if (editDeleteBtn)
+                    {
+                        dataToken = editDeleteBtn.getAttribute('data-token');
+                    }
+                }
+            }
+            else
+            {
                 dataToken = popupToConfirmDeletion.querySelector('a').getAttribute('data-token');
             }
 
             let slug = popupToConfirmDeletion.querySelector('a').getAttribute("data-figure-slug");
-            if(slug && dataToken) {
+            if (slug && dataToken)
+            {
                 await deleteFigure(slug, dataToken);
                 window.location.reload();
             }
@@ -320,27 +454,35 @@ if(popupToConfirmDeletion) {
     }
 }
 
-if(popupToConfirmPictureDeletion) {
-    popupToConfirmPictureDeletion.addEventListener('click', function (event) {
-        if (event.target === popupToConfirmPictureDeletion) {
+if (popupToConfirmPictureDeletion)
+{
+    popupToConfirmPictureDeletion.addEventListener('click', function (event)
+    {
+        if (event.target === popupToConfirmPictureDeletion)
+        {
             popupToConfirmPictureDeletion.close();
         }
     });
 
-    popupToConfirmPictureDeletion.querySelectorAll("button").forEach(button => {
-        button.addEventListener("click", async (e) => {
+    popupToConfirmPictureDeletion.querySelectorAll("button").forEach(button =>
+    {
+        button.addEventListener("click", async (e) =>
+        {
             e.preventDefault();
             popupToConfirmPictureDeletion.close();
         });
     });
 
     let confirmPicLink = popupToConfirmPictureDeletion.querySelector("a");
-    if(confirmPicLink) {
-        confirmPicLink.addEventListener("click", async (e) => {
+    if (confirmPicLink)
+    {
+        confirmPicLink.addEventListener("click", async (e) =>
+        {
             e.preventDefault();
             let dataToken = confirmPicLink.getAttribute("data-token");
             let pictureId = confirmPicLink.getAttribute("data-picture-id");
-            if(pictureId && dataToken) {
+            if (pictureId && dataToken)
+            {
                 await deletePicture(pictureId, dataToken);
                 window.location.reload();
             }
@@ -348,27 +490,35 @@ if(popupToConfirmPictureDeletion) {
     }
 }
 
-if(popupToConfirmVideoDeletion) {
-    popupToConfirmVideoDeletion.addEventListener('click', function (event) {
-        if (event.target === popupToConfirmVideoDeletion) {
+if (popupToConfirmVideoDeletion)
+{
+    popupToConfirmVideoDeletion.addEventListener('click', function (event)
+    {
+        if (event.target === popupToConfirmVideoDeletion)
+        {
             popupToConfirmVideoDeletion.close();
         }
     });
 
-    popupToConfirmVideoDeletion.querySelectorAll("button").forEach(button => {
-        button.addEventListener("click", async (e) => {
+    popupToConfirmVideoDeletion.querySelectorAll("button").forEach(button =>
+    {
+        button.addEventListener("click", async (e) =>
+        {
             e.preventDefault();
             popupToConfirmVideoDeletion.close();
         });
     });
 
     let confirmVidLink = popupToConfirmVideoDeletion.querySelector("a");
-    if(confirmVidLink) {
-        confirmVidLink.addEventListener("click", async (e) => {
+    if (confirmVidLink)
+    {
+        confirmVidLink.addEventListener("click", async (e) =>
+        {
             e.preventDefault();
             let dataToken = confirmVidLink.getAttribute("data-token");
             let videoId = confirmVidLink.getAttribute("data-video-id");
-            if(videoId && dataToken) {
+            if (videoId && dataToken)
+            {
                 await deleteVideo(videoId, dataToken);
                 window.location.reload();
             }
@@ -380,7 +530,8 @@ if(popupToConfirmVideoDeletion) {
 // Keep all your async fetch functions (deletePicture, deleteVideo, fetchFigure, etc.) exactly as they were.
 // They are correctly defined.
 
-async function deletePicture(pictureId, token) {
+async function deletePicture(pictureId, token)
+{
     let url = "http://localhost:8080/picture/figure/delete/" + pictureId;
     const response = await fetch(url, {
         method: "DELETE",
@@ -390,11 +541,18 @@ async function deletePicture(pictureId, token) {
             'X-CSRF-TOKEN': token
         }
     });
-    if (response.ok) return await response.json();
-    else throw new Error(`HTTP error: ${response.status}`);
+    if (response.ok)
+    {
+        return await response.json();
+    }
+    else
+    {
+        throw new Error(`HTTP error: ${response.status}`);
+    }
 }
 
-async function deleteVideo(videoId, token) {
+async function deleteVideo(videoId, token)
+{
     let url = "http://localhost:8080/video/figure/delete/" + videoId;
     const response = await fetch(url, {
         method: "DELETE",
@@ -404,11 +562,18 @@ async function deleteVideo(videoId, token) {
             'X-CSRF-TOKEN': token
         }
     });
-    if (response.ok) return await response.json();
-    else throw new Error(`HTTP error: ${response.status}`);
+    if (response.ok)
+    {
+        return await response.json();
+    }
+    else
+    {
+        throw new Error(`HTTP error: ${response.status}`);
+    }
 }
 
-async function deleteFigure(figureSlug, token) {
+async function deleteFigure(figureSlug, token)
+{
     let url = "http://localhost:8080/figure/delete/" + figureSlug;
     const response = await fetch(url, {
         method: "DELETE",
@@ -419,107 +584,183 @@ async function deleteFigure(figureSlug, token) {
         },
         body: JSON.stringify({figureSlug: figureSlug})
     });
-    if (response.ok) return await response.json();
-    else throw new Error(`HTTP error: ${response.status}`);
+    if (response.ok)
+    {
+        return await response.json();
+    }
+    else
+    {
+        throw new Error(`HTTP error: ${response.status}`);
+    }
 }
 
-async function updateFigure(figureSlug, formData) {
+async function updateFigure(figureSlug, formData)
+{
     let url = "http://localhost:8080/figure/update/" + figureSlug;
     formData.append('figureSlug', figureSlug);
     const response = await fetch(url, {
         method: 'POST',
-        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        headers: {'X-Requested-With': 'XMLHttpRequest'},
         body: formData,
     });
-    if (response.status >= 200 && response.status < 300) {
+    if (response.status >= 200 && response.status < 300)
+    {
         return await response.json();
     }
 }
 
-async function fetchFormToEditFigure(figureSlug) {
+async function fetchFormToEditFigure(figureSlug)
+{
     let url = "http://localhost:8080/figure/edit/modal/" + figureSlug;
-    const figureResponse = await fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
-    if (figureResponse.status >= 200 && figureResponse.status < 300) {
+    const figureResponse = await fetch(url, {headers: {'X-Requested-With': 'XMLHttpRequest'}});
+    if (figureResponse.status >= 200 && figureResponse.status < 300)
+    {
         let data = await figureResponse.json();
         return data.content;
     }
     throw new Error("Failed to fetch figure " + figureSlug);
 }
 
-async function fetchUrlVideo(formData, videoFigureId) {
+async function fetchUrlVideo(formData, videoFigureId)
+{
     let url = "http://localhost:8080/video/figure/edit/" + videoFigureId;
     const response = await fetch(url, {
         method: 'POST',
-        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        headers: {'X-Requested-With': 'XMLHttpRequest'},
         body: formData
     });
-    if (response.status >= 200 && response.status < 300) return await response.json();
+    if (response.status >= 200 && response.status < 300)
+    {
+        return await response.json();
+    }
 }
 
-async function fetchFormToEditVideoFigure(videoFigureId) {
+async function fetchFormToEditVideoFigure(videoFigureId)
+{
     let url = "http://localhost:8080/video/figure/form/to/edit/" + videoFigureId;
     const formResponse = await fetch(url, {
         method: 'POST',
-        headers: { 'X-Requested-With': 'XMLHttpRequest' },
-        body: JSON.stringify({ id: videoFigureId })
+        headers: {'X-Requested-With': 'XMLHttpRequest'},
+        body: JSON.stringify({id: videoFigureId})
     });
-    if (formResponse.status >= 200 && formResponse.status < 300) return await formResponse.json();
+    if (formResponse.status >= 200 && formResponse.status < 300)
+    {
+        return await formResponse.json();
+    }
 }
 
-async function fetchFilePicture(formData, pictureFigureId) {
+async function fetchFilePicture(formData, pictureFigureId)
+{
     let url = "http://localhost:8080/picture/figure/edit/" + pictureFigureId;
     const response = await fetch(url, {
         method: "POST",
-        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        headers: {'X-Requested-With': 'XMLHttpRequest'},
         body: formData
     });
-    if (response.status >= 200 && response.status < 300) return await response.json();
+    if (response.status >= 200 && response.status < 300)
+    {
+        return await response.json();
+    }
 }
 
-async function fetchFormToEditPictureFigure(pictureFigureId) {
+async function fetchFormToEditPictureFigure(pictureFigureId)
+{
     let url = "http://localhost:8080/picture/figure/form/to/edit/" + pictureFigureId;
     const formResponse = await fetch(url, {
         method: 'POST',
-        headers: { 'X-Requested-With': 'XMLHttpRequest' },
-        body: JSON.stringify({ id: pictureFigureId })
+        headers: {'X-Requested-With': 'XMLHttpRequest'},
+        body: JSON.stringify({id: pictureFigureId})
     });
-    if (formResponse.status >= 200 && formResponse.status < 300) return await formResponse.json();
+    if (formResponse.status >= 200 && formResponse.status < 300)
+    {
+        return await formResponse.json();
+    }
 }
 
-async function fecthMessagesAndPagination(url) {
+async function fecthMessagesAndPagination(url)
+{
     const response = await fetch(url, {
         method: "POST",
-        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        headers: {'X-Requested-With': 'XMLHttpRequest'},
         body: JSON.stringify({})
     });
-    if (response.status >= 200 && response.status < 300) return await response.json();
+    if (response.status >= 200 && response.status < 300)
+    {
+        return await response.json();
+    }
 }
 
-async function fetchMessages(figureSlug, messageContent) {
+async function fetchMessages(figureSlug, messageContent)
+{
     let url = "http://localhost:8080/message/new";
-    const messageResponse = await fetch(url, {
+
+    // FIX: Target the form specifically inside the modal or near the message input
+    // Instead of querying the whole document, look relative to the input or the modal
+    const messageInput = document.getElementById("message_content");
+    const form = messageInput ? messageInput.closest('form') : document.querySelector('form');
+
+    // Look specifically for the token with name="message[_token]"
+    let tokenInput = form ? form.querySelector('input[name="message[_token]"]') : null;
+
+    // Fallback if not found in the specific form
+    if (!tokenInput)
+    {
+        tokenInput = document.querySelector('input[id="message__token"]');
+    }
+
+    let csrfToken = tokenInput ? tokenInput.value : '';
+
+    console.log("Token found:", csrfToken ? "YES" : "NO");
+    if (csrfToken)
+    {
+        console.log("Token Start:", csrfToken.substring(0, 15));
+    }
+
+    if (!csrfToken)
+    {
+        console.error("CSRF Token not found!");
+        throw new Error("Security token missing.");
+    }
+
+    const response = await fetch(url, {
         method: "POST",
-        headers: { 'X-Requested-With': 'XMLHttpRequest' },
-        body: JSON.stringify({ messageContent: messageContent, figureSlug: figureSlug })
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrfToken
+        },
+        body: JSON.stringify({
+            messageContent: messageContent,
+            figureSlug: figureSlug
+        })
     });
-    if (messageResponse.status >= 200 && messageResponse.status < 300) return await messageResponse.json();
-    throw new Error("Failed to add the new message");
+
+    if (response.status >= 200 && response.status < 300)
+    {
+        return response;
+    }
+
+    return response; // Return error response to be handled by catch
 }
 
-async function fetchFigure(figureGroup, figureSlug) {
+async function fetchFigure(figureGroup, figureSlug)
+{
     let url = "http://localhost:8080/figure/" + figureGroup + "/" + figureSlug;
-    const figureResponse = await fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
-    if (figureResponse.status >= 200 && figureResponse.status < 300) {
+    const figureResponse = await fetch(url, {headers: {'X-Requested-With': 'XMLHttpRequest'}});
+    if (figureResponse.status >= 200 && figureResponse.status < 300)
+    {
         let data = await figureResponse.json();
         return data.content;
     }
     throw new Error("Failed to fetch figure " + figureSlug);
 }
 
-const openModal = function (event, link) {
+const openModal = function (event, link)
+{
     event.preventDefault();
     const target = document.querySelector(link.getAttribute("data-modal"));
-    if(target) {
+    if (target)
+    {
         target.showModal();
     }
 };
