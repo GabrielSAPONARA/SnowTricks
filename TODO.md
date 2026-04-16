@@ -58,3 +58,5 @@ Do I add group in all figure's url ?
 
 I don't understand what is the different group of figures in Wikipedia. 
 [Snowboard freestyle Wikipedia](https://fr.wikipedia.org/wiki/Snowboard_freestyle#Les_types_de_tricks)
+
+Do I transform DATE_MUTABLE to DATETIME_MUTABLE in Figure entity ?
