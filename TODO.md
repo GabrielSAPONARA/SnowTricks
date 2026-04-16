@@ -47,7 +47,14 @@ with the detail of a figure (low)~~
 
 ~~update responsive in user page account (low)~~
 
+add unique constraint on figure's slug
+
 
 ### Question ?
 
 Do I add slug to user page ?
+
+Do I add group in all figure's url ?
+
+I don't understand what is the different group of figures in Wikipedia. 
+[Snowboard freestyle Wikipedia](https://fr.wikipedia.org/wiki/Snowboard_freestyle#Les_types_de_tricks)

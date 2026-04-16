@@ -10,3 +10,8 @@
 ###< symfony/framework-bundle ###
 
 /public/uploads
+
+###> phpstan/phpstan ###
+phpstan.neon
+PHPSTAN.md
+###< phpstan/phpstan ###
