@@ -184,17 +184,68 @@ function initializeModalActions(link)
     });
 
     // Save Figure Change Logic
-    let buttonToSaveFigureChange = document.getElementById('save-figure-change');
+    console.log("🔍 Searching for button #save-figure-change inside modal...");
+    let buttonToSaveFigureChange = figureModal.querySelector('#save-figure-change');
+
     if (buttonToSaveFigureChange)
     {
+        console.log("✅ Button found. Attaching click listener...");
+
         buttonToSaveFigureChange.addEventListener("click", async (e) =>
         {
             e.preventDefault();
-            let figureForm = document.querySelector("form");
+            console.log("🖱️ Button Clicked! Preventing default.");
+
+            let figureForm = figureModal.querySelector("form");
+            if (!figureForm)
+            {
+                console.error("❌ ERROR: Form not found inside modal!");
+                return;
+            }
+
             let formData = new FormData(figureForm);
-            await updateFigure(figureSlug, formData);
-            window.location.reload();
+
+            // Debug: Log all keys being sent
+            console.log("👋 bonjour - Sending Form Data:");
+            for (let [key, value] of formData.entries())
+            {
+                console.log(`   📦 ${key}: ${value}`);
+            }
+
+            console.log("🚀 Calling updateFigure with slug:", figureSlug);
+
+            try
+            {
+                let response = await updateFigure(figureSlug, formData);
+
+                if (!response)
+                {
+                    console.error("❌ No response received from server.");
+                    return;
+                }
+
+                if (response.success)
+                {
+                    console.log("✅ Success:", response.message);
+                    window.location.reload();
+                }
+                else
+                {
+                    console.error("❌ Server returned success:false:", response);
+                    alert("Error: " + response.message);
+                }
+            }
+            catch (error)
+            {
+                console.error("💥 Exception during fetch:", error);
+                alert("Network error: " + error.message);
+            }
         });
+    }
+    else
+    {
+        console.error("❌ ERROR: Button #save-figure-change NOT found in modal.");
+        console.log("Modal content:", figureModal.innerHTML); // Check if HTML is actually there
     }
 
     // Delete Figure Logic (Inside Modal)
@@ -596,6 +647,7 @@ async function deleteFigure(figureSlug, token)
 
 async function updateFigure(figureSlug, formData)
 {
+    console.log("bonjour");
     let url = "http://localhost:8080/figure/update/" + figureSlug;
     formData.append('figureSlug', figureSlug);
     const response = await fetch(url, {
