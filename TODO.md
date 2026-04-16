@@ -51,3 +51,6 @@ with the detail of a figure (low)~~
 ### Question ?
 
 Do I add slug to user page ?
+
+I don't understand what is the different group of figures in Wikipedia. 
+[Snowboard freestyle Wikipedia](https://fr.wikipedia.org/wiki/Snowboard_freestyle#Les_types_de_tricks)
