@@ -45,12 +45,12 @@
                                 <div class="col-lg-6 mb-4">
                                     <div class="ratio ratio-16x9">
                                         <iframe
-                                            class="w-100"
-                                            title="Vidéo de {{ figure.name }}"
-                                            src="{{ embedUrl }}"
-                                            frameborder="0"
-                                            allowfullscreen
-                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share">
+                                                class="w-100"
+                                                title="Vidéo de {{ figure.name }}"
+                                                src="{{ embedUrl }}"
+                                                frameborder="0"
+                                                allowfullscreen
+                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share">
                                         </iframe>
                                     </div>
                                 </div>
@@ -69,11 +69,6 @@
             </div>
 
 
-
-
-
-
-
             <div class="row gx-5">
                 <div class="col-12">
                     {% if figure.pictureFigures|length > 0 %}
@@ -88,7 +83,8 @@
                 {% if figure.pictureFigures|length > 1 %}
                     {% for index in 1..figure.pictureFigures|length-1 %}
                         <div class="col-lg-6">
-                            <img class="img-fluid rounded-3 mb-5 fixed-size2" width="600" height="400" src="{{ asset('uploads/figures/' ~ figure.pictureFigures[index].name) }}"
+                            <img class="img-fluid rounded-3 mb-5 fixed-size2" width="600" height="400"
+                                 src="{{ asset('uploads/figures/' ~ figure.pictureFigures[index].name) }}"
                                  alt="Picture of {{ figure.name }}"/>
                         </div>
                     {% endfor %}
