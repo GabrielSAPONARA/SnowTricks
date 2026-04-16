@@ -125,7 +125,11 @@ final class FigureController extends AbstractController
 
             $this->addFlash('success', 'La figure a bien été créée.');
 
-            return $this->redirectToRoute('app_figure_show', ['slug' => $figure->getSlug()]);
+            return $this->redirectToRoute('app_figure_show', [
+                'groupName' =>
+                    $figure->getGroup()->getName()
+                , 'slug'    => $figure->getSlug()
+            ]);
         }
         else
         {
