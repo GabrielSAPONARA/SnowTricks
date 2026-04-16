@@ -308,22 +308,83 @@ final class FigureController extends AbstractController
         Figure                 $figure,
         EntityManagerInterface $entityManager,
         GroupRepository        $groupRepository,
+        SluggerInterface       $slugger
     ): Response
     {
         if ($request->isXmlHttpRequest())
         {
-            $figure->setName($request->request->all()['figure_form2']['name']);
-            $figure->setSlug($request->request->all()['figure_form2']['name']);
-            $figure->setDescription($request->request->all()['figure_form2']['description']);
-            $figure->setDateOfLastUpdate(new \DateTime('now', new
-            \DateTimeZone('Europe/Paris')));
-            $figure->getGroup()->clear();
-            dd($figure->getGroup());
-            foreach ($request->request->all()['figure_form2']['groupes'] as
-                     $groupId)
+            $allData = $request->request->all();
+
+            // DEBUG: Log exactly what Symfony received
+            // Check var/log/dev.log or docker logs symfony_php
+            error_log("📥 UPDATE REQUEST RECEIVED. Slug: " . $figure->getSlug());
+            error_log("📦 Raw Data: " . json_encode($allData));
+
+            // Try to find the form data. It could be 'figure_form2', 'figure_form', etc.
+            $formData = null;
+
+            if (isset($allData['figure_form2']))
             {
-                $group = $groupRepository->find($groupId);
-                $figure->addGroupe($group);
+                $formData = $allData['figure_form2'];
+                error_log("✅ Found key: figure_form2");
+            }
+            elseif (isset($allData['figure_form']))
+            {
+                $formData = $allData['figure_form'];
+                error_log("✅ Found key: figure_form");
+            }
+            else
+            {
+                // If keys are at the root (rare with form_start, but possible)
+                if (isset($allData['name']))
+                {
+                    $formData = $allData;
+                    error_log("✅ Using root level data");
+                }
+            }
+
+            if (!$formData)
+            {
+                return $this->json([
+                    'success' => false,
+                    'message' => 'Form data not found. Received keys: ' .
+                                 implode(', ', array_keys($allData)),
+                ], 400);
+            }
+
+            // Update Entity
+            $figure->setName($formData['name']);
+            $figure->setDescription($formData['description']);
+
+            $slug = $slugger->slug($formData['name'])->lower();
+            $figure->setSlug($slug);
+            $figure->setDateOfLastUpdate(new \DateTime('now', new \DateTimeZone('Europe/Paris')));
+
+            // Handle Group (Adjust based on if it's single or multiple)
+            $figure->setGroup(null);
+            if (isset($formData['group']))
+            {
+                // If multiple selection (array)
+                if (is_array($formData['group']))
+                {
+                    foreach ($formData['group'] as $groupId)
+                    {
+                        $group = $groupRepository->find($groupId);
+                        if ($group)
+                        {
+                            $figure->addGroupe($group);
+                        }
+                    }
+                }
+                else
+                {
+                    // If single selection
+                    $group = $groupRepository->find($formData['group']);
+                    if ($group)
+                    {
+                        $figure->setGroup($group);
+                    }
+                }
             }
 
             $entityManager->flush();
@@ -333,9 +394,9 @@ final class FigureController extends AbstractController
                 'message' => 'La figure a été mise à jour avec succès !',
             ]);
         }
+
         return $this->json([
-            'success' => false,
-            'message' => 'Requête invalide.'
+            'success' => false, 'message' => 'Not an AJAX request'
         ], 400);
     }
 
