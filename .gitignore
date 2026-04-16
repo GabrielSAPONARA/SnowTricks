@@ -13,4 +13,5 @@
 
 ###> phpstan/phpstan ###
 phpstan.neon
+PHPSTAN.md
 ###< phpstan/phpstan ###
