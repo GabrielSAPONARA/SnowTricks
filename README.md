@@ -21,6 +21,10 @@ Stop container with : `docker-compose down`
 ## phpStan
 
 Launch phpStan : `php -d memory_limit=512M vendor/bin/phpstan analyse src`
+Launch phpStan and redirect the output to PHPSTAN.md which doesn't track : 
+`php -d 
+memory_limit=512M vendor/bin/phpstan analyse src > 
+PHPSTAN.md`
 
 ## Improvements
 
