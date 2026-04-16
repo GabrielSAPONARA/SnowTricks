@@ -9,14 +9,19 @@ Install Git and clone the project with :
 ## Install project
 
 Build PHP container : `docker-compose build php`
+Rebuild PHP container without cache : `docker-compose build --no-cache php`
 Launch docker-compose : `docker-compose up -d`
 
 Stop container with : `docker-compose down`
 
 ##  Use Symfony commands
 
- Run `docker exec -it symfony_php bash` to launch bash and Symfony commands.
+ Run : `docker exec -it symfony_php bash` to launch bash and Symfony commands.
  
+## phpStan
+
+Launch phpStan : `php -d memory_limit=512M vendor/bin/phpstan analyse src`
+
 ## Improvements
 
 1. Replace Types::DATE_MUTABLE by Types::DATETIME_MUTABLE if it's necessary.
