@@ -16,6 +16,11 @@
 
 **update Symfony and PHP (high)**
 
+**fix the modification and deletion of pictures in modal (high)**
+
+**fix the modification and deletion of videos in modal (high)**
+
+
 
 
 
