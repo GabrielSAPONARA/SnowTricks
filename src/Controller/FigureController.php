@@ -359,31 +359,13 @@ final class FigureController extends AbstractController
             $slug = $slugger->slug($formData['name'])->lower();
             $figure->setSlug($slug);
             $figure->setDateOfLastUpdate(new \DateTime('now', new \DateTimeZone('Europe/Paris')));
-
-            // Handle Group (Adjust based on if it's single or multiple)
             $figure->setGroup(null);
             if (isset($formData['group']))
             {
-                // If multiple selection (array)
-                if (is_array($formData['group']))
+                $group = $groupRepository->find($formData['group']);
+                if ($group)
                 {
-                    foreach ($formData['group'] as $groupId)
-                    {
-                        $group = $groupRepository->find($groupId);
-                        if ($group)
-                        {
-                            $figure->addGroupe($group);
-                        }
-                    }
-                }
-                else
-                {
-                    // If single selection
-                    $group = $groupRepository->find($formData['group']);
-                    if ($group)
-                    {
-                        $figure->setGroup($group);
-                    }
+                    $figure->setGroup($group);
                 }
             }
 
