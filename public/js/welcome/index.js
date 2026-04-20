@@ -245,7 +245,6 @@ function initializeModalActions(link)
     else
     {
         console.error("❌ ERROR: Button #save-figure-change NOT found in modal.");
-        console.log("Modal content:", figureModal.innerHTML); // Check if HTML is actually there
     }
 
     // Delete Figure Logic (Inside Modal)
@@ -810,7 +809,7 @@ async function fetchFigure(figureGroup, figureSlug)
 const openModal = function (event, link)
 {
     event.preventDefault();
-    const target = document.querySelector(link.getAttribute("data-modal"));
+    const target = document.querySelector("." + link.getAttribute("data-modal"));
     if (target)
     {
         target.showModal();
