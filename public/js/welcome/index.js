@@ -8,7 +8,7 @@ new Filter(document.querySelector(".js-ajax"));
 let figureModal = document.querySelector(".js-figure-informations");
 let modalToEditPictureFigure = document.querySelector(".modal-picture-figure-to-edit");
 let popupToConfirmDeletion = document.getElementById("confirm-deletion");
-let popupToConfirmPictureDeletion = document.getElementById("modal-picture-to-delete");
+let popupToConfirmPictureDeletion = document.querySelector(".modal-picture-to-delete");
 let popupToConfirmVideoDeletion = document.getElementById("modal-video-to-delete");
 
 // --- EVENT DELEGATION FOR FIGURE LINKS ---
@@ -162,8 +162,8 @@ function initializeModalActions(link)
             e.preventDefault();
             let pictureId = buttonToDeletePicture.id;
             let pictureToken = buttonToDeletePicture.getAttribute("data-token");
-            document.getElementById('modal-picture-to-delete').querySelector('a').setAttribute('data-picture-id', pictureId);
-            document.getElementById('modal-picture-to-delete').querySelector('a').setAttribute('data-token', pictureToken);
+            document.querySelector('.modal-picture-to-delete').querySelector('a').setAttribute('data-picture-id', pictureId);
+            document.querySelector('.modal-picture-to-delete').querySelector('a').setAttribute('data-token', pictureToken);
             openModal(e, buttonToDeletePicture);
         });
     });
@@ -808,8 +808,10 @@ async function fetchFigure(figureGroup, figureSlug)
 
 const openModal = function (event, link)
 {
+    console.log(link);
     event.preventDefault();
     const target = document.querySelector("." + link.getAttribute("data-modal"));
+    console.log(target);
     if (target)
     {
         target.showModal();

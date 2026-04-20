@@ -37,7 +37,7 @@
                     <a class="btn btn-warning edit-picture mb-3" href="#" id="{{ picture.id }}"
                        data-modal="modal-picture-figure-to-edit">Edit
                         this picture</a>
-                    <a class="btn btn-danger delete-picture mb-3" href="#modal-picture-to-delete" id="{{ picture.id }}"
+                    <a class="btn btn-danger delete-picture mb-3" href="#" data-modal="modal-picture-to-delete" id="{{ picture.id }}"
                        data-token="{{ csrf_token('delete' ~ picture.id) }}">Delete this picture</a>
                 </div>
             {% endfor %}
