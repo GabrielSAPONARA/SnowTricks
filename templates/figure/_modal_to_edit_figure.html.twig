@@ -7,7 +7,8 @@
                  alt="Picture of {{ figure.name }}">
 
         </div>
-        <a class="btn btn-warning position-absolute w-25 edit-picture edit-hot-topic-picture" href="#modal-picture-to-edit" id="{{ pictures[0].id }}">Edit this picture</a>
+        <a class="btn btn-warning position-absolute w-25 edit-picture edit-hot-topic-picture"
+           href="#modal-picture-to-edit" id="{{ pictures[0].id }}" data-modal="modal-picture-figure-to-edit">Edit this picture</a>
     {% elseif videos|length > 0 %}
         <div class="col-12 px-0 mb-5">
             <iframe
@@ -33,8 +34,11 @@
                     <img class="img-fluid rounded-3 mb-3 fixed-size w-100 figure-pictures"
                          src="{{ asset('uploads/figures/' ~ picture.name) }}"
                          alt="Picture of {{ figure.name }}">
-                    <a class="btn btn-warning edit-picture mb-3" href="#modal-picture-to-edit" id="{{ picture.id }}">Edit this picture</a>
-                    <a class="btn btn-danger delete-picture mb-3" href="#modal-picture-to-delete" id="{{ picture.id }}" data-token="{{ csrf_token('delete' ~ picture.id) }}">Delete this picture</a>
+                    <a class="btn btn-warning edit-picture mb-3" href="#modal-picture-to-edit" id="{{ picture.id }}"
+                       data-modal="modal-picture-figure-to-edit">Edit
+                        this picture</a>
+                    <a class="btn btn-danger delete-picture mb-3" href="#modal-picture-to-delete" id="{{ picture.id }}"
+                       data-token="{{ csrf_token('delete' ~ picture.id) }}">Delete this picture</a>
                 </div>
             {% endfor %}
         {% endif %}
@@ -49,8 +53,10 @@
                             allowfullscreen
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share">
                     </iframe>
-                    <a class="btn btn-warning edit-video mb-3" href="#modal-picture-to-edit" id="{{ video.id }}">Edit this video</a>
-                    <a class="btn btn-danger delete-video mb-3" href="#modal-video-to-delete" id="{{ video.id }}" data-token="{{ csrf_token('delete' ~ video.id) }}">Delete this video</a>
+                    <a class="btn btn-warning edit-video mb-3" href="#modal-picture-to-edit" id="{{ video.id }}">Edit
+                        this video</a>
+                    <a class="btn btn-danger delete-video mb-3" href="#modal-video-to-delete" id="{{ video.id }}"
+                       data-token="{{ csrf_token('delete' ~ video.id) }}">Delete this video</a>
                 </div>
             {% endfor %}
         {% endif %}
@@ -81,10 +87,10 @@
         <button class="d-flex btn btn-primary my-3" id="save-figure-change">{{ button_label|default('Save') }}</button>
         {{ form_end(form) }}
         <a
-            id="delete-button-in-modal-to-edit-figure"
-            class="btn btn-danger delete-figure-button"
-            href="#confirm-deletion"
-            data-token="{{ csrf_token('delete' ~ figure.id) }}">
+                id="delete-button-in-modal-to-edit-figure"
+                class="btn btn-danger delete-figure-button"
+                href="#confirm-deletion"
+                data-token="{{ csrf_token('delete' ~ figure.id) }}">
             Delete
         </a>
     </div>
