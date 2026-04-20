@@ -129,12 +129,8 @@ final class MessageController extends AbstractController
                 return new JsonResponse(['error' => 'You must be logged in.'], 401);
             }
 
+            /** @var \App\Entity\User $currentUser */
             $currentUser = $this->getUser();
-
-            if (!$currentUser)
-            {
-                return new JsonResponse(['error' => 'You must be logged in.'], 401);
-            }
 
             $user = $entityManager->getReference(User::class, $currentUser->getId());
 
