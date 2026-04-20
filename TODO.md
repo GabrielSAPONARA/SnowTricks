@@ -73,3 +73,8 @@ I must just use more indicative names.
 
 Do I transform DATE_MUTABLE to DATETIME_MUTABLE in Figure entity ? 
 I must search difference between DATE and DATE_MUTABLE.
+
+How do you transform this `$pictureFigureRepository->findby(['id' => 
+$data->id])` in entity ?
+
+Have you a better attribut to store the modal to open ?
