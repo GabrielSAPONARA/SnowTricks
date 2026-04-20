@@ -96,15 +96,21 @@ final class PictureFigureController extends AbstractController
     #[Route('/form/to/edit/{id}', name: 'app_picture_figure_form_to_edit')]
     public function getFormPictureFigureToEdit
     (
-        Request                $request,
-        EntityManagerInterface $entityManager,
-        PictureFigure          $pictureFigure,
+        Request                 $request,
+        EntityManagerInterface  $entityManager,
+        PictureFigure           $pictureFigure,
+        PictureFigureRepository $pictureFigureRepository,
     ): Response
     {
         if ($request->isXmlHttpRequest())
         {
             $data = json_decode($request->getContent());
-            $form = $this->createForm(PictureFigureFormType::class, $pictureFigure);
+            $pictureFigure = $pictureFigureRepository->findby([
+                'id' =>
+                    $data->id
+            ])[0];
+            $form = $this->createForm(PictureFigureFormType::class,
+                $pictureFigure);
 
             return new JsonResponse([
                 'content' => $this->renderView('picture_figure/_form.html.twig',
@@ -128,8 +134,11 @@ final class PictureFigureController extends AbstractController
         PictureFigure          $pictureFigure,
     ): Response
     {
-        $token = $request->headers->get('X-CSRF-TOKEN') ?? $request->request->get('_token');
-        if (!$this->isCsrfTokenValid('delete' . $pictureFigure->getId(), $token)) {
+        $token = $request->headers->get('X-CSRF-TOKEN') ??
+                 $request->request->get('_token');
+        if (!$this->isCsrfTokenValid('delete' .
+                                     $pictureFigure->getId(), $token))
+        {
             return $this->json([
                 'success' => false,
                 'message' => "Invalid CSRF token.",
@@ -139,12 +148,15 @@ final class PictureFigureController extends AbstractController
         $entityManager->remove($pictureFigure);
         $entityManager->flush();
 
-        if ($request->isXmlHttpRequest()) {
+        if ($request->isXmlHttpRequest())
+        {
             return $this->json([
                 'success' => true,
                 'message' => "The figure was successfully deleted.",
             ]);
-        } else {
+        }
+        else
+        {
             return $this->redirectToRoute('app_welcome', [], Response::HTTP_SEE_OTHER);
         }
     }
