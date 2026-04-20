@@ -12,13 +12,13 @@
 
 ~~add theme in user page update (high)~~
 
+week 17th April
+
+~~fix the modals to edit and delete a picture or a video (high)~~
+
 **verify PSR 1 and 2 with PHPSTAN (high)**
 
 **update Symfony and PHP (high)**
-
-**fix the modification and deletion of pictures in modal (high)**
-
-**fix the modification and deletion of videos in modal (high)**
 
 
 
@@ -74,7 +74,11 @@ I must just use more indicative names.
 Do I transform DATE_MUTABLE to DATETIME_MUTABLE in Figure entity ? 
 I must search difference between DATE and DATE_MUTABLE.
 
+week 17th April
+
 How do you transform this `$pictureFigureRepository->findby(['id' => 
 $data->id])` in entity ?
 
 Have you a better attribut to store the modal to open ?
+
+Default picture to figure ?

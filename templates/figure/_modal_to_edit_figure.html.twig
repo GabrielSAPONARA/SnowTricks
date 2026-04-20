@@ -56,8 +56,8 @@
                     <a class="btn btn-warning edit-video mb-3" href="#" id="{{ video.id }}"
                        data-modal="modal-picture-figure-to-edit">Edit
                         this video</a>
-                    <a class="btn btn-danger delete-video mb-3" href="#modal-video-to-delete" id="{{ video.id }}"
-                       data-token="{{ csrf_token('delete' ~ video.id) }}">Delete this video</a>
+                    <a class="btn btn-danger delete-video mb-3" href="#" id="{{ video.id }}"
+                       data-token="{{ csrf_token('delete' ~ video.id) }}" data-modal="modal-video-to-delete">Delete this video</a>
                 </div>
             {% endfor %}
         {% endif %}

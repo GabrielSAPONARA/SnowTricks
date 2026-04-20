@@ -9,7 +9,7 @@ let figureModal = document.querySelector(".js-figure-informations");
 let modalToEditPictureFigure = document.querySelector(".modal-picture-figure-to-edit");
 let popupToConfirmDeletion = document.getElementById("confirm-deletion");
 let popupToConfirmPictureDeletion = document.querySelector(".modal-picture-to-delete");
-let popupToConfirmVideoDeletion = document.getElementById("modal-video-to-delete");
+let popupToConfirmVideoDeletion = document.querySelector(".modal-video-to-delete");
 
 // --- EVENT DELEGATION FOR FIGURE LINKS ---
 // Attach the listener to the static container '.js-ajax' instead of individual links
@@ -177,8 +177,8 @@ function initializeModalActions(link)
             e.preventDefault();
             let videoId = buttonToDeleteVideo.id; // Changed variable name for clarity
             let videoToken = buttonToDeleteVideo.getAttribute("data-token");
-            document.getElementById('modal-video-to-delete').querySelector('a').setAttribute('data-video-id', videoId);
-            document.getElementById('modal-video-to-delete').querySelector('a').setAttribute('data-token', videoToken);
+            document.querySelector('.modal-video-to-delete').querySelector('a').setAttribute('data-video-id', videoId);
+            document.querySelector('.modal-video-to-delete').querySelector('a').setAttribute('data-token', videoToken);
             openModal(e, buttonToDeleteVideo);
         });
     });
