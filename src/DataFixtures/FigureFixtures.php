@@ -19,10 +19,10 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 class FigureFixtures extends Fixture implements DependentFixtureInterface
 {
     public function __construct(
-        private readonly GroupRepository  $groupRepository,
+        private readonly GroupRepository $groupRepository,
         private readonly SluggerInterface $slugger,
-        private readonly string           $figuresImagesDirectory,
-        private readonly UserRepository   $userRepository,
+        private readonly string $figuresImagesDirectory,
+        private readonly UserRepository $userRepository,
     ) {}
 
     public function load(ObjectManager $manager): void
@@ -50,8 +50,9 @@ class FigureFixtures extends Fixture implements DependentFixtureInterface
             $figure->setDateOfLastUpdate(new \DateTime('now'));
             $figure->setCreationDate(new \DateTime('now'));
 
-            $group = $this->groupRepository->findOneByName("group" .
-                                                           $faker->numberBetween(1000, 1010));
+            $group = $this->groupRepository->findOneBy([
+                'name' => "group" . $faker->numberBetween(1000, 1010)
+            ]);
             if (!$group)
             {
                 $group = $this->groupRepository->findOneBy([]);
@@ -113,7 +114,8 @@ class FigureFixtures extends Fixture implements DependentFixtureInterface
                 $manager->persist($picture);
             }
 
-            for ($videoFigureCounter = 0; $videoFigureCounter < 4; $videoFigureCounter++)
+            for ($videoFigureCounter = 0; $videoFigureCounter <
+                                          4; $videoFigureCounter++)
             {
                 $videoFigure = new VideoFigure();
                 $videoId = $videoIds[array_rand($videoIds)];
