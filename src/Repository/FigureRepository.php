@@ -52,6 +52,9 @@ class FigureRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
+    /**
+     * @return Paginator<Figure>
+     */
     public function paginateFigures(int $page, int $limit) : Paginator
     {
         return new Paginator($this
