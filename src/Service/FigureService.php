@@ -2,45 +2,43 @@
 
 namespace App\Service;
 
-use App\Controller\FigureController;
 use App\Entity\Figure;
 use App\Entity\PictureFigure;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Twig\Environment;
-use Doctrine\ORM\Tools\Pagination\Paginator;
-use Symfony\Component\HttpFoundation\JsonResponse;
 
 class FigureService
 {
     public function __construct(
         private EntityManagerInterface $entityManager,
-        private ValidatorInterface $validator, // This ensures $this->validator exists
-        private string $figuresImagesDirectory,
-        private Environment $twig,
-    ){}
+        private ValidatorInterface     $validator,
+        private string                 $figuresImagesDirectory,
+        private Environment            $twig,
+    ) {}
 
     /**
-     * @param \Doctrine\ORM\Tools\Pagination\Paginator $figures
+     * $instance
+     * @param Paginator<Figure> $figures
      * @param float $maxPage
      * @param int $page
-     * @param FigureController $instance
      * @return JsonResponse
      */
     public function getJsonResponse(Paginator $figures, float $maxPage, int $page): JsonResponse
     {
         return new JsonResponse([
-            'content'    => $this->twig->render('figure/_figures.html.twig',
-                [
-                    'figures' => $figures,
-                ]),
-            'pagination' => $this->twig->render('figure/_pagination_figures.html.twig',
-                [
-                    'figures' => $figures,
-                    'maxPage' => $maxPage,
-                    'page'    => $page,
-                ]),
+            'content'    => $this->twig->render('figure/_figures.html.twig', [
+                'figures' => $figures,
+            ]),
+            'pagination' => $this->twig->render('figure/_pagination_figures.html.twig', [
+                'figures' => $figures,
+                'maxPage' => $maxPage,
+                'page'    => $page,
+            ]),
             'pages'      => $maxPage,
         ]);
     }
@@ -54,7 +52,8 @@ class FigureService
     {
         $errors = [];
 
-        foreach ($images as $image) {
+        foreach ($images as $image)
+        {
             $violations = $this->validator->validate(
                 $image,
                 new \Symfony\Component\Validator\Constraints\Image([
@@ -63,18 +62,28 @@ class FigureService
                 ])
             );
 
-            if (count($violations) > 0) {
-                $errors[] = (string)$violations;
+            if (count($violations) > 0)
+            {
+                $errorMessages = [];
+                foreach ($violations as $violation)
+                {
+                    $errorMessages[] = $violation->getMessage();
+                }
+                $errors[] = implode(', ', $errorMessages);
                 continue;
             }
 
             $originalFilename = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
             $safeFilename = $this->slug($originalFilename);
-            $newFilename = $safeFilename . '-' . uniqid() . '.' . $image->guessExtension();
+            $newFilename = $safeFilename . '-' . uniqid() . '.' .
+                           $image->guessExtension();
 
-            try {
+            try
+            {
                 $image->move($this->figuresImagesDirectory, $newFilename);
-            } catch (FileException $e) {
+            }
+            catch (FileException $e)
+            {
                 $errors[] = "Erreur lors de l'upload : " . $e->getMessage();
                 continue;
             }
@@ -86,7 +95,7 @@ class FigureService
         }
 
         return [
-            'valid' => empty($errors),
+            'valid'  => empty($errors),
             'errors' => $errors,
         ];
     }
