@@ -55,7 +55,7 @@ class Figure
     private Collection $pictureFigures;
 
     /**
-     * @var Collection<int, Group>
+     * @var Group|null
      */
     #[ORM\ManyToOne(inversedBy: 'figures')]
     #[ORM\JoinColumn(nullable: false)]

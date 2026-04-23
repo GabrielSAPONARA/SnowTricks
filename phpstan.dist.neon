@@ -6,3 +6,8 @@ parameters:
         - public/
         - src/
         - tests/
+    ignoreErrors:
+        # Ignore Doctrine ID assignment false positives for all entities
+        -
+            message: '#Property .*::\$id \(int\|null\) is never assigned int#'
+            path: src/Entity/
