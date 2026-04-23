@@ -44,6 +44,9 @@ class MessageRepository extends ServiceEntityRepository
     //    }
 
 
+    /**
+     * @return Paginator<Message>
+     */
     public function findByFigureId(int $page, int $limit, int $figureId):
     Paginator
     {
