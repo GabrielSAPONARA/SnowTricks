@@ -16,7 +16,7 @@ week 17th April
 
 ~~fix the modals to edit and delete a picture or a video (high)~~
 
-**verify PSR 1 and 2 with PHPSTAN (high)**
+~~verify PSR 1 and 2 with PHPSTAN (high)~~
 
 **update Symfony and PHP (high)**
 
