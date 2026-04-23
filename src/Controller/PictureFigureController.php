@@ -36,10 +36,11 @@ final class PictureFigureController extends AbstractController
     {
         if ($request->isXmlHttpRequest())
         {
-            if (is_array($request->request->all()) &&
-                isset($request->request->all()["picture_figure_form"]["_token"]))
+            $requestData = $request->request->all();
+
+            if (isset($requestData["picture_figure_form"]["_token"]))
             {
-                $token = $request->request->all()["picture_figure_form"]["_token"];
+                $token = $requestData["picture_figure_form"]["_token"];
             }
             else
             {
