@@ -18,7 +18,7 @@ week 17th April
 
 ~~verify PSR 1 and 2 with PHPSTAN (high)~~
 
-**update Symfony and PHP (high)**
+~~update Symfony and PHP (high)~~
 
 **Update the procedure to install the project (high)**
     1. install Docker
