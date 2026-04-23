@@ -23,19 +23,17 @@ use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 class RegistrationController extends AbstractController
 {
     public function __construct(
-        private EmailVerifier $emailVerifier,
+        private EmailVerifier    $emailVerifier,
         private SluggerInterface $slugger,
-    )
-    {
-    }
+    ) {}
 
     #[Route('/register', name: 'app_register')]
     public function register(
-        Request $request,
+        Request                     $request,
         UserPasswordHasherInterface $userPasswordHasher,
-        Security $security,
-        EntityManagerInterface $entityManager,
-        ValidatorInterface     $validator,
+        Security                    $security,
+        EntityManagerInterface      $entityManager,
+        ValidatorInterface          $validator,
         UserPasswordHasherInterface $passwordHasher
     ): Response
     {
@@ -43,7 +41,8 @@ class RegistrationController extends AbstractController
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid())
+        {
             /** @var string $plainPassword */
             $plainPassword = $form->get('plainPassword')->getData();
 
@@ -53,9 +52,10 @@ class RegistrationController extends AbstractController
                 $this->addFlash('danger', "Your new password isn't the same in the two field.");
                 return $this->redirectToRoute('app_register');
             }
-            $user->setPassword($passwordHasher->hashPassword($user, $form->get('plainPassword')
-                                                                         ->get('first')
-                                                                         ->getData()));
+            $user->setPassword($passwordHasher->hashPassword($user, $form
+                ->get('plainPassword')
+                ->get('first')
+                ->getData()));
             // encode the plain password
             $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
 
@@ -72,7 +72,13 @@ class RegistrationController extends AbstractController
 
                 if (count($violations) > 0)
                 {
-                    $this->addFlash('error', (string)$violations);
+                    $errors = [];
+                    foreach ($violations as $violation)
+                    {
+                        $errors[] = $violation->getMessage();
+                    }
+
+                    $this->addFlash('error', implode(', ', $errors));
                 }
 
                 $originalFilename = pathinfo($avatar->getClientOriginalName(),
@@ -103,7 +109,7 @@ class RegistrationController extends AbstractController
             $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
                 (new TemplatedEmail())
                     ->from(new Address('gabriel.saponara@zohomail.eu', 'Snow Tricks Support'))
-                    ->to((string) $user->getEmail())
+                    ->to((string)$user->getEmail())
                     ->subject('Please Confirm your Email')
                     ->htmlTemplate('registration/confirmation_email.html.twig')
             );
@@ -127,22 +133,27 @@ class RegistrationController extends AbstractController
         $id = $request->get('id'); // récupéré depuis l’URL signée
 
 
-        if (null === $id) {
+        if (null === $id)
+        {
             throw $this->createNotFoundException('No user found for this id.');
         }
 
         $user = $userRepository->find($id);
 
-        if (null === $user) {
+        if (null === $user)
+        {
             throw $this->createNotFoundException('This user doesn\'t exist.');
         }
 
         // validate email confirmation link, sets User::isVerified=true and persists
-        try {
+        try
+        {
             /** @var User $user */
 //            $user = $this->getUser();
             $this->emailVerifier->handleEmailConfirmation($request, $user);
-        } catch (VerifyEmailExceptionInterface $exception) {
+        }
+        catch (VerifyEmailExceptionInterface $exception)
+        {
             $this->addFlash('verify_email_error', $exception->getReason());
 
             return $this->redirectToRoute('app_register');

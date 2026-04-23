@@ -95,7 +95,13 @@ final class UserController extends AbstractController
 
                 if (count($violations) > 0)
                 {
-                    $this->addFlash('error', (string)$violations);
+                    $errors = [];
+                    foreach ($violations as $violation)
+                    {
+                        $errors[] = $violation->getMessage();
+                    }
+
+                    $this->addFlash('error', implode(', ', $errors));
                 }
 
                 $originalFilename = pathinfo($avatar->getClientOriginalName(),

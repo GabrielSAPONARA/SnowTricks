@@ -20,14 +20,14 @@ final class VideoFigureController extends AbstractController
         VideoFigure $videoFigure,
         Request $request,
         EntityManagerInterface $entityManager,
-    )
+    ) : Response
     {
         if($request->isXmlHttpRequest())
         {
-            if (is_array($request->request->all()) &&
-                isset($request->request->all()["video_figure_form"]["_token"]))
+            $requestData = $request->request->all();
+            if (isset($requestData["video_figure_form"]["_token"]))
             {
-                $token = $request->request->all()["video_figure_form"]["_token"];
+                $token = $requestData["video_figure_form"]["_token"];
             }
             else
             {
@@ -64,6 +64,7 @@ final class VideoFigureController extends AbstractController
                     ])
             ]);
         }
+        return $this->redirectToRoute('app_welcome', [], Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/delete/{id}', name: 'app_video_figure_to_delete')]
