@@ -16,9 +16,16 @@ week 17th April
 
 ~~fix the modals to edit and delete a picture or a video (high)~~
 
-**verify PSR 1 and 2 with PHPSTAN (high)**
+~~verify PSR 1 and 2 with PHPSTAN (high)~~
 
 **update Symfony and PHP (high)**
+
+**Update the procedure to install the project (high)**
+    1. install Docker
+    2. Check with `docker ps` if MySQL run
+    3. Kill if necessary MySQL with `docker kill mySqlId`
+
+**Check the application (high)**
 
 
 
