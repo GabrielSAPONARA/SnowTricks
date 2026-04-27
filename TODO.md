@@ -27,7 +27,7 @@ week 17th April
 
 **Check the application (high)**
 
-**delete default picture in modal**
+~~delete default picture in modal~~
 
 
 
@@ -49,7 +49,9 @@ refactor code in JavaScript (low)
 
 translate every comment in english (low)
 
-change group names in fixturesgroup --> create array and use a loop (low)
+change group names in GroupFixtures --> create array and use a loop (low)
+
+change figure names in FigureFixtures --> create array and use a loop (low)
 
 ~~improve scrollbar to messages (low) --> add margin to see scrollbar~~
 

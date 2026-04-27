@@ -19,10 +19,8 @@
             </iframe>
         </div>
     {% else %}
-        <div class="col-12 px-0 top-div-popup-picture">
-            <img class="img-fluid mb-5 fixed-size px-0 w-100 top-picture-popup"
-                 src="{{ asset('assets/img/snowboard_neige_figure_saut_shutterstock2.jpg') }}"
-                 alt="Default snowboard picture">
+        <div class="w-100 p-0 bg-warning top-video-popup d-flex align-items-end">
+            <p class="ps-3">No available picture or video.</p>
         </div>
     {% endif %}
     {%  if is_granted('IS_AUTHENTICATED') %}
@@ -43,9 +41,11 @@
         </div>
     {% endif %}
 </div>
-<button class="d-grid d-md-none btn btn-primary see-medias d-flex mx-auto">
-    See medias
-</button>
+{% if (pictures|length > 0) or (videos|length > 0) %}
+    <button class="d-grid d-md-none btn btn-primary see-medias d-flex mx-auto">
+        See medias
+    </button>
+{% endif %}
 <button class="d-none d-md-none btn btn-danger hide-medias d-flex mx-auto mb-3">
     Hide medias
 </button>
