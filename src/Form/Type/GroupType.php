@@ -1,15 +1,13 @@
 <?php
 
-namespace App\Form;
+namespace App\Form\Type;
 
-use App\Entity\Figure;
 use App\Entity\Group;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class GroupForm extends AbstractType
+class GroupType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {

@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Message;
 use App\Entity\User;
-use App\Form\MessageType;
+use App\Form\Type\MessageType;
 use App\Repository\FigureRepository;
 use App\Repository\MessageRepository;
 use Doctrine\ORM\EntityManagerInterface;

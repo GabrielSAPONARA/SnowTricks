@@ -38,7 +38,7 @@ week 17th April
 
 **add style to error and notice flash messages (average)**
 
-**standardize the name of form (average)**
+~~standardize the name of form (average)~~
 
 
 verify code with codacy (low)

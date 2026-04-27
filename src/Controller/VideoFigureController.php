@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\VideoFigure;
-use App\Form\VideoFigureFormType;
+use App\Form\Type\VideoFigureType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -55,7 +55,7 @@ final class VideoFigureController extends AbstractController
     {
         if($request->isXmlHttpRequest())
         {
-            $form = $this->createForm(VideoFigureFormType::class, $videoFigure);
+            $form = $this->createForm(VideoFigureType::class, $videoFigure);
 
             return new JsonResponse([
                 'content' => $this->renderView('video_figure/_form.html.twig',

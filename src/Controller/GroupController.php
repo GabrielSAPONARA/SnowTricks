@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Group;
-use App\Form\GroupForm;
+use App\Form\Type\GroupType;
 use App\Repository\GroupRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -28,7 +28,7 @@ final class GroupController extends AbstractController
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $group = new Group();
-        $form = $this->createForm(GroupForm::class, $group);
+        $form = $this->createForm(GroupType::class, $group);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -56,7 +56,7 @@ final class GroupController extends AbstractController
     #[IsGranted('ROLE_VERIFIED')]
     public function edit(Request $request, Group $group, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(GroupForm::class, $group);
+        $form = $this->createForm(GroupType::class, $group);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
