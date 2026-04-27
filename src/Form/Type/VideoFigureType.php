@@ -1,17 +1,14 @@
 <?php
 
-namespace App\Form;
+namespace App\Form\Type;
 
-use App\Entity\Figure;
 use App\Entity\VideoFigure;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class VideoFigureFormType extends AbstractType
+class VideoFigureType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {

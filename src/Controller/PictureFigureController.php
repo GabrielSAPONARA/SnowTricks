@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\PictureFigure;
-use App\Form\PictureFigureFormType;
+use App\Form\Type\PictureFigureType;
 use App\Repository\PictureFigureRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -110,7 +110,7 @@ final class PictureFigureController extends AbstractController
                 'id' =>
                     $data->id
             ])[0];
-            $form = $this->createForm(PictureFigureFormType::class,
+            $form = $this->createForm(PictureFigureType::class,
                 $pictureFigure);
 
             return new JsonResponse([

@@ -6,9 +6,9 @@ use App\Entity\Figure;
 use App\Entity\Message;
 use App\Entity\PictureFigure;
 use App\Entity\VideoFigure;
-use App\Form\FigureForm;
-use App\Form\FigureForm2;
-use App\Form\MessageType;
+use App\Form\Type\FigureType;
+use App\Form\Type\FigureType2;
+use App\Form\Type\MessageType;
 use App\Repository\FigureRepository;
 use App\Repository\GroupRepository;
 use App\Repository\MessageRepository;
@@ -23,7 +23,6 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Symfony\Component\Validator\Constraints\Image as ImageConstraint;
 
 
 #[Route('/figure')]
@@ -66,7 +65,7 @@ final class FigureController extends AbstractController
     ): Response
     {
         $figure = new Figure();
-        $form = $this->createForm(FigureForm::class, $figure);
+        $form = $this->createForm(FigureType::class, $figure);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid())
@@ -159,7 +158,7 @@ final class FigureController extends AbstractController
 
         if ($request->isXmlHttpRequest())
         {
-            $form = $this->createForm(FigureForm2::class, $figure);
+            $form = $this->createForm(FigureType2::class, $figure);
 
             return new JsonResponse([
                 'content' => $this->renderView('figure/_modal_to_edit_figure.html.twig',
@@ -185,7 +184,7 @@ final class FigureController extends AbstractController
         SluggerInterface       $slugger
     ): Response
     {
-        $form = $this->createForm(FigureForm::class, $figure);
+        $form = $this->createForm(FigureType::class, $figure);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid())
