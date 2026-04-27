@@ -52,8 +52,7 @@ dialog::backdrop {
 }
 .symbols
 {
-    min-height: 5dvh;
-    top: 1%;
+    top: 230px;
     right: 1%;
     border: 2px solid black;
     background-color: white;

@@ -31,7 +31,7 @@ document.querySelector(".js-ajax").addEventListener("click", async (e) =>
     {
         let html = await fetchFigure(
             link.querySelector("p").textContent,
-            link.querySelector("h5").textContent
+            link.querySelector("h6").textContent
         );
 
         // Clear modal content
