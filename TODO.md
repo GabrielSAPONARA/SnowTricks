@@ -65,7 +65,7 @@ with the detail of a figure (low)~~
 ~~add unique constraint on figure's slug~~
 
 FigureForm FigureForm2 edit the medias with the parameters of the form in a
-single form (low) (create a new branch and to make a merge)
+single form, and use inheritance (low) (create a new branch and to make a merge)
 
 
 ### Question ?
