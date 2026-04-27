@@ -51,7 +51,7 @@ translate every comment in english (low)
 
 change group names in fixturesgroup --> create array and use a loop (low)
 
-improve scrollbar to messages (low) --> add margin to see scrollbar
+~~improve scrollbar to messages (low) --> add margin to see scrollbar~~
 
 reformat code with Ctrl + Alt + L (low)
 
