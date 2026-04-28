@@ -1,10 +1,8 @@
 import Filter from "../Filter.js";
 import FilterMessage from "./FilterMessage.js";
 
-// Initialize Filter on the static container
 new Filter(document.querySelector(".js-ajax"));
 
-// Select static elements that exist on load
 let figureModal = document.querySelector(".js-figure-informations");
 let modalToEditPictureFigure = document.querySelector(".modal-picture-figure-to-edit");
 let popupToConfirmDeletion = document.getElementById("confirm-deletion");
@@ -15,11 +13,8 @@ let popupToConfirmVideoDeletion = document.querySelector(".modal-video-to-delete
 // Attach the listener to the static container '.js-ajax' instead of individual links
 document.querySelector(".js-ajax").addEventListener("click", async (e) =>
 {
-
-    // Find the closest ancestor (or self) that matches the selector
     let link = e.target.closest(".js-figure-details");
 
-    // If the click wasn't on a figure link, ignore it
     if (!link)
     {
         return;
@@ -46,9 +41,6 @@ document.querySelector(".js-ajax").addEventListener("click", async (e) =>
             figureModal.insertAdjacentHTML('afterbegin', html);
 
             // --- RE-ATTACH INTERNAL MODAL LISTENERS ---
-            // Since the modal content is dynamic, these listeners must be re-added
-            // every time the modal opens.
-
             let pencilToEditModal = document.getElementById("pencil-to-edit-figure");
             if (pencilToEditModal)
             {
@@ -61,18 +53,10 @@ document.querySelector(".js-ajax").addEventListener("click", async (e) =>
                         figureModal.removeChild(figureModal.firstChild);
                     }
                     figureModal.insertAdjacentHTML('afterbegin', html);
-
-                    // Note: You will need to re-attach the inner edit/delete listeners
-                    // here as well, similar to the logic below.
-                    // For brevity, I've kept your existing logic structure inside the timeout.
-                    // Ensure you wrap the inner logic in a function to avoid duplication.
                     initializeModalActions(link);
                 });
             }
-
-            // Initialize actions for the newly loaded content
             initializeModalActions(link);
-
         }, 100);
 
     }
@@ -80,12 +64,9 @@ document.querySelector(".js-ajax").addEventListener("click", async (e) =>
     {
         console.error(error);
     }
-
-    // Open the modal
     openModal(e, link);
 });
 
-// Helper function to organize the complex inner logic
 function initializeModalActions(link)
 {
     let figureModal = document.querySelector(".js-figure-informations");
@@ -274,10 +255,8 @@ function initializeModalActions(link)
     // Message Logic
     if (saveMessageButton && messages && pagination)
     {
-        // 1. Initialize FilterMessage for the initial state
         let filterMessageInstance = new FilterMessage(document.querySelector(".js-figure-informations"));
 
-        // 2. Create/Error Container Setup (if it doesn't exist)
         let errorContainer = document.getElementById("message-error-container");
         if (!errorContainer)
         {
@@ -288,12 +267,10 @@ function initializeModalActions(link)
             const messageInput = document.getElementById("message_content");
             if (messageInput && messageInput.parentElement)
             {
-                // Insert error message right before the input field
                 messageInput.parentElement.insertBefore(errorContainer, messageInput);
             }
         }
 
-        // 3. Add Message Listener
         saveMessageButton.addEventListener("click", async (e) =>
         {
             e.preventDefault();
@@ -332,7 +309,6 @@ function initializeModalActions(link)
                 // --- SEND REQUEST ---
                 let response = await fetchMessages(figureSlug, messageContent);
 
-                // Check HTTP status (Handle 400 Bad Request from Server Validation)
                 if (!response.ok)
                 {
                     const errorData = await response.json();
@@ -341,32 +317,26 @@ function initializeModalActions(link)
 
                 const data = await response.json();
 
-                // --- UPDATE DOM ---
                 messages.innerHTML = data.content;
                 pagination.innerHTML = data.pagination;
 
                 // --- CRITICAL FIX: RE-INITIALIZE PAGINATION ---
-                // Since we replaced the HTML, old listeners are gone. Create a new instance.
                 const updatedContainer = document.querySelector(".js-figure-informations");
                 if (updatedContainer)
                 {
                     filterMessageInstance = new FilterMessage(updatedContainer);
                 }
 
-                // Clear Input
                 messageInput.value = "";
 
             }
             catch (error)
             {
                 console.error("Message error:", error);
-                // Display Server or Network Error
                 errorContainer.textContent = error.message;
                 messageInput.classList.add("is-invalid");
             }
         });
-
-        // NOTE: Manual pagination.addEventListener removed. FilterMessage handles it exclusively.
     }
 
 
@@ -411,7 +381,6 @@ function initializeModalActions(link)
 }
 
 // --- GLOBAL LISTENERS (Static elements) ---
-// These remain largely the same as they target static IDs
 
 document.addEventListener('keydown', function (event)
 {
@@ -575,10 +544,6 @@ if (popupToConfirmVideoDeletion)
         });
     }
 }
-
-// --- API FUNCTIONS (Unchanged) ---
-// Keep all your async fetch functions (deletePicture, deleteVideo, fetchFigure, etc.) exactly as they were.
-// They are correctly defined.
 
 async function deletePicture(pictureId, token)
 {
@@ -744,16 +709,10 @@ async function fecthMessagesAndPagination(url)
 async function fetchMessages(figureSlug, messageContent)
 {
     let url = "http://localhost:8080/message/new";
-
-    // FIX: Target the form specifically inside the modal or near the message input
-    // Instead of querying the whole document, look relative to the input or the modal
     const messageInput = document.getElementById("message_content");
     const form = messageInput ? messageInput.closest('form') : document.querySelector('form');
-
-    // Look specifically for the token with name="message[_token]"
     let tokenInput = form ? form.querySelector('input[name="message[_token]"]') : null;
 
-    // Fallback if not found in the specific form
     if (!tokenInput)
     {
         tokenInput = document.querySelector('input[id="message__token"]');
@@ -791,7 +750,7 @@ async function fetchMessages(figureSlug, messageContent)
         return response;
     }
 
-    return response; // Return error response to be handled by catch
+    return response;
 }
 
 async function fetchFigure(figureGroup, figureSlug)
