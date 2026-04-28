@@ -10,11 +10,13 @@
     object-fit: cover;
 }
 
-.ratio iframe {
-    min-height: 700px; /* ou la hauteur souhaitée */
+.ratio iframe
+{
+    min-height: 700px;
 }
 
-.ratio-16x9 {
+.ratio-16x9
+{
     min-height: 700px;
 }
 

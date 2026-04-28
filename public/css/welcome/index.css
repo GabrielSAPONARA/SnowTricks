@@ -13,7 +13,8 @@ header
     position: fixed;
 }
 
-dialog::backdrop {
+dialog::backdrop
+{
     background-color: rgba(0, 0, 0, 0.75);
 }
 
@@ -39,17 +40,20 @@ dialog::backdrop {
     overflow-y: scroll;
     width: 90%;
 }
+
 .card
 {
     min-height: 35dvh;
     max-height: 35dvh;
 }
+
 .card-symbols
 {
     min-height: 35px;
     max-height: 35px;
     column-gap: 10px;
 }
+
 .symbols
 {
     top: 230px;
@@ -57,11 +61,13 @@ dialog::backdrop {
     border: 2px solid black;
     background-color: white;
 }
-.symbols>a
+
+.symbols > a
 {
     width: 50px;
     height: 50px;
 }
+
 #figure_form2_description
 {
     height: 25dvh;
@@ -71,10 +77,12 @@ dialog::backdrop {
 {
     height: 25dvh;
 }
+
 .figure-pictures
 {
     height: 15rem;
 }
+
 .edit-hot-topic-picture
 {
     top: 250px;
