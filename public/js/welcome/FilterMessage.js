@@ -11,7 +11,7 @@ export default class Filter
      */
     constructor(element)
     {
-        if(element === null || element === undefined)
+        if (element === null || element === undefined)
         {
             return;
         }
@@ -29,7 +29,7 @@ export default class Filter
     {
         const aClickListener = e =>
         {
-            if(e.target.tagName === 'A')
+            if (e.target.tagName === 'A')
             {
                 e.preventDefault();
                 this.loadUrl(e.target.getAttribute("href"));
@@ -37,7 +37,7 @@ export default class Filter
 
 
         }
-        if(this.moreNav)
+        if (this.moreNav)
         {
             this.pagination.innerHTML = "<button class='" +
                 " btn" +
@@ -63,7 +63,7 @@ export default class Filter
         button.removeAttribute('disabled');
     }
 
-    async loadUrl (url, append = false)
+    async loadUrl(url, append = false)
     {
         console.log(url);
         const params = new URLSearchParams(url.split('?')[1] || '')
@@ -76,7 +76,7 @@ export default class Filter
         if (response.status >= 200 && response.status < 300)
         {
             const data = await response.json()
-            if(append)
+            if (append)
             {
                 this.content.innerHTML += data.content;
             }
@@ -84,7 +84,7 @@ export default class Filter
             {
                 this.content.innerHTML = data.content;
             }
-            if(!this.moreNav)
+            if (!this.moreNav)
             {
                 this.pagination.innerHTML = data.pagination;
             }
