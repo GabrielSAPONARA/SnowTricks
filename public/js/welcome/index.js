@@ -71,7 +71,7 @@ function initializeModalActions(link)
 {
     let figureModal = document.querySelector(".js-figure-informations");
     let modalToEditPictureFigure = document.querySelector(".modal-picture-figure-to-edit");
-    let figureSlug = link.querySelector("h5").textContent;
+    let figureSlug = link.querySelector("h6").textContent;
     let pagination = document.getElementById("pagination");
     let saveMessageButton = document.getElementById("save-message");
     let messages = document.getElementById("messages");
