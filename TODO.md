@@ -29,6 +29,16 @@ week 17th April
 
 ~~delete default picture in modal~~
 
+~~Fix the button to see medias in responsive "mode" to disconnected user 
+(high)~~
+
+**On welcome page update pagination to see 10 figures (high)**
+
+**Hide buttons to edit or delete a figure in welcome page for disconnected 
+user**
+
+**Update README with adding the .env's configuration**
+
 
 
 
@@ -36,7 +46,7 @@ week 17th April
 
 **verify flash messages (average)**
 
-**add style to error and notice flash messages (average)**
+~~add style to error and notice flash messages (average)~~
 
 ~~standardize the name of form (average)~~
 
@@ -67,6 +77,12 @@ with the detail of a figure (low)~~
 FigureForm FigureForm2 edit the medias with the parameters of the form in a
 single form, and use inheritance (low) (create a new branch and to make a merge)
 
+Add FOSJsRoutingBundle library to use Symfony's routes in JavaScript (low)
+
+Increase size to textarea to edit figure's description (low)
+
+Create "div" to enable the click in list of figures (low)
+
 
 ### Question ?
 
@@ -84,6 +100,10 @@ I must just use more indicative names.
 
 Do I transform DATE_MUTABLE to DATETIME_MUTABLE in Figure entity ? 
 I must search difference between DATE and DATE_MUTABLE.
+DATE and DATE_MUTABLE are the same, when I call a method like modify() or add
+(), it changes the original state of the object's instance.
+DATE_IMMUTABLE is immutable in other words the object's instance doesn't 
+change, and when a method like modify() or add() a new instance is created.
 
 week 17th April
 
